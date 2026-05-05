@@ -178,6 +178,71 @@ body {
   box-shadow: var(--bs);
 }
 
+/* Language Toggle Switch */
+.lang-toggle-container {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--clr-light);
+}
+
+.lang-label {
+  opacity: 0.4;
+  transition: var(--transition-fast);
+}
+
+.lang-label.active {
+  opacity: 1;
+  color: var(--clr-accent);
+}
+
+.toggle-switch {
+  width: 50px;
+  height: 26px;
+  background: var(--clr-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--clr-glass-border);
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: var(--bs);
+}
+
+.toggle-switch:hover {
+  box-shadow: 0 0 15px var(--clr-accent);
+  border-color: var(--clr-accent);
+}
+
+.toggle-knob {
+  width: 20px;
+  height: 20px;
+  background: var(--clr-light);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background 0.3s ease;
+}
+
+/* When Korean is active */
+.toggle-switch.ko-active {
+  background: rgba(48, 236, 200, 0.2);
+  border-color: var(--clr-accent);
+}
+
+.toggle-switch.ko-active .toggle-knob {
+  transform: translateX(24px);
+  background: var(--clr-accent);
+}
+
 .home-back-btn:hover {
   transform: scale(1.1) translate(var(--back-shift-x, 0), var(--back-shift-y, 0));
   box-shadow: 0 0 50px var(--clr-accent);
@@ -207,7 +272,7 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 80px;
+  padding: 40px; /* Reduced to allow more room for growth */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -215,15 +280,19 @@ body {
 }
 
 .content-wrapper {
-  max-width: 900px;
-  width: 100%;
+  max-width: 90vw;
+  width: fit-content;
   background: var(--clr-glass);
   backdrop-filter: blur(20px);
   padding: 3rem;
   border-radius: 40px;
   border: 1px solid var(--clr-glass-border);
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the title/subtitle within the content */
+}
   scrollbar-width: thin;
   scrollbar-color: var(--clr-accent) transparent;
 }
@@ -257,8 +326,28 @@ h2.section__title {
 /* Portfolio Grid */
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* Force 4 columns on PC */
   gap: 1.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+@media (max-width: 1100px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on small desktops/large tablets */
+  }
+}
+
+@media (max-width: 850px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+  }
+}
+
+@media (max-width: 550px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr; /* 1 column on mobile */
+  }
 }
 
 .portfolio__item {
@@ -335,13 +424,36 @@ h2.section__title {
 
 /* Services */
 .services {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 2rem;
+  justify-content: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.service {
+  flex: 1 1 300px;
+  max-width: 400px;
+  min-width: 250px;
+  text-align: left; /* Align text within each service card for better readability */
 }
 
 .service h3 {
   color: var(--clr-accent);
+  margin-bottom: 1.2rem; /* Margin increased for breathing room */
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.service p {
+  line-height: 1.8; /* Significantly increased line-height */
+  font-size: 1rem;
+  color: #e2e8f0;
+  word-break: keep-all; /* Prevents awkward breaks in Korean words */
+  overflow-wrap: break-word;
+  letter-spacing: -0.01em; /* Subtle letter-spacing for premium feel */
 }
 
 /* Buttons */

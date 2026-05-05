@@ -24,8 +24,15 @@
         <!-- Home View -->
         <section id="home" class="view active">
             <div class="home-content">
+                <div class="lang-toggle-container">
+                    <span class="lang-label en-label active">ENG</span>
+                    <div class="toggle-switch" id="lang-toggle-btn">
+                        <div class="toggle-knob"></div>
+                    </div>
+                    <span class="lang-label ko-label">KOR</span>
+                </div>
                 <div class="center-group">
-                    <h1 class="home-title">Taekyung Ho</h1>
+                    <h1 class="home-title" data-i18n="home-title">Taekyung Ho</h1>
                     <div class="center-picture">
                         <img src="img/face.jpg" alt="Taekyung Ho">
                     </div>
@@ -33,25 +40,25 @@
                 
                 <nav class="node-nav">
                     <button class="node-btn" data-target="skills" id="node-skills" style="--angle: -40deg; --dist: 380px;">
-                        <span>Skills</span>
+                        <span data-i18n="node-skills">Skills</span>
                     </button>
                     <button class="node-btn" data-target="projects" id="node-projects" style="--angle: 0deg; --dist: 420px;">
-                        <span>Portfolio</span>
+                        <span data-i18n="node-projects">Portfolio</span>
                     </button>
                     <button class="node-btn" data-target="resume" id="node-resume" style="--angle: 40deg; --dist: 380px;">
-                        <span>Resume</span>
+                        <span data-i18n="node-resume">Resume</span>
                     </button>
                     <button class="node-btn" data-target="sns" id="node-sns" style="--angle: 140deg; --dist: 380px;">
-                        <span>SNS</span>
+                        <span data-i18n="node-sns">SNS</span>
                     </button>
                     <button class="node-btn" data-target="about" id="node-about" style="--angle: 180deg; --dist: 420px;">
-                        <span>About Me</span>
+                        <span data-i18n="node-about">About Me</span>
                     </button>
                     <button class="node-btn" data-target="q1" id="node-q1" style="--angle: -90deg; --dist: 300px;">
-                        <span>?</span>
+                        <span data-i18n="node-q1">?</span>
                     </button>
                     <button class="node-btn" data-target="q2" id="node-q2" style="--angle: -140deg; --dist: 380px;">
-                        <span>?</span>
+                        <span data-i18n="node-q2">?</span>
                     </button>
                 </nav>
             </div>
@@ -64,17 +71,17 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--about">Who I am</h2>
-                    <p class="section__subtitle section__subtitle--about">
+                    <h2 class="section__title section__title--about" data-i18n="about-title">Who I am</h2>
+                    <p class="section__subtitle section__subtitle--about" data-i18n="about-subtitle">
                         Student Game Programmer Taekyung Ho
                     </p>
                     <div class="about-me__body">
-                        <p>
+                        <p data-i18n="about-p1">
                             TODO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
                             et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
                             aliquip ex ea commodo consequat.
                         </p>
-                        <p>
+                        <p data-i18n="about-p2">
                             TODO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
                             et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
                             aliquip ex ea commodo consequat.
@@ -92,30 +99,24 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--services">SKLILZ</h2>
+                    <h2 class="section__title section__title--services" data-i18n="skills-title">SKILLS</h2>
                     <div class="services">
                         <div class="service">
-                            <h3>SKILL TODO</h3>
-                            <p> TODO
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                aliquip ex ea commodo consequat.
+                            <h3 data-i18n="skill1-title">C++ Systems Programming</h3>
+                            <p data-i18n="skill1-desc">
+                                I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.
                             </p>
                         </div>
                         <div class="service">
-                            <h3>SKILL TODO</h3>
-                            <p> TODO
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                aliquip ex ea commodo consequat.
+                            <h3 data-i18n="skill2-title">Computer Graphics Development</h3>
+                            <p data-i18n="skill2-desc">
+                                I built a foundational rendering pipeline through 2D graphics programming and later expanded my capabilities to <b>OpenGL</b>-based 3D implementation. Proficient in sophisticated spatial transformations and graphics using <b>linear algebra</b>, I build optimized rendering environments that secure both visual quality and performance through <b>advanced shader writing techniques</b> like <b>Post-processing</b> and <b>MSAA</b>.
                             </p>
                         </div>
                         <div class="service">
-                            <h3>SKILL TODO</h3>
-                            <p> TODO
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                aliquip ex ea commodo consequat.
+                            <h3 data-i18n="skill3-title">Architecture Programming & Engine Development</h3>
+                            <p data-i18n="skill3-desc">
+                                During engine development, including the <b>Dragonic Tactics</b> project, I applied major design patterns such as <b>Singleton</b> and designed a high-performance architecture based on <b>ECS (Entity Component System)</b>. I directly implemented a custom 2D graphics pipeline and maximized the engine's runtime performance by applying graphics optimization techniques like <b>Batch Rendering</b> and <b>Instancing Rendering</b> to resolve rendering bottlenecks.
                             </p>
                         </div>
                     </div>
@@ -130,8 +131,8 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--projects">My Projects</h2>
-                    <p class="section__subtitle section__subtitle--projects">
+                    <h2 class="section__title section__title--projects" data-i18n="projects-title">My Projects</h2>
+                    <p class="section__subtitle section__subtitle--projects" data-i18n="projects-subtitle">
                         A selection of my range of projects
                     </p>
                     <div class="portfolio-grid">
@@ -168,14 +169,14 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--resume">Resume</h2>
+                    <h2 class="section__title section__title--resume" data-i18n="resume-title">Resume</h2>
                     <div class="resume-download">
-                        <a target="_blank" href="docs/Resume.pdf" class="btn"><i class="far fa-file-pdf"></i> Download PDF</a>
+                        <a target="_blank" href="docs/Resume.pdf" class="btn"><i class="far fa-file-pdf"></i><span data-i18n="resume-download"> Download PDF</span></a>
                     </div>
                     <div class="resume-section">
-                        <h3>Experience</h3>
+                        <h3 data-i18n="resume-exp-title">Experience</h3>
                         <div class="resume-item">
-                            <p>
+                            <p data-i18n="resume-exp1">
                                 <b>Title, Company</b><br>
                                 Month Year - Present<br>
                                 <em>City, State, Country</em><br>
@@ -183,16 +184,16 @@
                             </p>
                         </div>
                         <div class="resume-item">
-                            <p>
+                            <p data-i18n="resume-exp2">
                                 <b>Software Test Engineer Intern, Qualtrics</b><br>
                                 Month Year - Month Year <br>
                                 <em>Seattle, WA</em><br>
                                 Implemented an extensible script in Python to automate project...
                             </p>
                         </div>
-                        <h3>Education</h3>
+                        <h3 data-i18n="resume-edu-title">Education</h3>
                         <div class="resume-item">
-                            <p>
+                            <p data-i18n="resume-edu1">
                                 <b>Bachelor of Science in Computer Science...</b><br>
                                 Year-Year<br>
                                 <em>Daegu, Korea & Redmond, WA, USA</em>
@@ -210,7 +211,7 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title">Connect with Me</h2>
+                    <h2 class="section__title" data-i18n="sns-title">Connect with Me</h2>
                     <a href="mailto:my.email@digipen.edu" class="footer__link">my.email@digipen.edu</a>
                     <ul class="social-list">
                         <li class="social-list__item">
@@ -235,8 +236,8 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title">Coming Soon</h2>
-                    <p>This section is under development.</p>
+                    <h2 class="section__title" data-i18n="q1-title">Coming Soon</h2>
+                    <p data-i18n="q1-desc">This section is under development.</p>
                 </div>
             </div>
         </section>
@@ -248,8 +249,8 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title">Secret Node</h2>
-                    <p>Wait for it...</p>
+                    <h2 class="section__title" data-i18n="q2-title">Secret Node</h2>
+                    <p data-i18n="q2-desc">Wait for it...</p>
                 </div>
             </div>
         </section>

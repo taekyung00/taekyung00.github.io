@@ -5,6 +5,119 @@ document.addEventListener("DOMContentLoaded", () => {
     const centerGroup = document.querySelector(".center-group");
     const homeTitle = document.querySelector(".home-title");
     
+    // --- i18n Translation Data ---
+    const translations = {
+        en: {
+            "home-title": "Taekyung Ho",
+            "node-skills": "Skills",
+            "node-projects": "Graphics",
+            "node-resume": "Resume",
+            "node-sns": "SNS",
+            "node-about": "About Me",
+            "node-q1": "?",
+            "node-q2": "?",
+            "about-title": "Who I am",
+            "about-subtitle": "Student Game Programmer Taekyung Ho",
+            "about-p1": "TODO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "about-p2": "TODO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "skills-title": "SKILLS",
+            "skill1-title": "C++ Systems Programming",
+            "skill1-desc": "I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.",
+            "skill2-title": "Computer Graphics Development",
+            "skill2-desc": "I built a foundational rendering pipeline through 2D graphics programming and later expanded my capabilities to <b>OpenGL</b>-based 3D implementation. Proficient in sophisticated spatial transformations and graphics using <b>linear algebra</b>, I build optimized rendering environments that secure both visual quality and performance through <b>advanced shader writing techniques</b> like <b>Post-processing</b> and <b>MSAA</b>.",
+            "skill3-title": "Architecture Programming & Engine Development",
+            "skill3-desc": "During engine development, including the <b>Dragonic Tactics</b> project, I applied major design patterns such as <b>Singleton</b> and designed a high-performance architecture based on <b>ECS (Entity Component System)</b>. I directly implemented a custom 2D graphics pipeline and maximized the engine's runtime performance by applying graphics optimization techniques like <b>Batch Rendering</b> and <b>Instancing Rendering</b> to resolve rendering bottlenecks.",
+            "projects-title": "Graphics Demos",
+            "projects-subtitle": "Visual simulations and graphics programming experiments",
+            "resume-title": "Resume",
+            "resume-download": " Download PDF",
+            "resume-exp-title": "Experience",
+            "resume-exp1": "<b>Title, Company</b><br>Month Year - Present<br><em>City, State, Country</em><br>What you did, how you did it, result.",
+            "resume-exp2": "<b>Software Test Engineer Intern, Qualtrics</b><br>Month Year - Month Year <br><em>Seattle, WA</em><br>Implemented an extensible script in Python to automate project...",
+            "resume-edu-title": "Education",
+            "resume-edu1": "<b>Bachelor of Science in Computer Science...</b><br>Year-Year<br><em>Daegu, Korea & Redmond, WA, USA</em>",
+            "sns-title": "Connect with Me",
+            "q1-title": "Coming Soon",
+            "q1-desc": "This section is under development.",
+            "q2-title": "Secret Node",
+            "q2-desc": "Wait for it..."
+        },
+        ko: {
+            "home-title": "허태경",
+            "node-skills": "기술",
+            "node-projects": "그래픽스",
+            "node-resume": "이력서",
+            "node-sns": "소셜 미디어",
+            "node-about": "내 소개",
+            "node-q1": "?",
+            "node-q2": "?",
+            "about-title": "나는 누구인가",
+            "about-subtitle": "학생 게임 프로그래머 허태경",
+            "about-p1": "포트폴리오 소개글의 첫 번째 단락입니다. 여기에 본인의 성장 배경, 프로그래밍에 관심을 가지게 된 계기, 앞으로의 목표 등을 자유롭게 작성하세요.",
+            "about-p2": "포트폴리오 소개글의 두 번째 단락입니다. 주요 역량과 참여했던 프로젝트의 역할 등을 간략히 덧붙이면 좋습니다.",
+            "skills-title": "보유 기술",
+            "skill1-title": "C++ Systems Programming",
+            "skill1-desc": "C++의 기초 문법부터 <b>Modern C++</b>의 최신 속성까지 폭넓게 이해하고 있습니다. 하드웨어와 밀접한 <b>low-level 시스템 최적화</b> 및 <b>직접적인 메모리 관리</b>는 물론, <b>TMP</b>(Template Metaprogramming)와 <b>Modules</b> 같은 고수준 추상화 기법을 활용하여 하드웨어 제어와 소프트웨어 설계의 균형을 맞춘 효율적인 프로그램을 개발합니다.",
+            "skill2-title": "Computer Graphics Development",
+            "skill2-desc": "2D 그래픽 프로그래밍 학습을 통해 기본적인 렌더링 파이프라인을 구축하였으며, 이후 <b>OpenGL</b> 기반의 3D 구현으로 역량을 확장했습니다. <b>선형대수학(linear algebra)</b>을 활용한 정교한 공간 변환 및 그래픽 구현에 능숙하며, <b>Post-processing</b> 및 <b>MSAA</b>(Multisample Anti-Aliasing)와 같은 <b>고급 쉐이더 작성 기술</b>을 통해 시각적 품질과 성능을 동시에 확보하는 최적화된 렌더링 환경을 구축합니다.",
+            "skill3-title": "Architecture Programming & Engine Development",
+            "skill3-desc": "<b>Dragonic Tactics</b> 프로젝트를 포함한 엔진 개발 과정에서 <b>Singleton</b> 등 주요 디자인 패턴을 적용하고, <b>ECS(Entity Component System)</b> 기반의 고성능 아키텍처를 설계하였습니다. 커스텀 2D 그래픽 파이프라인을 직접 구현하였으며, 특히 렌더링 병목 현상을 해결하기 위해 <b>Batch Rendering</b> 및 <b>Instancing Rendering</b>과 같은 그래픽스 최적화 기법을 적용하여 엔진의 런타임 성능을 극대화한 경험이 있습니다.",
+            "projects-title": "그래픽스 데모",
+            "projects-subtitle": "시각적 시뮬레이션 및 그래픽스 프로그래밍 실험 결과물입니다",
+            "resume-title": "이력서",
+            "resume-download": " PDF 다운로드",
+            "resume-exp-title": "경력",
+            "resume-exp1": "<b>직책, 회사명</b><br>년월 - 현재<br><em>근무 도시, 국가</em><br>어떤 업무를 수행했고, 어떤 결과를 냈는지 간략히 적습니다.",
+            "resume-exp2": "<b>소프트웨어 테스트 엔지니어 인턴, Qualtrics</b><br>년월 - 년월<br><em>시애틀, WA</em><br>파이썬을 활용해 프로젝트 자동화를 위한 확장 가능한 스크립트를 구현했습니다...",
+            "resume-edu-title": "학력",
+            "resume-edu1": "<b>컴퓨터 공학 학사...</b><br>입학년도-졸업년도<br><em>대한민국 대구 & 미국 시애틀</em>",
+            "sns-title": "연락처 및 소셜 미디어",
+            "q1-title": "준비 중",
+            "q1-desc": "이 섹션은 현재 개발 중입니다.",
+            "q2-title": "비밀 노드",
+            "q2-desc": "조금만 기다려주세요..."
+        }
+    };
+
+    let currentLang = "en";
+    const langSwitch = document.getElementById("lang-toggle-btn");
+    const enLabel = document.querySelector(".en-label");
+    const koLabel = document.querySelector(".ko-label");
+
+    function updateLanguage() {
+        const elements = document.querySelectorAll("[data-i18n]");
+        elements.forEach(el => {
+            const key = el.getAttribute("data-i18n");
+            if (translations[currentLang][key]) {
+                el.innerHTML = translations[currentLang][key]; // innerHTML allows formatting like <br>
+            }
+        });
+        
+        // Update switch UI
+        if (langSwitch && enLabel && koLabel) {
+            if (currentLang === "ko") {
+                langSwitch.classList.add("ko-active");
+                enLabel.classList.remove("active");
+                koLabel.classList.add("active");
+            } else {
+                langSwitch.classList.remove("ko-active");
+                koLabel.classList.remove("active");
+                enLabel.classList.add("active");
+            }
+        }
+    }
+
+    if (langSwitch) {
+        langSwitch.addEventListener("click", () => {
+            currentLang = currentLang === "en" ? "ko" : "en";
+            updateLanguage();
+        });
+    }
+
+    // Initialize with default language
+    updateLanguage();
+
+    
     // Helper to get corner translation based on target view ID
     function getTargetCornerTranslation(targetId) {
         const halfW = window.innerWidth / 2;
