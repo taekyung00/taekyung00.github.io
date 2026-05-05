@@ -1,30 +1,29 @@
-const navToggle = document.querySelector(".nav-toggle")
-const navLinks = document.querySelectorAll(".nav__link")
+document.addEventListener("DOMContentLoaded", () => {
+    const views = document.querySelectorAll(".view");
+    const nodeBtns = document.querySelectorAll(".node-btn");
+    const backBtns = document.querySelectorAll(".home-back-btn");
 
-navToggle.addEventListener("click", () => {
-    document.body.classList.toggle("nav-open");
-})
-
-navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-        document.body.classList.remove('nav-open')
-    })
-})
-
-// Help iframe of webgl demos get access to the keyboard by giving them focus when clicked
-document.addEventListener("DOMContentLoaded", function () {
-    const iframe = document.getElementById("demo");
-    if (!iframe) {
-        return;
+    function switchView(targetId) {
+        views.forEach(view => {
+            if (view.id === targetId) {
+                view.classList.add("active");
+            } else {
+                view.classList.remove("active");
+            }
+        });
+        document.body.setAttribute("data-view", targetId);
     }
-    iframe.addEventListener("load", function () {
-        try {
-            const iframeDoc = iframe.contentWindow.document;
-            iframeDoc.addEventListener("mousedown", function () {
-                iframe.contentWindow.Module.canvas.focus();
-            });
-        } catch (e) {
-            console.error(e);
-        }
+
+    nodeBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const target = btn.getAttribute("data-target");
+            switchView(target);
+        });
+    });
+
+    backBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            switchView("home");
+        });
     });
 });
