@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // 1. The clicked back button expands massively
             btn.classList.add("expanding-node");
             btn.style.pointerEvents = "none"; // Prevent the giant bubble from intercepting mouse events
-            btn.style.transition = "transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s ease";
+            btn.style.transition = "transform 1.1s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease";
             btn.style.transform = `scale(30)`;
             
             // 2. The detail page content shrinks towards the opposite corner (the original node position)
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const contentWrapper = btn.closest('.view').querySelector('.content-wrapper');
             if (contentWrapper) {
-                contentWrapper.style.transition = "transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease";
+                contentWrapper.style.transition = "transform 1.0s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease";
                 contentWrapper.style.transform = `translate(${-corner.x}px, ${-corner.y}px) scale(0)`;
                 contentWrapper.style.opacity = "0";
             }
@@ -200,8 +200,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         btn.style.pointerEvents = "auto"; // Restore pointer events
                         if (contentWrapper) contentWrapper.style.transition = "";
                     }, 50);
-                }, 800); // Wait 800ms to ensure the crossfade is totally finished
-            }, 300); // Reduced from 500ms to 300ms for even faster transition
+                }, 1000); // Wait 1000ms to ensure the crossfade and slower expansion is totally finished
+            }, 450); // Increased from 300ms to 450ms to match the slower animation speed
         });
     });
 });
