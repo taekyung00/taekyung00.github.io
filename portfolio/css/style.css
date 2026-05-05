@@ -95,6 +95,20 @@ body {
   transition: var(--transition-slow);
 }
 
+.home-subtitle {
+  font-size: 1.1rem; /* Slightly reduced */
+  font-weight: var(--fw-medium);
+  color: #94a3b8;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px; /* Significantly reduced from 5px to save space */
+  opacity: 0.8;
+  pointer-events: auto;
+  max-width: 600px; /* Limit width */
+  line-height: 1.5;
+  text-align: center;
+}
+
 .center-picture {
   width: 280px;
   height: 280px;

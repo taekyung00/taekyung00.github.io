@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const translations = {
         en: {
             "home-title": "Taekyung Ho",
+            "home-subtitle": "Software Engineer & Graphics Engineer",
             "node-skills": "Skills",
             "node-projects": "Graphics",
             "node-resume": "Resume",
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         ko: {
             "home-title": "허태경",
+            "home-subtitle": "소프트웨어 엔지니어 & 그래픽스 엔지니어",
             "node-skills": "기술",
             "node-projects": "그래픽스",
             "node-resume": "이력서",
