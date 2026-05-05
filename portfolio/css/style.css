@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
 :root {
   --ff-primary: 'Outfit', sans-serif;
   --ff-secondary: "Source Code Pro", monospace;
@@ -83,29 +85,30 @@ body {
 }
 
 .home-title {
-  font-size: 3.5rem; /* Reduced from 5rem */
+  font-size: clamp(1.8rem, 6vmin, 2.5rem); /* Changed to vmin to react to height */
   font-weight: var(--fw-black);
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: 2px;
   background: linear-gradient(to right, #38bdf8, #818cf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   pointer-events: auto;
   transition: var(--transition-slow);
+  text-align: center;
+  line-height: 1;
 }
 
 .home-subtitle {
-  font-size: 1.1rem; /* Slightly reduced */
+  font-size: clamp(0.75rem, 2.5vmin, 0.95rem); /* Changed to vmin */
   font-weight: var(--fw-medium);
   color: #94a3b8;
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 2px; /* Significantly reduced from 5px to save space */
+  letter-spacing: 2px;
   opacity: 0.8;
   pointer-events: auto;
-  max-width: 600px; /* Limit width */
-  line-height: 1.5;
+  line-height: 1.2;
   text-align: center;
 }
 
@@ -138,8 +141,8 @@ body {
 
 .node-btn {
   position: absolute;
-  width: 120px;
-  height: 120px;
+  width: 100px; /* Reduced from 120px to save space */
+  height: 100px;
   border-radius: 50%;
   background: var(--clr-glass);
   backdrop-filter: blur(15px);
@@ -151,8 +154,9 @@ body {
   justify-content: center;
   font-family: var(--ff-primary);
   font-weight: var(--fw-bold);
-  font-size: 1rem;
+  font-size: 0.9rem; /* Slightly smaller font */
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, opacity 0.5s ease;
+  /* Simplified transform, avoiding aggressive vh that caused issues */
   transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--dist)) rotate(calc(var(--angle) * -1)) translate(var(--tx, 0), var(--ty, 0)) scale(var(--scale, 1));
   box-shadow: var(--bs);
   z-index: 30;

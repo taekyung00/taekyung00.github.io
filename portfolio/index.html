@@ -10,17 +10,16 @@
     <link rel="stylesheet" href="external/normalize.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
         integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Source+Code+Pro:wght@200..900&display=swap"
-        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/style.css" />
+    <!-- 브라우저 캐시 무시를 위해 v=3 추가 -->
+    <link rel="stylesheet" href="css/style.css?v=3" />
 </head>
 
 <body data-view="home">
-    <div class="app-container">
+    <main>
         <!-- Home View -->
         <section id="home" class="view active">
             <div class="home-content">
@@ -40,25 +39,26 @@
                 </div>
                 
                 <nav class="node-nav">
-                    <button class="node-btn" data-target="skills" id="node-skills" style="--angle: -40deg; --dist: 380px;">
+                    <!-- 정칠각형 형태에서 양옆(Graphics, About Me)은 420px, 대각선 상단(Skills, ?)은 360px로 벌려 타원형 심미성 획득 -->
+                    <button class="node-btn" data-target="skills" id="node-skills" style="--angle: -38.6deg; --dist: 360px;">
                         <span data-i18n="node-skills">Skills</span>
                     </button>
-                    <button class="node-btn" data-target="projects" id="node-projects" style="--angle: 0deg; --dist: 460px;">
+                    <button class="node-btn" data-target="projects" id="node-projects" style="--angle: 12.8deg; --dist: 420px;">
                         <span data-i18n="node-projects">Graphics</span>
                     </button>
-                    <button class="node-btn" data-target="resume" id="node-resume" style="--angle: 40deg; --dist: 380px;">
+                    <button class="node-btn" data-target="resume" id="node-resume" style="--angle: 64.2deg; --dist: 300px;">
                         <span data-i18n="node-resume">Resume</span>
                     </button>
-                    <button class="node-btn" data-target="sns" id="node-sns" style="--angle: 140deg; --dist: 380px;">
+                    <button class="node-btn" data-target="sns" id="node-sns" style="--angle: 115.6deg; --dist: 300px;">
                         <span data-i18n="node-sns">Social Media</span>
                     </button>
-                    <button class="node-btn" data-target="about" id="node-about" style="--angle: 180deg; --dist: 460px;">
+                    <button class="node-btn" data-target="about" id="node-about" style="--angle: 167deg; --dist: 420px;">
                         <span data-i18n="node-about">About Me</span>
                     </button>
                     <button class="node-btn" data-target="q1" id="node-q1" style="--angle: -90deg; --dist: 300px;">
                         <span data-i18n="node-q1">?</span>
                     </button>
-                    <button class="node-btn" data-target="q2" id="node-q2" style="--angle: -140deg; --dist: 380px;">
+                    <button class="node-btn" data-target="q2" id="node-q2" style="--angle: 218.4deg; --dist: 360px;">
                         <span data-i18n="node-q2">?</span>
                     </button>
                 </nav>
