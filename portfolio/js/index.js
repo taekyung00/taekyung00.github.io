@@ -112,11 +112,11 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.style.setProperty("--ty", `${corner.y * 0.3}px`);
             btn.style.setProperty("--scale", "25"); // Massive scale
 
-            // Wait for transition then switch view
+            // Wait for transition to mostly finish, then switch view earlier to remove pause
             setTimeout(() => {
                 switchView(target);
                 isAnimating = false;
-            }, 800);
+            }, 300); // Reduced from 500ms to 300ms for even faster transition
         });
     });
 
@@ -129,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // 1. The clicked back button expands massively
             btn.classList.add("expanding-node");
+            btn.style.pointerEvents = "none"; // Prevent the giant bubble from intercepting mouse events
             btn.style.transition = "transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s ease";
             btn.style.transform = `scale(30)`;
             
@@ -166,14 +167,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     nodeBtn.style.opacity = "1";
                 });
                 
-                // Reset the detail view elements ONLY AFTER it has completely faded out (var(--transition-slow) is 0.6s)
-                setTimeout(() => {
-                    // Restore transitions for home elements so hover works smoothly
+                // Force another reflow to apply the 0px positions instantly
+                document.body.offsetHeight;
+                
+                // Use requestAnimationFrame to ensure the 'none' transition is painted
+                // BEFORE we restore the CSS transitions, preventing any race conditions.
+                requestAnimationFrame(() => {
                     centerGroup.style.transition = "";
                     nodeBtns.forEach(nodeBtn => {
                         nodeBtn.style.transition = "";
                     });
                     
+                    // Allow user interaction immediately!
+                    isAnimating = false;
+                });
+                
+                // WAIT for the detail view to completely fade out (var(--transition-slow) is 0.6s)
+                setTimeout(() => {
                     // Instantly snap the hidden detail view elements back to normal without animation
                     btn.style.transition = "none";
                     btn.classList.remove("expanding-node");
@@ -187,12 +197,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Clear the inline 'none' transition after a tiny delay so future interactions work
                     setTimeout(() => {
                         btn.style.transition = "";
+                        btn.style.pointerEvents = "auto"; // Restore pointer events
                         if (contentWrapper) contentWrapper.style.transition = "";
                     }, 50);
-
-                    isAnimating = false;
-                }, 800); // 800ms wait ensures the 0.6s view crossfade is completely finished
-            }, 800);
+                }, 800); // Wait 800ms to ensure the crossfade is totally finished
+            }, 300); // Reduced from 500ms to 300ms for even faster transition
         });
     });
 });
