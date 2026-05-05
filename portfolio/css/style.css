@@ -310,7 +310,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center; /* Center the title/subtitle within the content */
-}
   scrollbar-width: thin;
   scrollbar-color: var(--clr-accent) transparent;
 }
