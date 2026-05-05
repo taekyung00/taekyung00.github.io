@@ -323,6 +323,14 @@ body {
   border-radius: 10px;
 }
 
+/* Specific styling for About Me to prevent overlap with home button */
+#about .content-wrapper {
+  max-width: 750px; /* Reduced width to avoid home button */
+  width: 90vw;
+  min-height: 55vh; /* Increased minimum height */
+  justify-content: center; /* Vertically center the content */
+}
+
 /* Typography & Content Styles */
 h2.section__title {
   font-size: 3rem;
@@ -339,6 +347,18 @@ h2.section__title {
   margin-bottom: 1.5rem; /* Reduced from 2rem */
   text-align: center;
   display: block;
+}
+
+/* About Me Paragraph Styling */
+.about-me__body p {
+  line-height: 1.8; /* Increase space between lines for better readability */
+  margin-bottom: 1.5rem; /* Increase space between paragraphs */
+  font-size: 1.05rem; /* Slightly larger text */
+  color: var(--clr-light);
+}
+
+.about-me__body p:last-child {
+  margin-bottom: 0;
 }
 
 /* Portfolio Grid */
