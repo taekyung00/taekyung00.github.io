@@ -75,13 +75,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
   z-index: 5;
-  pointer-events: none; /* Let clicks pass through the group if they hit the empty space */
+  pointer-events: none;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+  transform: translate(var(--tx, 0), var(--ty, 0)) scale(var(--scale, 1));
 }
 
 .home-title {
-  font-size: 5rem;
+  font-size: 3.5rem; /* Reduced from 5rem */
   font-weight: var(--fw-black);
   margin: 0;
   text-transform: uppercase;
@@ -89,7 +91,8 @@ body {
   background: linear-gradient(to right, #38bdf8, #818cf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  pointer-events: auto; /* Re-enable clicks for the title text itself if needed */
+  pointer-events: auto;
+  transition: var(--transition-slow);
 }
 
 .center-picture {
@@ -135,21 +138,29 @@ body {
   font-family: var(--ff-primary);
   font-weight: var(--fw-bold);
   font-size: 1rem;
-  transition: var(--transition-fast);
-  transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--dist)) rotate(calc(var(--angle) * -1));
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, opacity 0.5s ease;
+  transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--dist)) rotate(calc(var(--angle) * -1)) translate(var(--tx, 0), var(--ty, 0)) scale(var(--scale, 1));
   box-shadow: var(--bs);
-  z-index: 30; /* High z-index for clickability */
+  z-index: 30;
 }
 
 .node-btn:hover {
   background: var(--clr-accent);
   color: var(--clr-dark);
-  transform: translate(-50%, -50%) rotate(var(--angle)) translate(calc(var(--dist) + 20px)) rotate(calc(var(--angle) * -1)) scale(1.15);
   box-shadow: 0 0 30px var(--clr-accent);
+  z-index: 40;
 }
 
 .node-btn span {
   text-align: center;
+  transition: opacity 0.2s ease;
+}
+
+/* Expanding state to hide inner content and prevent pixelation */
+.expanding-node > span,
+.expanding-node > img {
+  opacity: 0 !important;
+  transition: none !important;
 }
 
 /* Detail View Back Button Positions */
@@ -168,24 +179,28 @@ body {
 }
 
 .home-back-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 30px var(--clr-accent);
+  transform: scale(1.1) translate(var(--back-shift-x, 0), var(--back-shift-y, 0));
+  box-shadow: 0 0 50px var(--clr-accent);
+}
+
+.home-back-btn:active {
+  transform: scale(0.95) translate(var(--back-shift-x, 0), var(--back-shift-y, 0));
 }
 
 .home-back-btn img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: opacity 0.2s ease;
 }
 
-/* Positioning based on the "opposite" logic */
-.opposite-ne { bottom: 40px; left: 40px; }   /* From NE to SW */
-.opposite-east { top: 50%; left: 40px; transform: translateY(-50%); } /* From E to W */
-.opposite-se { top: 40px; left: 40px; }     /* From SE to NW */
-.opposite-sw { top: 40px; right: 40px; }    /* From SW to NE */
-.opposite-west { top: 50%; right: 40px; transform: translateY(-50%); } /* From W to E */
-.opposite-north { bottom: 40px; left: 50%; transform: translateX(-50%); } /* From N to S */
-.opposite-nw { bottom: 40px; right: 40px; } /* From NW to SE */
+.opposite-ne { bottom: 40px; left: 40px; --back-shift-x: 20px; --back-shift-y: -20px; }   /* From NE, so at SW. Return: Up/Right */
+.opposite-east { top: 50%; left: 40px; margin-top: -60px; --back-shift-x: 20px; --back-shift-y: 0; } /* From E, at W. Return: Right */
+.opposite-se { top: 40px; left: 40px; --back-shift-x: 20px; --back-shift-y: 20px; }     /* From SE, at NW. Return: Down/Right */
+.opposite-sw { top: 40px; right: 40px; --back-shift-x: -20px; --back-shift-y: 20px; }    /* From SW, at NE. Return: Down/Left */
+.opposite-west { top: 50%; right: 40px; margin-top: -60px; --back-shift-x: -20px; --back-shift-y: 0; } /* From W, at E. Return: Left */
+.opposite-north { bottom: 40px; left: 50%; margin-left: -60px; --back-shift-x: 0; --back-shift-y: -20px; } /* From N, at S. Return: Up */
+.opposite-nw { bottom: 40px; right: 40px; --back-shift-x: -20px; --back-shift-y: -20px; } /* From NW, at SE. Return: Up/Left */
 
 /* Content Wrapper inside Views */
 .view-content {
