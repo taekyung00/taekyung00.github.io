@@ -248,4 +248,5 @@ transform:
 | 2026-05-05 | `css/style.css`, `js/index.js` | 반응형 레이아웃 개선, 모바일/데스크탑 뷰포트 분기, 노드 배치 타원형으로 조정 |
 | 2026-05-06 | `index.html` | About Me 섹션 내용 업데이트 (Student Programmer 자기소개), 불필요한 시각 요소 제거 |
 | 2026-05-06 | `index.html`, `js/index.js` | Resume 섹션 내용 교체 — Dragonic Tactics 프로듀서/엔지니어, 대한민국 공군 병장, DigiPen 학사 이력 반영. 영/한 번역 데이터 동시 업데이트 |
+| 2026-05-06 | `index.html`, `js/index.js` | 학력 표기 수정 — "B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology"로 정정. 영/한 공통 적용 |
 | 2026-05-06 | `README.md` | AI 에이전트 가이드 문서 최초 생성 |
