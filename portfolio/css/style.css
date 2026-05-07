@@ -73,6 +73,28 @@ body {
   height: 100%;
 }
 
+/* Home corner logo (top-left) */
+.home-corner-logo {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  width: 200px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;   /* 클릭 이벤트 통과 — 노드 간섭 없음 */
+  user-select: none;
+  z-index: 50;
+  transition: opacity var(--transition-fast);
+}
+
+@media (max-width: 768px) {
+  .home-corner-logo {
+    width: 110px;
+    top: 20px;
+    left: 20px;
+  }
+}
+
 .center-group {
   display: flex;
   flex-direction: column;
