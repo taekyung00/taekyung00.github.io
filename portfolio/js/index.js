@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "q2-title": "Secret Node",
             "q2-desc": "Wait for it..."
         },
-        ko: {
+                ko: {
             "home-title": "허태경",
             "home-subtitle": "소프트웨어 엔지니어 & 그래픽스 엔지니어",
             "node-skills": "기술",
@@ -55,25 +55,25 @@ document.addEventListener("DOMContentLoaded", () => {
             "node-q1": "?",
             "node-q2": "?",
             "about-title": "About Me",
-            "about-subtitle": "학생 프로그래머 태경",
-            "about-p1": "사람들의 삶을 더 편하고 이롭게 만드는 도구를 개발할 때 가장 큰 즐거움을 느끼는 학생 프로그래머, 태경입니다.",
-            "about-p2": "현재 C++와 OpenGL을 기반으로 기술적 토대를 다지고 있으며, 이를 활용해 커스텀 2D 엔진을 직접 설계하고 게임 프로젝트를 개발하며 실무 역량을 쌓고 있습니다.",
+            "about-subtitle": "학생 프로그래머 허태경",
+            "about-p1": "사람들의 삶을 더 편리하고 이롭게 만드는 도구를 개발하는 데서 가장 큰 즐거움을 느끼는 학생 프로그래머 허태경입니다.",
+            "about-p2": "현재 C++와 OpenGL을 기반으로 기술적 기반을 다지고 있습니다. 이를 활용해 커스텀 2D 엔진을 직접 설계하고 게임 프로젝트를 개발하며 실무 경험을 쌓고 있습니다.",
             "skills-title": "보유 기술",
             "skill1-title": "C++ Systems Programming",
-            "skill1-desc": "C++의 기초 문법부터 <b>Modern C++</b>의 최신 속성까지 폭넓게 이해하고 있습니다. 하드웨어와 밀접한 <b>low-level 시스템 최적화</b> 및 <b>직접적인 메모리 관리</b>는 물론, <b>TMP</b>(Template Metaprogramming)와 <b>Modules</b> 같은 고수준 추상화 기법을 활용하여 하드웨어 제어와 소프트웨어 설계의 균형을 맞춘 효율적인 프로그램을 개발합니다.",
+            "skill1-desc": "C++의 기초 문법부터 Modern C++의 최신 기능까지 깊이 있게 이해하고 활용합니다. 하드웨어와 밀접한 low-level 시스템 최적화 및 직접적인 메모리 관리는 물론, TMP(Template Metaprogramming)와 Modules 같은 고수준 추상화 기법을 활용하여 하드웨어 제어와 소프트웨어 설계의 균형을 맞춘 효율적인 프로그램을 개발합니다.",
             "skill2-title": "Computer Graphics Development",
-            "skill2-desc": "2D 그래픽 프로그래밍 학습을 통해 기본적인 렌더링 파이프라인을 구축하였으며, 이후 <b>OpenGL</b> 기반의 3D 구현으로 역량을 확장했습니다. <b>선형대수학(linear algebra)</b>을 활용한 정교한 공간 변환 및 그래픽 구현에 능숙하며, <b>Post-processing</b> 및 <b>MSAA</b>(Multisample Anti-Aliasing)와 같은 <b>고급 쉐이더 작성 기술</b>을 통해 시각적 품질과 성능을 동시에 확보하는 최적화된 렌더링 환경을 구축합니다.",
+            "skill2-desc": "2D 그래픽스 프로그래밍 학습을 통해 기본적인 렌더링 파이프라인을 구축하였으며, 이후 OpenGL 기반의 3D 구현으로 역량을 확장했습니다. 선형대수학(linear algebra)을 활용한 정교한 공간 변환 및 그래픽 구현에 능숙하며, Post-processing 및 MSAA(Multisample Anti-Aliasing)와 같은 고급 셰이더 작성 기술을 통해 시각적 품질과 성능을 동시에 확보하는 최적화된 렌더링 환경을 구축합니다.",
             "skill3-title": "Architecture Programming & Engine Development",
-            "skill3-desc": "<b>Dragonic Tactics</b> 프로젝트를 포함한 엔진 개발 과정에서 <b>Singleton</b> 등 주요 디자인 패턴을 적용하고, <b>ECS(Entity Component System)</b> 기반의 고성능 아키텍처를 설계하였습니다. 커스텀 2D 그래픽 파이프라인을 직접 구현하였으며, 특히 렌더링 병목 현상을 해결하기 위해 <b>Batch Rendering</b> 및 <b>Instancing Rendering</b>과 같은 그래픽스 최적화 기법을 적용하여 엔진의 런타임 성능을 극대화한 경험이 있습니다.",
+            "skill3-desc": "<b>Dragonic Tactics</b> 프로젝트를 포함한 엔진 개발 과정에서 Singleton 등 주요 디자인 패턴을 활용하고, ECS(Entity Component System) 기반의 고성능 아키텍처를 설계하였습니다. 커스텀 2D 그래픽스 파이프라인을 직접 구현하였으며, 특히 렌더링 병목 현상을 해결하기 위해 Batch Rendering 및 Instancing Rendering과 같은 그래픽스 최적화 기법을 적용하여 엔진의 런타임 성능을 극대화한 경험이 있습니다.",
             "projects-title": "그래픽스 데모",
-            "projects-subtitle": "고급 렌더링 기법 및 실시간 쉐이더 구현 데모입니다",
+            "projects-subtitle": "고급 렌더링 기법 및 그래픽스 알고리즘 구현 데모입니다.",
             "resume-title": "이력서",
             "resume-download": " PDF 다운로드",
             "resume-exp-title": "경력",
-            "resume-exp1": "<b>Producer &amp; Engine/Graphics Engineer, Dragonic Tactics</b><br>2025년 9월 – 2026년 6월<br><em>대한민국 대구</em><br><b>C++ 및 OpenGL</b>을 활용한 고성능 2D 엔진을 설계하고, <b>ECS 아키텍처</b> 기반 배치 렌더링을 구현하여 런타임 성능을 최적화했습니다.",
-            "resume-exp2": "<b>병장 (ROMAD 전문가), 대한민국 공군</b><br>2022년 8월 – 2024년 5월<br><em>대한민국</em><br>임무 핵심 전술 통신 시스템 및 무선 장비를 관리하며, 고압적인 현장 환경에서 <b>100% 작전 준비 태세</b>를 유지했습니다.",
+            "resume-exp1": "<b>Producer & Engine/Graphics Engineer, Dragonic Tactics</b><br>2025년 9월 – 2026년 6월<br><b>C++ 및 OpenGL</b>을 활용한 고성능 2D 엔진을 설계하고, <b>ECS 아키텍처</b> 기반 배치 렌더링을 구현하여 엔진 성능을 최적화했습니다.",
+            "resume-exp2": "<b>병장 (ROMAD 전문가), 대한민국 공군</b><br>2022년 8월 – 2024년 5월<br>임무 핵심 전술 통신 시스템 및 무선 장비를 관리하며, 고압적인 현장 환경에서 <b>100% 작전 준비 태세</b>를 유지했습니다.",
             "resume-edu-title": "학력",
-            "resume-edu1": "<b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>2022년 3월 – 2028년 4월<br><em>대한민국 대구 &amp; 미국 Redmond, WA</em>",
+            "resume-edu1": "<b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>2022년 3월 – 2028년 4월<br><em>대구, 대한민국 & 미국 Redmond, WA</em>",
             "sns-title": "연락처 및 소셜 미디어",
             "sns-email": "taek020422@gmail.com",
             "q1-title": "준비 중",
@@ -133,11 +133,11 @@ document.addEventListener("DOMContentLoaded", () => {
         switch(targetId) {
             case 'skills': tx = -halfW + offset; ty = halfH - offset; break;
             case 'projects': tx = -halfW + offset; ty = 0; break;
-            case 'resume': tx = -halfW + offset; ty = -halfH + offset; break;
-            case 'sns': tx = halfW - offset; ty = -halfH + offset; break;
-            case 'about': tx = halfW - offset; ty = 0; break;
-            case 'q1': tx = 0; ty = halfH - offset; break;
-            case 'q2': tx = halfW - offset; ty = halfH - offset; break;
+            case 'resume': tx = halfW - offset; ty = halfH - offset; break;
+            case 'sns': tx = halfW - offset; ty = 0; break;
+            case 'about': tx = 0; ty = halfH - offset; break;
+            case 'q1': tx = halfW - offset; ty = -halfH + offset; break;
+            case 'q2': tx = -halfW + offset; ty = -halfH + offset; break;
         }
         return { x: tx, y: ty };
     }
