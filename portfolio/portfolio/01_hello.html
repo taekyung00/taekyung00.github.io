@@ -1,114 +1,339 @@
-<!-- https://youtu.be/_xkSvufmjEs?si=mh-MXT2ZdUasYAYn&t=3416 -->
-<!-- adobe.ly/2GAgF93 -->
-<!-- https://scrimba.com/build-and-deploy-your-portfolio-c012 -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="../img/face.jpg">
-
-    <!-- Help auto scale for desktop & mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taekyung Ho Website</title>
+    <title>CS250 Hello Quad — Taekyung Ho</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    <!-- Normalize the difference across browsers  https://necolas.github.io/normalize.css/ -->
-    <link rel="stylesheet" href="../external/normalize.css">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.7;
+        }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-        integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 40px;
+            text-align: center;
+            border-bottom: 2px solid #4a90d9;
+        }
 
-    <!-- https://fonts.google.com/selection/embed -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
-        rel="stylesheet">
+        header h1 {
+            font-size: 2.8rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
 
-    <link rel="stylesheet" href="../css/style.css">
+        header p {
+            font-size: 1.1rem;
+            color: #a0b8d8;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #0f3460;
+            border: 1px solid #4a90d9;
+            color: #4a90d9;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 6px 4px;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        section {
+            margin-bottom: 70px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #4a90d9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a3a5a;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            color: #7ec8e3;
+            margin: 24px 0 10px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #c8d8e8;
+        }
+
+        ul {
+            padding-left: 22px;
+            margin-bottom: 14px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #c8d8e8;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #2a3a5a;
+            border-radius: 10px;
+            padding: 22px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: #7ec8e3;
+        }
+
+        .card p {
+            font-size: 0.93rem;
+            margin-bottom: 0;
+        }
+
+        code {
+            background: #0f1e35;
+            color: #7ec8e3;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: "Fira Code", "Consolas", monospace;
+            font-size: 0.9em;
+        }
+
+        .demo-wrapper {
+            background: #000;
+            border: 2px solid #4a90d9;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+        }
+
+        .demo-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .demo-hint {
+            text-align: center;
+            font-size: 0.88rem;
+            color: #7a8fa8;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #2a3a5a;
+            color: #556070;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
-
 <body>
-    <header>
-        <div class="logo">
-            <!-- alt text can be blank since the logo is purely decorative and putting something like logo isn't actually helpful -->
-            <img src="../img/cout.png" alt="">
-        </div>
-        <button class="nav-toggle" aria-label="toggle navigation">
-            <span class="hamburger"></span>
-        </button>
-        <nav class="nav">
-            <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="../index.html" class="nav__link">Home</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#skills" class="nav__link">Skills</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#about" class="nav__link">About Me</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#projects" class="nav__link">Projects</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#resume" class="nav__link">Resume</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Introduction -->
-    <section class="intro">
-        <h1 class="section__title section__title--intro">
-            Project <strong>Hello Quad</strong>
-        </h1>
-        <p class="section__subtitle section__subtitle--intro">3D Graphics</p>
-        <img src="../img/portfolio_thumbnails/01_hello.jpg" alt="a picture of this portfolio item" class="intro__img">
+<header>
+    <h1>Hello Quad</h1>
+    <p>CS250 Computer Graphics II &nbsp;|&nbsp; DigiPen Institute of Technology</p>
+    <p style="margin-top:8px;">Taekyung Ho &nbsp;·&nbsp; Spring 2026</p>
+    <div style="margin-top:18px;">
+        <span class="badge">OpenGL ES 3.0</span>
+        <span class="badge">WebGL 2</span>
+        <span class="badge">GLSL</span>
+        <span class="badge">C++20</span>
+        <span class="badge">Emscripten</span>
+    </div>
+</header>
+
+<main>
+
+    <!-- 1. Project Overview -->
+    <section id="overview">
+        <h2>Project Overview</h2>
+        <p>
+            Hello Quad is the first assignment in the CS250 Computer Graphics II series at DigiPen Institute
+            of Technology. The objective is to build the foundational OpenGL rendering pipeline from scratch
+            and use it to display an animated, textured quad on screen.
+        </p>
+        <p>
+            The project targets three platforms simultaneously — Windows (OpenGL 3.3), Web (WebGL 2 via
+            Emscripten), and Linux (OpenGL ES 3.0) — using a shared GLSL ES 3.0 shader codebase and a
+            cross-platform CMake build system.
+        </p>
+
+        <h3>Goals</h3>
+        <ul>
+            <li>Implement the core OpenGL abstraction layer: <code>VertexBuffer</code>, <code>IndexBuffer</code>, <code>VertexArray</code>, <code>Texture</code>.</li>
+            <li>Upload vertex data (position, color, UV) to the GPU and render it with a custom GLSL shader.</li>
+            <li>Add interactive animation driven by mouse input and real-time uniforms.</li>
+            <li>Practice hot-reloading shaders and textures without restarting the application.</li>
+        </ul>
     </section>
 
-    <div class="portfolio-item-individual">
-        <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
-
+    <!-- 2. Tasks Completed -->
+    <section id="tasks">
         <h2>Tasks Completed</h2>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>VertexBuffer</h3>
+                <p>
+                    Wraps an OpenGL VBO. Allocates GPU memory with <code>glBufferData</code> and supports
+                    sub-region updates via <code>glBufferSubData</code>. Uses RAII — the destructor calls
+                    <code>glDeleteBuffers</code>.
+                </p>
+            </div>
+            <div class="card">
+                <h3>IndexBuffer</h3>
+                <p>
+                    Wraps an OpenGL IBO. Stores index type (<code>GL_UNSIGNED_INT</code> etc.) and element
+                    count so <code>DrawIndexed</code> can issue the correct <code>glDrawElements</code> call.
+                </p>
+            </div>
+            <div class="card">
+                <h3>VertexArray</h3>
+                <p>
+                    Manages a VAO. <code>AddVertexBuffer</code> pre-computes the full interleaved stride,
+                    then calls <code>glVertexAttribPointer</code> / <code>glVertexAttribIPointer</code> for
+                    each attribute. Supports instanced rendering via per-attribute divisors.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Texture</h3>
+                <p>
+                    Loads a PNG with <code>stb_image</code> and uploads it via <code>glTexImage2D</code>.
+                    Exposes <code>UseForSlot(n)</code> to bind to any texture unit, and runtime
+                    <code>SetFiltering</code> / <code>SetWrapping</code> helpers.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Vertex Shader Animation</h3>
+                <p>
+                    Accepts a <code>uAngle</code> uniform and applies a 2D rotation matrix to vertex
+                    positions each frame, making the quad spin in response to mouse clicks.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Fragment Shader Animation</h3>
+                <p>
+                    Uses <code>sin(uAngle)</code> to smoothly cycle the <code>mix</code> ratio between
+                    vertex color and texture color, producing a continuous color-blending animation tied
+                    to the rotation state.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Click-driven Physics</h3>
+                <p>
+                    Each left-click adds an angular velocity impulse. The velocity decays each frame via
+                    exponential damping (<code>exp(−1.5 · Δt)</code>), giving a natural spin-and-stop feel
+                    that is frame-rate independent.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Hot Reload</h3>
+                <p>
+                    The <code>assets::Reloader</code> polls shader and texture file timestamps every frame.
+                    Changes are applied instantly while the app is running — no rebuild required.
+                </p>
+            </div>
+        </div>
+
+        <h3>Technologies Used</h3>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li><strong>C++20</strong> — RAII resource management, move semantics, <code>std::span</code></li>
+            <li><strong>OpenGL ES 3.0 / WebGL 2 / OpenGL 3.3</strong> — single GLSL ES 3.0 shader set for all targets</li>
+            <li><strong>SDL2</strong> — window creation, event loop, mouse input via <code>window::input</code> environment</li>
+            <li><strong>Dear ImGui</strong> — in-app debug overlay</li>
+            <li><strong>stb_image</strong> — PNG loading</li>
+            <li><strong>Emscripten</strong> — WebAssembly compilation for the browser demo</li>
+            <li><strong>CMake + Presets</strong> — unified build across Windows, Web, and Linux</li>
         </ul>
+    </section>
 
+    <!-- 3. Reflection -->
+    <section id="reflection">
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
-    </div>
 
-    <div class="portfolio-item-individual">
-        <h2>Demo</h2>
-        <!-- TODO demo the webgl version of the project -->
-        <iframe id="demo" src="../webgl/D01HelloQuad/graphics_fun.html"></iframe>
-    </div>
+        <h3>Challenges</h3>
+        <p>
+            The most subtle bug encountered was in <code>VertexArray::AddVertexBuffer</code>. My first
+            attempt accumulated the stride <em>inside</em> the attribute loop, so each attribute received
+            only a partial stride value. Position and color data were read at the wrong byte offsets,
+            producing a corrupted quad. The fix was to compute the total stride in a separate pre-pass
+            before setting up any attribute pointers.
+        </p>
+        <p>
+            On the build side, WSL's rename permission errors when extracting CMake dependencies to
+            <code>/mnt/c/</code> (NTFS) caused intermittent configure failures. Running only the
+            <code>web-release</code> preset and cleaning the partial <code>_deps_Linux</code> directory
+            resolved the issue.
+        </p>
 
+        <h3>Solutions Implemented</h3>
+        <p>
+            For the unbind convention: <em>setup functions</em> (<code>LoadFromMemory</code>,
+            <code>SetFiltering</code>, <code>SetWrapping</code>) always unbind after modifying GL state,
+            while <em>render functions</em> (<code>UseForSlot</code>) intentionally leave state bound for
+            the upcoming draw call. This consistent pattern prevents accidental state leaks.
+        </p>
+        <p>
+            Frame-rate independent animation is achieved using <code>window::DeltaTime</code> and
+            exponential decay (<code>velocity *= exp(−damping · Δt)</code>) rather than a fixed
+            multiplier, ensuring the same physical behavior at any refresh rate.
+        </p>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <a href="mailto:my.email@digipen.edu" class="footer__link">my.email@digipen.edu</a>
-        <ul class="social-list">
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://linkedin.com/in/mylinkedinid">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://github.com/mygithubid">
-                    <i class="fab fa-github"></i>
-                </a>
-            </li>
-            <!-- Want to list more? search : https://fontawesome.com/v5/search?ic=brands -->
+        <h3>Lessons Learned</h3>
+        <ul>
+            <li>Stride must be the <em>total</em> interleaved vertex size — computed before the attribute setup loop, not during it.</li>
+            <li>The IBO binding is part of VAO state; unbinding the IBO while the VAO is bound would silently break indexed drawing.</li>
+            <li>Exponential damping (<code>exp(−k·Δt)</code>) is the correct frame-rate-independent alternative to a per-frame multiplier.</li>
+            <li>Hot-reloading shaders dramatically shortens the iteration loop when tuning visual effects.</li>
         </ul>
-    </footer>
+    </section>
 
-    <script src="../js/index.js"></script>
+    <!-- 4. Live Demo -->
+    <section id="demo">
+        <h2>Live Demo</h2>
+        <p>Click inside the canvas to give the quad an angular impulse. It will spin and gradually slow to a stop.</p>
+        <div class="demo-wrapper">
+            <iframe
+                src="quad_demo.html?start=hello"
+                allow="autoplay"
+                title="Hello Quad Demo">
+            </iframe>
+        </div>
+        <p class="demo-hint">If the demo does not load, try opening this page from a local web server or GitHub Pages.</p>
+    </section>
+
+</main>
+
+<footer>
+    <p>CS250 Computer Graphics II &nbsp;·&nbsp; DigiPen Institute of Technology &nbsp;·&nbsp; Spring 2026</p>
+    <p style="margin-top:6px;">© 2026 Taekyung Ho. All rights reserved.</p>
+</footer>
 
 </body>
-
 </html>
