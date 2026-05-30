@@ -1,114 +1,350 @@
-<!-- https://youtu.be/_xkSvufmjEs?si=mh-MXT2ZdUasYAYn&t=3416 -->
-<!-- adobe.ly/2GAgF93 -->
-<!-- https://scrimba.com/build-and-deploy-your-portfolio-c012 -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="../img/face.jpg">
-
-    <!-- Help auto scale for desktop & mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS250 Procedural Geometric Modeling — Taekyung Ho</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    <title>Taekyung Ho Website</title>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.7;
+        }
 
-    <!-- Normalize the difference across browsers  https://necolas.github.io/normalize.css/ -->
-    <link rel="stylesheet" href="../external/normalize.css">
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 40px;
+            text-align: center;
+            border-bottom: 2px solid #4a90d9;
+        }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-        integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+        header h1 {
+            font-size: 2.8rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
 
-    <!-- https://fonts.google.com/selection/embed -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
-        rel="stylesheet">
+        header p {
+            font-size: 1.1rem;
+            color: #a0b8d8;
+        }
 
-    <link rel="stylesheet" href="../css/style.css">
+        .badge {
+            display: inline-block;
+            background: #0f3460;
+            border: 1px solid #4a90d9;
+            color: #4a90d9;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 6px 4px;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        section {
+            margin-bottom: 70px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #4a90d9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a3a5a;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            color: #7ec8e3;
+            margin: 24px 0 10px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #c8d8e8;
+        }
+
+        ul {
+            padding-left: 22px;
+            margin-bottom: 14px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #c8d8e8;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #2a3a5a;
+            border-radius: 10px;
+            padding: 22px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: #7ec8e3;
+        }
+
+        .card p {
+            font-size: 0.93rem;
+            margin-bottom: 0;
+        }
+
+        code {
+            background: #0f1e35;
+            color: #7ec8e3;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: "Fira Code", "Consolas", monospace;
+            font-size: 0.9em;
+        }
+
+        .demo-wrapper {
+            background: #000;
+            border: 2px solid #4a90d9;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+        }
+
+        .demo-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .demo-hint {
+            text-align: center;
+            font-size: 0.88rem;
+            color: #7a8fa8;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #2a3a5a;
+            color: #556070;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
-
 <body>
-    <header>
-        <div class="logo">
-            <!-- alt text can be blank since the logo is purely decorative and putting something like logo isn't actually helpful -->
-            <img src="../img/cout.png" alt="">
-        </div>
-        <button class="nav-toggle" aria-label="toggle navigation">
-            <span class="hamburger"></span>
-        </button>
-        <nav class="nav">
-            <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="../index.html" class="nav__link">Home</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#skills" class="nav__link">Skills</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#about" class="nav__link">About Me</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#projects" class="nav__link">Projects</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#resume" class="nav__link">Resume</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Introduction -->
-    <section class="intro">
-        <!-- TODO put the name of the assignment here -->
-        <h1 class="section__title section__title--intro">
-            Project <strong>Procedural Geometric Modeling</strong>
-        </h1>
-        <p class="section__subtitle section__subtitle--intro">3D Graphics</p>
-        <img src="../img/portfolio_thumbnails/02_meshes.jpg" alt="a picture of this portfolio item" class="intro__img">
+<header>
+    <h1>Procedural Geometric Modeling</h1>
+    <p>CS250 Computer Graphics II &nbsp;|&nbsp; DigiPen Institute of Technology</p>
+    <p style="margin-top:8px;">Taekyung Ho &nbsp;·&nbsp; Spring 2026</p>
+    <div style="margin-top:18px;">
+        <span class="badge">OpenGL ES 3.0</span>
+        <span class="badge">WebGL 2</span>
+        <span class="badge">GLSL</span>
+        <span class="badge">C++20</span>
+        <span class="badge">Emscripten</span>
+    </div>
+</header>
+
+<main>
+
+    <!-- 1. Project Overview -->
+    <section id="overview">
+        <h2>Project Overview</h2>
+        <p>
+            Procedural Geometric Modeling is the second assignment in the CS250 Computer Graphics II series
+            at DigiPen Institute of Technology. The goal is to implement six procedural mesh generation
+            algorithms — Plane, Cube, Sphere, Torus, Cylinder, and Cone — and integrate them into an
+            interactive 3D viewer built on top of the OpenGL abstraction layer from the previous assignment.
+        </p>
+        <p>
+            All shapes share a single index buffer generation routine and are rendered with two shader
+            programs: a flat-color shader for wireframe and normal-vector display, and a UV-textured shader
+            for solid surface rendering. The viewer runs on Windows (OpenGL 3.3), Web (WebGL 2 via
+            Emscripten), and Linux (OpenGL ES 3.0) from a shared GLSL ES 3.0 shader codebase.
+        </p>
+
+        <h3>Goals</h3>
+        <ul>
+            <li>Implement <code>build_index_buffer()</code> as a shared quad-to-triangle pattern reused by all shapes.</li>
+            <li>Generate correct vertex positions, surface normals, and UV coordinates for each of the six shapes using parametric equations.</li>
+            <li>Build an interactive demo with real-time stacks/slices controls, wireframe overlay, and normal-vector visualization.</li>
+            <li>Compile without warnings across Clang (Emscripten), GCC, and MSVC with <code>-Werror</code>.</li>
+        </ul>
     </section>
 
-    <div class="portfolio-item-individual">
-        <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
-
+    <!-- 2. Tasks Completed -->
+    <section id="tasks">
         <h2>Tasks Completed</h2>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Index Buffer</h3>
+                <p>
+                    Implemented <code>build_index_buffer(stacks, slices)</code> which generates two
+                    counter-clockwise triangles per quad cell. The resulting pattern is shared by Plane,
+                    Sphere, Torus, Cylinder, and Cone without modification.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Plane</h3>
+                <p>
+                    Grid of <code>(stacks+1)×(slices+1)</code> vertices centered at the origin.
+                    Position: <code>(col−0.5, row−0.5, 0)</code>, normal: <code>(0, 0, 1)</code>,
+                    UV: <code>(col, row)</code>. Backface culling disabled to allow viewing from both sides.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Sphere</h3>
+                <p>
+                    Spherical polar coordinates with radius 0.5. Latitude angle β ∈ [−π/2, π/2] over stacks,
+                    longitude α ∈ [0, 2π) over slices. Normal is <code>position / radius</code> — always
+                    radially outward. Degenerate triangles at poles are silently ignored by the GPU.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Torus</h3>
+                <p>
+                    Parametric surface with major radius R = 0.35 and tube radius r = 0.15.
+                    Position uses a two-angle formula; normal is computed as
+                    <code>(position − tubeCenter) / r</code>, pointing outward from the tube axis.
+                    Supports arbitrary start/end sweep angles.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Cylinder</h3>
+                <p>
+                    Barrel built with side normals <code>(sinα, 0, cosα)</code>, plus two flat caps
+                    generated by <code>add_cap()</code>. Caps use separate vertices with outward normals
+                    <code>(0, ±1, 0)</code> and reversed winding for the bottom cap.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Cone</h3>
+                <p>
+                    Tapered body where the cross-section radius scales as <code>R·(0.5−h)</code>.
+                    Side normals are derived from the slope of the cone's 2D profile:
+                    <code>normalize(sinα, TangentSlope, cosα)</code>. Tip vertices receive a special
+                    normal <code>(0, 1, 0)</code>. Base cap added via <code>add_cap()</code>.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Wireframe &amp; Normals</h3>
+                <p>
+                    <code>convert_to_lines_pattern()</code> converts the triangle index buffer into a
+                    line-pair index buffer for wireframe rendering. A separate normal-vector mesh is
+                    generated at build time. Both passes use the flat-color <code>fill_3d</code> shader.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Material &amp; Camera System</h3>
+                <p>
+                    Four materials (textured, textured-no-cull, wireframe, normals) with MVP uniform
+                    management. Camera smoothly interpolates to the selected shape using exponential
+                    easing on <code>eyePosition</code> and <code>viewDistance</code> each frame.
+                </p>
+            </div>
+        </div>
+
+        <h3>Technologies Used</h3>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li><strong>C++20</strong> — RAII resource management, <code>std::span</code>, <code>std::numbers::pi_v</code></li>
+            <li><strong>OpenGL ES 3.0 / WebGL 2 / OpenGL 3.3</strong> — single GLSL ES 3.0 shader set for all targets</li>
+            <li><strong>GLM</strong> — mat4 projection, view, and model matrix construction</li>
+            <li><strong>SDL2</strong> — window creation and event loop</li>
+            <li><strong>Dear ImGui</strong> — shape selector, display toggles, stacks/slices sliders, rotation controls</li>
+            <li><strong>stb_image</strong> — UV grid texture loading</li>
+            <li><strong>Emscripten</strong> — WebAssembly compilation with embedded assets</li>
+            <li><strong>CMake + Presets</strong> — unified build across Windows, Web, and Linux</li>
         </ul>
+    </section>
 
+    <!-- 3. Reflection -->
+    <section id="reflection">
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
-    </div>
 
-    <div class="portfolio-item-individual">
-        <h2>Demo</h2>
-        <iframe id="demo" src="../webgl/D02ProceduralMeshes/graphics_fun.html?start=meshes" tabindex="-1"></iframe>
-    </div>
+        <h3>Challenges</h3>
+        <p>
+            The main source of difficulty was linear algebra errors — deriving surface normals from
+            first principles for each shape required careful geometric reasoning. The cone in particular
+            demanded working through a 2D cross-section analysis to obtain the correct tangent slope,
+            and index winding order for the cylinder and cone caps had to be reasoned from scratch to
+            ensure consistent front-face orientation.
+        </p>
+        <p>
+            On the build side, the Emscripten toolchain enforced stricter warnings than MSVC
+            (<code>-Wsign-conversion</code>, <code>-Wimplicit-int-float-conversion</code>,
+            <code>-Wdouble-promotion</code>), causing the web-release build to fail even though the
+            Windows debug build passed cleanly.
+        </p>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <a href="mailto:my.email@digipen.edu" class="footer__link">my.email@digipen.edu</a>
-        <ul class="social-list">
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://linkedin.com/in/mylinkedinid">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://github.com/mygithubid">
-                    <i class="fab fa-github"></i>
-                </a>
-            </li>
-            <!-- Want to list more? search : https://fontawesome.com/v5/search?ic=brands -->
+        <h3>Solutions Implemented</h3>
+        <p>
+            For each shape's normal, I returned to the underlying geometric definition — perpendicular
+            to the surface tangent — and re-derived the formula analytically before translating it into
+            code. For the winding order issue, I traced through a small concrete example (4 vertices,
+            2 triangles) to verify CCW orientation before generalizing.
+        </p>
+        <p>
+            The build warnings were resolved by adding explicit <code>static_cast</code> calls wherever
+            signed/unsigned or int/float implicit conversions occurred, and by changing a
+            <code>double</code> constant to <code>float</code> to avoid the double-promotion path.
+        </p>
+
+        <h3>Lessons Learned</h3>
+        <ul>
+            <li>Parametric surface normals are best derived geometrically (perpendicular to the tangent plane) rather than approximated numerically.</li>
+            <li>A single shared <code>build_index_buffer()</code> significantly reduces duplication — all six shapes reuse it unchanged.</li>
+            <li>Strict Clang warnings (<code>-Wconversion</code>, <code>-Wsign-conversion</code>) expose real type mismatches that MSVC silently accepts.</li>
+            <li>Separating cap vertices from barrel vertices (with different normals) is essential for correct lighting on closed surfaces.</li>
         </ul>
-    </footer>
+    </section>
 
-    <script src="../js/index.js"></script>
+    <!-- 4. Live Demo -->
+    <section id="demo">
+        <h2>Live Demo</h2>
+        <p>
+            Select a shape from the dropdown, adjust stacks and slices, and toggle Textured, Wire Frame,
+            and Show Normals to explore the procedural geometry interactively.
+        </p>
+        <div class="demo-wrapper">
+            <iframe
+                src="meshes_demo.html?start=meshes"
+                allow="autoplay"
+                title="Procedural Geometric Modeling Demo">
+            </iframe>
+        </div>
+        <p class="demo-hint">If the demo does not load, try opening this page from a local web server or GitHub Pages.</p>
+    </section>
+
+</main>
+
+<footer>
+    <p>CS250 Computer Graphics II &nbsp;·&nbsp; DigiPen Institute of Technology &nbsp;·&nbsp; Spring 2026</p>
+    <p style="margin-top:6px;">© 2026 Taekyung Ho. All rights reserved.</p>
+</footer>
 
 </body>
-
 </html>
