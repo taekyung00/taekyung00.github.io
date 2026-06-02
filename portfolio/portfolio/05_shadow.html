@@ -1,112 +1,364 @@
-<!-- https://youtu.be/_xkSvufmjEs?si=mh-MXT2ZdUasYAYn&t=3416 -->
-<!-- adobe.ly/2GAgF93 -->
-<!-- https://scrimba.com/build-and-deploy-your-portfolio-c012 -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="../img/face.jpg">
-
-    <!-- Help auto scale for desktop & mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taekyung Ho Website</title>
+    <title>CS250 Shadow Mapping &ndash; Taekyung Ho</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    <!-- Normalize the difference across browsers  https://necolas.github.io/normalize.css/ -->
-    <link rel="stylesheet" href="../external/normalize.css">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.7;
+        }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-        integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 40px;
+            text-align: center;
+            border-bottom: 2px solid #4a90d9;
+        }
 
-    <!-- https://fonts.google.com/selection/embed -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
-        rel="stylesheet">
+        header h1 {
+            font-size: 2.8rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
 
-    <link rel="stylesheet" href="../css/style.css">
+        header p {
+            font-size: 1.1rem;
+            color: #a0b8d8;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #0f3460;
+            border: 1px solid #4a90d9;
+            color: #4a90d9;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 6px 4px;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        section {
+            margin-bottom: 70px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #4a90d9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a3a5a;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            color: #7ec8e3;
+            margin: 24px 0 10px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #c8d8e8;
+        }
+
+        ul {
+            padding-left: 22px;
+            margin-bottom: 14px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #c8d8e8;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #2a3a5a;
+            border-radius: 10px;
+            padding: 22px;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: #7ec8e3;
+        }
+
+        .card p {
+            font-size: 0.93rem;
+            margin-bottom: 0;
+        }
+
+        code {
+            background: #0f1e35;
+            color: #7ec8e3;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: "Fira Code", "Consolas", monospace;
+            font-size: 0.9em;
+            overflow-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .demo-wrapper {
+            background: #000;
+            border: 2px solid #4a90d9;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+        }
+
+        .demo-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .demo-hint {
+            text-align: center;
+            font-size: 0.88rem;
+            color: #7a8fa8;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #2a3a5a;
+            color: #556070;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
-
 <body>
-    <header>
-        <div class="logo">
-            <!-- alt text can be blank since the logo is purely decorative and putting something like logo isn't actually helpful -->
-            <img src="../img/cout.png" alt="">
-        </div>
-        <button class="nav-toggle" aria-label="toggle navigation">
-            <span class="hamburger"></span>
-        </button>
-        <nav class="nav">
-            <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="../index.html" class="nav__link">Home</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#skills" class="nav__link">Skills</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#about" class="nav__link">About Me</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#projects" class="nav__link">Projects</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#resume" class="nav__link">Resume</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Introduction -->
-    <section class="intro">
-        <h1 class="section__title section__title--intro">
-            Project <strong>Shadow Mapping</strong>
-        </h1>
-        <p class="section__subtitle section__subtitle--intro">3D Graphics</p>
-        <img src="../img/portfolio_thumbnails/05_shadow.jpg" alt="a picture of this portfolio item" class="intro__img">
+<header>
+    <h1>Shadow Mapping</h1>
+    <p>CS250 Computer Graphics II &nbsp;|&nbsp; DigiPen Institute of Technology</p>
+    <p style="margin-top:8px;">Taekyung Ho &nbsp;&middot;&nbsp; Spring 2026</p>
+    <div style="margin-top:18px;">
+        <span class="badge">OpenGL ES 3.0</span>
+        <span class="badge">WebGL 2</span>
+        <span class="badge">GLSL</span>
+        <span class="badge">C++20</span>
+        <span class="badge">Emscripten</span>
+    </div>
+</header>
+
+<main>
+
+    <!-- 1. Project Overview -->
+    <section id="overview">
+        <h2>Project Overview</h2>
+        <p>
+            Shadow Mapping is the third assignment in the CS250 Computer Graphics II series
+            at DigiPen Institute of Technology. The goal is to implement a classic two-pass
+            shadow mapping pipeline: in the first pass the scene is rendered from the light's
+            perspective into a depth texture, and in the second pass that depth texture is
+            compared against each fragment's distance from the light to determine whether it
+            lies in shadow.
+        </p>
+        <p>
+            The implementation extends the existing OpenGL abstraction layer with a
+            <code>FrameBuffer</code> class and new <code>Texture</code> loading paths for
+            depth and RGBA render targets. A dedicated <code>Camera</code> struct provides
+            analytically derived view and inverse-view matrices used for both the eye camera
+            and the light camera. Additional debug features include a light frustum wireframe
+            and an on-screen depth map preview.
+        </p>
+
+        <h3>Goals</h3>
+        <ul>
+            <li>Implement a two-pass shadow mapping pipeline with a perspective light source.</li>
+            <li>Extend <code>Texture</code> with <code>LoadAsDepthTexture()</code> and <code>LoadAsRGBA()</code> for off-screen render targets.</li>
+            <li>Implement <code>FrameBuffer</code> with depth and color attachments and completeness checking.</li>
+            <li>Derive <code>Camera::ViewMatrix()</code> and <code>Camera::ToWorldMatrix()</code> analytically without <code>glm::inverse()</code>.</li>
+            <li>Apply exponential fog and gamma correction (1&thinsp;/&thinsp;2.2) in the shadow shader.</li>
+            <li>Compile without warnings on Windows (MSVC) and Web (Emscripten) with <code>-Werror</code>.</li>
+        </ul>
     </section>
 
-    <div class="portfolio-item-individual">
-        <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
-
+    <!-- 2. Tasks Completed -->
+    <section id="tasks">
         <h2>Tasks Completed</h2>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Depth Texture</h3>
+                <p>
+                    <code>Texture::LoadAsDepthTexture()</code> allocates a GPU depth texture using
+                    <code>TexStorage2D</code> on WebGL / OpenGL&nbsp;4.2+ and <code>TexImage2D</code>
+                    otherwise. Sets <code>GL_LINEAR</code> filtering, <code>GL_CLAMP_TO_EDGE</code>
+                    wrapping, and <code>GL_COMPARE_REF_TO_TEXTURE</code> so that the texture can be
+                    bound as <code>sampler2DShadow</code> for hardware depth comparison.
+                </p>
+            </div>
+            <div class="card">
+                <h3>RGBA Color Texture</h3>
+                <p>
+                    <code>Texture::LoadAsRGBA()</code> allocates an empty RGBA8 render target by
+                    delegating to the existing <code>LoadFromMemory()</code> with a <code>nullptr</code>
+                    pixel pointer. Used as the color attachment of the shadow framebuffer to enable
+                    depth-map visualization.
+                </p>
+            </div>
+            <div class="card">
+                <h3>FrameBuffer</h3>
+                <p>
+                    <code>FrameBuffer::LoadWithSpecification()</code> creates an FBO, attaches the
+                    depth texture via <code>GL_DEPTH_ATTACHMENT</code>, optionally attaches a color
+                    texture via <code>GL_COLOR_ATTACHMENT0</code>, and verifies completeness with
+                    <code>glCheckFramebufferStatus</code>. <code>Use(bind)</code> binds or unbinds
+                    the FBO for rendering.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Camera Matrices</h3>
+                <p>
+                    <code>Camera::ViewMatrix()</code> builds the world-to-camera matrix by
+                    assembling column vectors from the Right, Up, and Back basis and their dot
+                    products with Eye. <code>Camera::ToWorldMatrix()</code> is its analytical
+                    inverse &mdash; the transpose of the rotation block with Eye as the translation
+                    column &mdash; computed without <code>glm::inverse()</code>.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Depth Pass</h3>
+                <p>
+                    <code>renderToDepthBuffer()</code> binds the shadow FBO, sets the viewport to
+                    the shadow map dimensions, enables <code>GL_POLYGON_OFFSET_FILL</code> to reduce
+                    shadow acne, and renders the scene using the <code>WriteDepth</code> shader from
+                    the light camera's point of view. Front- or back-face culling can be toggled via
+                    ImGui to trade shadow acne against peter-panning.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Shadow Pass</h3>
+                <p>
+                    <code>renderToScreen()</code> clears the default framebuffer with the fog color,
+                    binds the depth texture to slot&nbsp;0 as <code>sampler2DShadow</code>, and
+                    renders the scene with the <code>Shadow</code> shader. The shader performs a
+                    projective texture lookup, applies Phong lighting scaled by the shadow factor,
+                    then applies exponential fog and gamma correction.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Light Frustum Visualization</h3>
+                <p>
+                    <code>drawLightFrustum()</code> renders an NDC unit cube transformed by
+                    <code>lightCamera.ToWorldMatrix() &times; inverse(lightProjectionMatrix)</code>,
+                    mapping clip-space corners to world space to outline the light's view volume as
+                    a wireframe box. Displayed only in View camera mode.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Depth Map Debug View</h3>
+                <p>
+                    <code>drawDepthTexture()</code> draws a full-screen NDC quad with the
+                    <code>ViewDepth</code> shader, sampling the shadow FBO's color texture (written
+                    by <code>write_depth.frag</code>) to display a linearized grayscale depth map
+                    in a corner of the screen for debugging.
+                </p>
+            </div>
+        </div>
+
+        <h3>Technologies Used</h3>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li><strong>C++20</strong> &ndash; RAII resource management, structured bindings, <code>std::span</code></li>
+            <li><strong>OpenGL ES 3.0 / WebGL 2 / OpenGL 3.3</strong> &ndash; single GLSL ES 3.0 shader set for all targets</li>
+            <li><strong>GLM</strong> &ndash; perspective projection, matrix math for shadow bias and MVP</li>
+            <li><strong>SDL2</strong> &ndash; window creation and event loop</li>
+            <li><strong>Dear ImGui</strong> &ndash; light FOV, near/far sliders, polygon offset, depth bit size, shadow map resolution, camera mode toggle</li>
+            <li><strong>Emscripten</strong> &ndash; WebAssembly compilation with embedded assets</li>
+            <li><strong>CMake + Presets</strong> &ndash; unified build across Windows, Web, and Linux</li>
         </ul>
+    </section>
 
+    <!-- 3. Reflection -->
+    <section id="reflection">
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
-    </div>
 
-    <div class="portfolio-item-individual">
-        <h2>Demo</h2>
-        <iframe id="demo" src="../webgl/D05ShadowMapping/graphics_fun.html?start=shadow" tabindex="-1"></iframe>
-    </div>
+        <h3>Challenges</h3>
+        <p>
+            The primary source of difficulty was linear algebra &mdash; deriving the view and
+            inverse-view matrices analytically, understanding how the shadow bias matrix maps
+            NDC coordinates to texture space, and reasoning through the two-pass coordinate
+            transformation chain from object space all the way to shadow-map UV coordinates.
+        </p>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <a href="mailto:my.email@digipen.edu" class="footer__link">my.email@digipen.edu</a>
-        <ul class="social-list">
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://linkedin.com/in/mylinkedinid">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://github.com/mygithubid">
-                    <i class="fab fa-github"></i>
-                </a>
-            </li>
-            <!-- Want to list more? search : https://fontawesome.com/v5/search?ic=brands -->
+        <h3>Solutions Implemented</h3>
+        <p>
+            For the matrix derivations, I worked through the algebra on paper &mdash; starting
+            from the definition of a rotation matrix and its transpose-inverse property &mdash;
+            before translating each term into GLM column-vector form. Verifying that
+            <code>ViewMatrix() &times; ToWorldMatrix()</code> yields the identity was a useful
+            sanity check.
+        </p>
+        <p>
+            The Emscripten build warning was resolved by auditing all <code>TexImage2D</code>
+            call sites for mismatched signedness and adding explicit casts where needed.
+        </p>
+
+        <h3>Lessons Learned</h3>
+        <ul>
+            <li>Shadow mapping requires careful tracking of coordinate spaces across two separate render passes; drawing the transformation chain on paper first saves debugging time.</li>
+            <li>The shadow bias matrix (scale + translate from [&minus;1,&thinsp;1] to [0,&thinsp;1]) is easy to derive but easy to forget &mdash; omitting it produces no shadows at all.</li>
+            <li><code>GL_TEXTURE_COMPARE_MODE = GL_COMPARE_REF_TO_TEXTURE</code> enables the GPU to perform the depth comparison automatically inside the sampler, eliminating manual comparisons in the shader.</li>
+            <li>Strict Emscripten warnings continue to surface type mismatches that MSVC silently accepts &mdash; testing the web build early catches these before they accumulate.</li>
         </ul>
-    </footer>
+    </section>
 
-    <script src="../js/index.js"></script>
+    <!-- 4. Live Demo -->
+    <section id="demo">
+        <h2>Live Demo</h2>
+        <p>
+            Use the mouse to look around and W/A/S/D to move. Switch between View and Light
+            camera modes, toggle the depth map preview, adjust light FOV and shadow map resolution,
+            and enable the light frustum wireframe to explore the shadow mapping pipeline interactively.
+        </p>
+        <div class="demo-wrapper">
+            <iframe
+                src="shadow_demo.html?start=shadow"
+                allow="autoplay"
+                title="Shadow Mapping Demo">
+            </iframe>
+        </div>
+        <p class="demo-hint">If the demo does not load, try opening this page from a local web server or GitHub Pages.</p>
+    </section>
+
+</main>
+
+<footer>
+    <p>CS250 Computer Graphics II &nbsp;&middot;&nbsp; DigiPen Institute of Technology &nbsp;&middot;&nbsp; Spring 2026</p>
+    <p style="margin-top:6px;">&copy; 2026 Taekyung Ho. All rights reserved.</p>
+</footer>
 
 </body>
-
 </html>
