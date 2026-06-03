@@ -1,112 +1,369 @@
-<!-- https://youtu.be/_xkSvufmjEs?si=mh-MXT2ZdUasYAYn&t=3416 -->
-<!-- adobe.ly/2GAgF93 -->
-<!-- https://scrimba.com/build-and-deploy-your-portfolio-c012 -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="../img/face.jpg">
-
-    <!-- Help auto scale for desktop & mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taekyung Ho Website</title>
+    <title>CS250 Value Noise &ndash; Taekyung Ho</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    <!-- Normalize the difference across browsers  https://necolas.github.io/normalize.css/ -->
-    <link rel="stylesheet" href="../external/normalize.css">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.7;
+        }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-        integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 40px;
+            text-align: center;
+            border-bottom: 2px solid #4a90d9;
+        }
 
-    <!-- https://fonts.google.com/selection/embed -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
-        rel="stylesheet">
+        header h1 {
+            font-size: 2.8rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
 
-    <link rel="stylesheet" href="../css/style.css">
+        header p {
+            font-size: 1.1rem;
+            color: #a0b8d8;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #0f3460;
+            border: 1px solid #4a90d9;
+            color: #4a90d9;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 6px 4px;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        section {
+            margin-bottom: 70px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #4a90d9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a3a5a;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            color: #7ec8e3;
+            margin: 24px 0 10px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #c8d8e8;
+        }
+
+        ul {
+            padding-left: 22px;
+            margin-bottom: 14px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #c8d8e8;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #2a3a5a;
+            border-radius: 10px;
+            padding: 22px;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: #7ec8e3;
+        }
+
+        .card p {
+            font-size: 0.93rem;
+            margin-bottom: 0;
+        }
+
+        code {
+            background: #0f1e35;
+            color: #7ec8e3;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: "Fira Code", "Consolas", monospace;
+            font-size: 0.9em;
+            overflow-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .demo-wrapper {
+            background: #000;
+            border: 2px solid #4a90d9;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+        }
+
+        .demo-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .demo-hint {
+            text-align: center;
+            font-size: 0.88rem;
+            color: #7a8fa8;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #2a3a5a;
+            color: #556070;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
-
 <body>
-    <header>
-        <div class="logo">
-            <!-- alt text can be blank since the logo is purely decorative and putting something like logo isn't actually helpful -->
-            <img src="../img/cout.png" alt="">
-        </div>
-        <button class="nav-toggle" aria-label="toggle navigation">
-            <span class="hamburger"></span>
-        </button>
-        <nav class="nav">
-            <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="../index.html" class="nav__link">Home</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#skills" class="nav__link">Skills</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#about" class="nav__link">About Me</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#projects" class="nav__link">Projects</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#resume" class="nav__link">Resume</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Introduction -->
-    <section class="intro">
-        <h1 class="section__title section__title--intro">
-            Project <strong>Value Noise</strong>
-        </h1>
-        <p class="section__subtitle section__subtitle--intro">3D Graphics</p>
-        <img src="../img/portfolio_thumbnails/06_value.jpg" alt="a picture of this portfolio item" class="intro__img">
+<header>
+    <h1>Value Noise</h1>
+    <p>CS250 Computer Graphics II &nbsp;|&nbsp; DigiPen Institute of Technology</p>
+    <p style="margin-top:8px;">Taekyung Ho &nbsp;&middot;&nbsp; Spring 2026</p>
+    <div style="margin-top:18px;">
+        <span class="badge">OpenGL ES 3.0</span>
+        <span class="badge">WebGL 2</span>
+        <span class="badge">GLSL</span>
+        <span class="badge">C++20</span>
+        <span class="badge">Multithreading</span>
+        <span class="badge">Emscripten</span>
+    </div>
+</header>
+
+<main>
+
+    <!-- 1. Project Overview -->
+    <section id="overview">
+        <h2>Project Overview</h2>
+        <p>
+            Value Noise is an assignment in the CS250 Computer Graphics II series
+            at DigiPen Institute of Technology. The goal is to implement a procedural value
+            noise generator from scratch: a lattice of pseudo-random values is sampled at
+            arbitrary coordinates and smoothly interpolated to produce continuous,
+            tileable noise. The result is generated on the CPU into a texture that is then
+            displayed on a full-screen quad.
+        </p>
+        <p>
+            The core is a templated <code>ValueNoise&lt;T&gt;</code> class that supports 1D, 2D,
+            and 3D evaluation. Each integer lattice point is mapped to a random value through a
+            <code>PermutationHash</code>, and neighboring values are blended using selectable
+            smoothing functions (Linear, Cosine, Smoothstep, Quintic). On top of plain value
+            noise, the demo layers several classic procedural patterns &mdash; Fractal Sum,
+            Turbulence, Marble, and Wood &mdash; built by summing multiple octaves of noise.
+        </p>
+        <p>
+            Because generating a high-resolution texture is expensive, the demo distributes the
+            work across a <code>JobSystem</code> of worker threads on native builds, and falls
+            back to time-sliced chunked generation on single-threaded web builds, keeping the
+            interface responsive while the texture updates.
+        </p>
+
+        <h3>Goals</h3>
+        <ul>
+            <li>Implement a templated <code>ValueNoise&lt;T&gt;</code> supporting <code>Evaluate(x)</code>, <code>Evaluate(x, y)</code>, and <code>Evaluate(x, y, z)</code>.</li>
+            <li>Map lattice coordinates to random values with a wrap-around <code>PermutationHash</code>.</li>
+            <li>Implement linear, bilinear, and trilinear interpolation with selectable smoothing (Linear, Cosine, Smoothstep, Quintic).</li>
+            <li>Build fractal patterns &mdash; Fractal Sum (fBm), Turbulence, Marble, and Wood &mdash; by summing octaves.</li>
+            <li>Generate the noise texture asynchronously via a <code>JobSystem</code> with a chunked fallback for the web.</li>
+            <li>Compile without warnings on Windows (MSVC) and Web (Emscripten) with <code>-Werror</code>.</li>
+        </ul>
     </section>
 
-    <div class="portfolio-item-individual">
-        <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
-
+    <!-- 2. Tasks Completed -->
+    <section id="tasks">
         <h2>Tasks Completed</h2>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Value Noise Core</h3>
+                <p>
+                    <code>ValueNoise&lt;T&gt;</code> stores a <code>std::vector&lt;T&gt;</code> of random
+                    lattice values sized to the noise period. <code>Evaluate()</code> is overloaded
+                    for 1D, 2D, and 3D input, gathering the surrounding lattice values and blending
+                    them to return a smooth value at any fractional coordinate.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Noise Coordinate</h3>
+                <p>
+                    <code>make_noise_coord()</code> splits a float input into a
+                    <code>NoiseCoordinate</code> holding the integer <code>base</code> cell, its
+                    <code>next</code> neighbor, and the fractional <code>interpolant</code> in
+                    [0,&thinsp;1] used to mix between the two lattice values.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Permutation Hash</h3>
+                <p>
+                    <code>PermutationHash</code> converts one, two, or three integer lattice
+                    coordinates into an index into the random value array. It wraps coordinates by
+                    the noise period so the resulting noise tiles seamlessly across that period.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Interpolation &amp; Smoothing</h3>
+                <p>
+                    <code>linear_mix</code>, <code>bilinear_mix</code>, and <code>trilinear_mix</code>
+                    blend 2, 4, and 8 lattice values respectively. <code>fade()</code> reshapes the
+                    raw interpolant with the selected <code>SmoothMethod</code> &mdash; Linear,
+                    Cosine, Smoothstep, or Quintic &mdash; to control the visual smoothness.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Fractal Sum &amp; Turbulence</h3>
+                <p>
+                    Fractal Sum (fBm) accumulates several octaves of noise, scaling frequency by
+                    <code>lacunarity</code> and amplitude by <code>gain</code> each layer.
+                    Turbulence sums the absolute value of signed noise per octave to produce
+                    sharper, billowy detail.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Marble &amp; Wood</h3>
+                <p>
+                    Marble feeds an fBm term into a sine wave of the coordinate to produce veined
+                    bands, while Wood scales a single noise sample and keeps its fractional part to
+                    create concentric grain rings &mdash; both classic procedural texture effects.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Procedural Texture Pipeline</h3>
+                <p>
+                    A <code>Generation</code> state machine (<code>Setup</code> &rarr;
+                    <code>Working</code> &rarr; <code>UploadNewTexture</code> &rarr; <code>Done</code>)
+                    fills an RGBA color buffer, then uploads it with
+                    <code>Texture::UploadAsRGBA()</code>. The texture is drawn on a full-screen quad
+                    with an aspect-correct orthographic projection and adjustable tiling scale.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Multithreaded Generation</h3>
+                <p>
+                    On native builds <code>JobSystem::DoJobs()</code> splits the per-pixel work
+                    across worker threads. When threads are unavailable
+                    (<code>util::CanUseThreads == false</code> on the web), the demo falls back to a
+                    time-sliced loop that generates the texture in chunks across frames.
+                </p>
+            </div>
+        </div>
+
+        <h3>Technologies Used</h3>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li><strong>C++20</strong> &ndash; class templates, <code>std::span</code>, structured bindings, <code>if constexpr</code></li>
+            <li><strong>OpenGL ES 3.0 / WebGL 2 / OpenGL 3.3</strong> &ndash; single GLSL ES 3.0 shader set for all targets</li>
+            <li><strong>GLM</strong> &ndash; <code>glm::vec4</code> noise values, orthographic projection, vector math</li>
+            <li><strong>SDL2</strong> &ndash; window creation and event loop</li>
+            <li><strong>Dear ImGui</strong> &ndash; period dimension, smooth method, texture size, noise dimension, pattern type, tiling scale, and value-set controls</li>
+            <li><strong>JobSystem</strong> &ndash; custom worker-thread pool for parallel texture generation</li>
+            <li><strong>Emscripten</strong> &ndash; WebAssembly compilation with embedded assets</li>
+            <li><strong>CMake + Presets</strong> &ndash; unified build across Windows, Web, and Linux</li>
         </ul>
+    </section>
 
+    <!-- 3. Reflection -->
+    <section id="reflection">
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
-    </div>
 
-    <div class="portfolio-item-individual">
-        <h2>Demo</h2>
-        <iframe id="demo" src="../webgl/D06ValueNoise/graphics_fun.html?start=value" tabindex="-1"></iframe>
-    </div>
+        <h3>Challenges</h3>
+        <p>
+            The main conceptual challenge was reasoning about interpolation across multiple
+            dimensions &mdash; extending the same idea from blending two values in 1D to four in
+            2D and eight in 3D &mdash; and keeping the lattice-coordinate hashing consistent so
+            that the noise stays continuous and tileable. Balancing texture generation cost
+            against interactivity also required care about how work is scheduled per frame.
+        </p>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <a href="mailto:my.email@digipen.edu" class="footer__link">my.email@digipen.edu</a>
-        <ul class="social-list">
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://linkedin.com/in/mylinkedinid">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://github.com/mygithubid">
-                    <i class="fab fa-github"></i>
-                </a>
-            </li>
-            <!-- Want to list more? search : https://fontawesome.com/v5/search?ic=brands -->
+        <h3>Solutions Implemented</h3>
+        <p>
+            I built the interpolation bottom-up, expressing the 2D and 3D cases as nested
+            applications of the 1D mix so each level reused the one below it. Working through the
+            octave-summation math for the fractal patterns on paper clarified how lacunarity and
+            gain shape the final look before tuning them in the demo.
+        </p>
+        <p>
+            For performance I separated generation into a small state machine so the same code
+            path drives both the multithreaded job-based route and the single-threaded chunked
+            fallback, with the choice made at compile time via <code>if constexpr</code>.
+        </p>
+
+        <h3>Lessons Learned</h3>
+        <ul>
+            <li>Higher-dimensional interpolation is just the 1D blend applied recursively &mdash; seeing that structure made the 2D and 3D code straightforward.</li>
+            <li>The choice of smoothing function (especially Quintic) has a large visual impact on how organic the noise looks, despite being a small change in the math.</li>
+            <li>Fractal patterns emerge from very simple rules: summing octaves with decreasing amplitude and increasing frequency produces convincing natural texture.</li>
+            <li>Designing generation as a state machine made it easy to support both threaded and single-threaded targets without duplicating the noise logic.</li>
         </ul>
-    </footer>
+    </section>
 
-    <script src="../js/index.js"></script>
+    <!-- 4. Live Demo -->
+    <section id="demo">
+        <h2>Live Demo</h2>
+        <p>
+            Use the ImGui panel to choose the noise dimension (1D / 2D / 3D), the smoothing
+            method, and the pattern type (Value, Fractal Sum, Turbulence, Marble, Wood). Adjust
+            the period dimension, texture resolution, and tiling scale, sweep the Z input in 3D,
+            and reseed the lattice with random or uniform value sets to explore the generator
+            interactively.
+        </p>
+        <div class="demo-wrapper">
+            <iframe
+                src="value_demo.html?start=value"
+                allow="autoplay"
+                title="Value Noise Demo">
+            </iframe>
+        </div>
+        <p class="demo-hint">If the demo does not load, try opening this page from a local web server or GitHub Pages.</p>
+    </section>
+
+</main>
+
+<footer>
+    <p>CS250 Computer Graphics II &nbsp;&middot;&nbsp; DigiPen Institute of Technology &nbsp;&middot;&nbsp; Spring 2026</p>
+    <p style="margin-top:6px;">&copy; 2026 Taekyung Ho. All rights reserved.</p>
+</footer>
 
 </body>
-
 </html>
