@@ -1,112 +1,375 @@
-<!-- https://youtu.be/_xkSvufmjEs?si=mh-MXT2ZdUasYAYn&t=3416 -->
-<!-- adobe.ly/2GAgF93 -->
-<!-- https://scrimba.com/build-and-deploy-your-portfolio-c012 -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="../img/face.jpg">
-    <!-- Help auto scale for desktop & mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taekyung Ho Website</title>
+    <title>CS250 Gradient Noise &ndash; Taekyung Ho</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    <!-- Normalize the difference across browsers  https://necolas.github.io/normalize.css/ -->
-    <link rel="stylesheet" href="../external/normalize.css">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.7;
+        }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-        integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 40px;
+            text-align: center;
+            border-bottom: 2px solid #4a90d9;
+        }
 
-    <!-- https://fonts.google.com/selection/embed -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
-        rel="stylesheet">
+        header h1 {
+            font-size: 2.8rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
 
-    <link rel="stylesheet" href="../css/style.css">
+        header p {
+            font-size: 1.1rem;
+            color: #a0b8d8;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #0f3460;
+            border: 1px solid #4a90d9;
+            color: #4a90d9;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 6px 4px;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        section {
+            margin-bottom: 70px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #4a90d9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a3a5a;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            color: #7ec8e3;
+            margin: 24px 0 10px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #c8d8e8;
+        }
+
+        ul {
+            padding-left: 22px;
+            margin-bottom: 14px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #c8d8e8;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #2a3a5a;
+            border-radius: 10px;
+            padding: 22px;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: #7ec8e3;
+        }
+
+        .card p {
+            font-size: 0.93rem;
+            margin-bottom: 0;
+        }
+
+        code {
+            background: #0f1e35;
+            color: #7ec8e3;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: "Fira Code", "Consolas", monospace;
+            font-size: 0.9em;
+            overflow-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .demo-wrapper {
+            background: #000;
+            border: 2px solid #4a90d9;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+        }
+
+        .demo-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .demo-hint {
+            text-align: center;
+            font-size: 0.88rem;
+            color: #7a8fa8;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #2a3a5a;
+            color: #556070;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
-
 <body>
-    <header>
-        <div class="logo">
-            <!-- alt text can be blank since the logo is purely decorative and putting something like logo isn't actually helpful -->
-            <img src="../img/cout.png" alt="">
-        </div>
-        <button class="nav-toggle" aria-label="toggle navigation">
-            <span class="hamburger"></span>
-        </button>
-        <nav class="nav">
-            <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="../index.html" class="nav__link">Home</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#skills" class="nav__link">Skills</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#about" class="nav__link">About Me</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#projects" class="nav__link">Projects</a>
-                </li>
-                <li class="nav__item">
-                    <a href="../index.html#resume" class="nav__link">Resume</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Introduction -->
-    <section class="intro">
-        <h1 class="section__title section__title--intro">
-            Project <strong>Gradient Noise</strong>
-        </h1>
-        <p class="section__subtitle section__subtitle--intro">3D Graphics</p>
-        <img src="../img/portfolio_thumbnails/07_gradient.jpg" alt="a picture of this portfolio item"
-            class="intro__img">
+<header>
+    <h1>Gradient Noise</h1>
+    <p>CS250 Computer Graphics II &nbsp;|&nbsp; DigiPen Institute of Technology</p>
+    <p style="margin-top:8px;">Taekyung Ho &nbsp;&middot;&nbsp; Spring 2026</p>
+    <div style="margin-top:18px;">
+        <span class="badge">OpenGL ES 3.0</span>
+        <span class="badge">WebGL 2</span>
+        <span class="badge">GLSL</span>
+        <span class="badge">C++20</span>
+        <span class="badge">Render-to-Texture</span>
+        <span class="badge">Emscripten</span>
+    </div>
+</header>
+
+<main>
+
+    <!-- 1. Project Overview -->
+    <section id="overview">
+        <h2>Project Overview</h2>
+        <p>
+            Gradient Noise is an assignment in the CS250 Computer Graphics II series at DigiPen
+            Institute of Technology. The goal is to implement Improved 3D Perlin (gradient) noise
+            entirely in GLSL and use it to generate seamless, tileable procedural textures.
+            Unlike value noise, gradient noise places a random direction vector at each lattice
+            point and interpolates the dot product of that gradient with the distance to the
+            sample point, producing smoother and more organic results.
+        </p>
+        <p>
+            The noise is generated on the GPU: a fragment shader evaluates 3D Perlin noise for
+            every texel and renders a 2D slice into an off-screen framebuffer backed by a
+            single-channel floating-point (<code>R32F</code>) texture. This required extending the
+            engine's texture and framebuffer abstractions to support new color formats. A fixed
+            permutation table and twelve fixed gradient directions are hard-coded in the shader,
+            and lattice coordinates are wrapped by the period so the texture tiles seamlessly.
+        </p>
+        <p>
+            The generated noise is visualized two ways: as a flat textured quad, and as a 3D
+            terrain surface where a plane mesh is displaced in its vertex shader by sampling the
+            noise as a height map. On top of plain gradient noise, the demo implements the classic
+            Fractal Sum, Turbulence, Marble, and Wood patterns.
+        </p>
+
+        <h3>Goals</h3>
+        <ul>
+            <li>Implement Improved 3D Perlin gradient noise in GLSL using a hard-coded permutation table and twelve fixed gradient directions.</li>
+            <li>Use quintic smoothing and trilinear interpolation, and remap the <code>[-1,1]</code> result to <code>[0,1]</code>.</li>
+            <li>Generate the noise on the GPU into an off-screen <code>R32F</code> framebuffer (render-to-texture).</li>
+            <li>Extend <code>Texture::LoadAsFormat()</code> to support <code>RGBA8</code>, <code>RGBA32F</code>, and <code>R32F</code> formats.</li>
+            <li>Extend <code>FrameBuffer</code> to attach color textures in a configurable format.</li>
+            <li>Implement the Fractal Sum, Turbulence, Marble, and Wood patterns and make the textures tile seamlessly.</li>
+            <li>Visualize the noise as both a textured quad and a displaced 3D surface.</li>
+            <li>Compile without warnings on Windows (MSVC) and Web (Emscripten) with <code>-Werror</code>.</li>
+        </ul>
     </section>
 
-    <div class="portfolio-item-individual">
-        <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
-
+    <!-- 2. Tasks Completed -->
+    <section id="tasks">
         <h2>Tasks Completed</h2>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>3D Perlin Noise Core</h3>
+                <p>
+                    <code>gen_gradient_noise.frag</code> evaluates Improved 3D Perlin noise per
+                    texel: it finds the surrounding lattice cell, computes the gradient dotted with
+                    the distance vector at all eight cube corners, and blends them with quintic
+                    trilinear interpolation to return a value in <code>[-1,1]</code>.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Permutation Table &amp; Hashing</h3>
+                <p>
+                    A 128-entry permutation table (period 64 repeated twice) is hard-coded in the
+                    shader. Ken Perlin's nested indexing hashes the eight corners, and lattice
+                    coordinates are wrapped with <code>&amp; 63</code> so the table stays in range and
+                    the noise repeats with its period &mdash; the key to seamless tiling.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Twelve Fixed Gradients</h3>
+                <p>
+                    Instead of random gradients, the improved algorithm cycles through twelve fixed
+                    directions (the edges of a cube). Each corner's hash selects one gradient via
+                    <code>hash % 12</code>, which is then dotted with the distance vector to give
+                    that corner's contribution.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Quintic Fade &amp; Interpolation</h3>
+                <p>
+                    The fractional cell position is reshaped by the quintic fade
+                    <code>6t&#8309;-15t&#8308;+10t&sup3;</code> before being used as interpolation
+                    weights, giving continuous first and second derivatives across cell boundaries
+                    so the noise has no visible grid artifacts.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Fractal Patterns</h3>
+                <p>
+                    Building on the noise function, the shader implements Fractal Sum (summed
+                    octaves with <code>lacunarity</code> and <code>gain</code>), Turbulence
+                    (summed absolute noise), Marble (a sine of the coordinate distorted by an fBm
+                    term), and Wood (the fractional part of scaled noise).
+                </p>
+            </div>
+            <div class="card">
+                <h3>Texture Format Support</h3>
+                <p>
+                    <code>Texture::LoadAsFormat()</code> allocates textures in <code>RGBA8</code>,
+                    <code>RGBA32F</code>, or <code>R32F</code> using <code>TexStorage2D</code> on
+                    WebGL / OpenGL&nbsp;4.2+ and <code>TexImage2D</code> otherwise, choosing the
+                    matching base format and component type for each.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Floating-Point Render Target</h3>
+                <p>
+                    <code>FrameBuffer</code> was extended with an <code>R32F</code> color component
+                    and a writable <code>ColorTexture()</code> accessor, then attaches that texture
+                    as <code>GL_COLOR_ATTACHMENT0</code> so the fragment shader can render the
+                    floating-point noise values straight into it.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Texture &amp; Surface Views</h3>
+                <p>
+                    <code>simple.vert/.frag</code> draw the noise as a grayscale textured quad,
+                    while <code>surface.vert</code> samples the noise with <code>textureLod</code>
+                    in the vertex shader to displace a plane mesh into a 3D terrain, reusing the
+                    same fragment shader for color.
+                </p>
+            </div>
+        </div>
+
+        <h3>Technologies Used</h3>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li><strong>C++20</strong> &ndash; RAII resource management, <code>std::span</code>, scoped enums</li>
+            <li><strong>OpenGL ES 3.0 / WebGL 2 / OpenGL 3.3</strong> &ndash; single GLSL ES 3.0 shader set for all targets</li>
+            <li><strong>GLSL</strong> &ndash; per-texel Perlin noise, vertex-shader texture displacement, pattern generation</li>
+            <li><strong>Framebuffer / Render-to-Texture</strong> &ndash; off-screen <code>R32F</code> color attachment for GPU noise generation</li>
+            <li><strong>GLM</strong> &ndash; perspective and orthographic projection, camera and model matrices</li>
+            <li><strong>SDL2</strong> &ndash; window creation and event loop</li>
+            <li><strong>Dear ImGui</strong> &ndash; view mode, pattern type, tiling scale, Z slice, texture size, and surface controls</li>
+            <li><strong>Emscripten</strong> &ndash; WebAssembly compilation with embedded assets</li>
+            <li><strong>CMake + Presets</strong> &ndash; unified build across Windows, Web, and Linux</li>
         </ul>
+    </section>
 
+    <!-- 3. Reflection -->
+    <section id="reflection">
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
-    </div>
 
-    <div class="portfolio-item-individual">
-        <h2>Demo</h2>
-        <iframe id="demo" src="../webgl/D07GradientNoise/graphics_fun.html?start=gradient" tabindex="-1"></iframe>
-    </div>
+        <h3>Challenges</h3>
+        <p>
+            The main challenges were reasoning carefully about coordinate spaces &mdash; from
+            texture coordinates to lattice cells to the off-screen render target &mdash; and
+            guaranteeing that the generated texture tiles seamlessly when repeated. Moving the
+            noise computation onto the GPU also meant thinking in terms of a render-to-texture
+            pipeline rather than a CPU loop, including the constraints of floating-point render
+            targets and vertex-shader texture sampling.
+        </p>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <a href="mailto:my.email@digipen.edu" class="footer__link">my.email@digipen.edu</a>
-        <ul class="social-list">
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://linkedin.com/in/mylinkedinid">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://github.com/mygithubid">
-                    <i class="fab fa-github"></i>
-                </a>
-            </li>
-            <!-- Want to list more? search : https://fontawesome.com/v5/search?ic=brands -->
+        <h3>Solutions Implemented</h3>
+        <p>
+            I built the noise function bottom-up &mdash; corner hashing, gradient dot products,
+            then trilinear blending &mdash; and verified each step by first rendering only plain
+            gradient noise before layering the fractal patterns on top. Keeping the lattice period
+            a power of two let a single bitwise wrap guarantee seamless tiling across every octave.
+        </p>
+        <p>
+            For visualization I separated the work into two passes: one fragment shader bakes the
+            noise into the framebuffer, and a second pair of shaders displays it either as a flat
+            texture or as a vertex-displaced surface, reusing the same noise texture for both
+            geometry and color.
+        </p>
+
+        <h3>Lessons Learned</h3>
+        <ul>
+            <li>Gradient noise is smoother than value noise because it interpolates dot products of gradients rather than raw values, forcing the noise to zero at every lattice point.</li>
+            <li>Seamless tiling falls out naturally once lattice coordinates are wrapped by the noise period &mdash; a power-of-two period keeps this true through all fractal octaves.</li>
+            <li>Generating noise on the GPU is dramatically faster than on the CPU, but requires care with floating-point render targets and explicit-LOD texture sampling in vertex shaders.</li>
+            <li>The same noise field can drive completely different looks &mdash; a flat texture or a 3D terrain &mdash; just by how it is sampled and applied.</li>
         </ul>
-    </footer>
+    </section>
 
-    <script src="../js/index.js"></script>
+    <!-- 4. Live Demo -->
+    <section id="demo">
+        <h2>Live Demo</h2>
+        <p>
+            Switch between the Texture and Surface views, and choose the pattern type (Gradient,
+            Fractal Sum, Turbulence, Marble, Wood). Adjust the tiling scale, sweep the Z input to
+            move through slices of the 3D noise, and change the texture resolution. In Surface
+            view, use the mouse to look around and W/A/S/D to fly over the displaced terrain, and
+            tune the area, height, and mesh resolution.
+        </p>
+        <div class="demo-wrapper">
+            <iframe
+                src="gradient_demo.html?start=gradient"
+                allow="autoplay"
+                title="Gradient Noise Demo">
+            </iframe>
+        </div>
+        <p class="demo-hint">If the demo does not load, try opening this page from a local web server or GitHub Pages.</p>
+    </section>
+
+</main>
+
+<footer>
+    <p>CS250 Computer Graphics II &nbsp;&middot;&nbsp; DigiPen Institute of Technology &nbsp;&middot;&nbsp; Spring 2026</p>
+    <p style="margin-top:6px;">&copy; 2026 Taekyung Ho. All rights reserved.</p>
+</footer>
 
 </body>
-
 </html>
