@@ -1,0 +1,217 @@
+================================================================================
+DRAGONIC TACTICS - PRESS KIT
+================================================================================
+
+You are the dragon. A party of adventurers has come to slay you in your own
+lair - don't let them leave.
+
+  >> Play the Demo: https://taekyung00.github.io/dragonic_tactics_presskit/
+
+Header banner: files/header.png
+
+
+--------------------------------------------------------------------------------
+FACTSHEET
+--------------------------------------------------------------------------------
+
+Developer
+  CodePistols - a 5-person student team at DigiPen Institute of Technology
+
+Elevator pitch
+  A D&D-style turn-based tactics game where you play as the dragon and fend off
+  a party of AI-controlled adventurers invading your lair.
+
+Release date
+  In development / playtest - 2026
+
+Platforms
+  Windows (standalone) and Web (WebAssembly, runs in the browser)
+
+Price
+  Free (playtest demo)
+
+System requirements
+  Windows 10 (64-bit) or a modern WebAssembly-capable browser; OpenGL-capable
+  GPU; ~150 MB storage. Lightweight 2D engine - no high-end hardware required.
+
+Website
+  https://taekyung00.github.io/dragonic_tactics_presskit/
+
+
+--------------------------------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------------------------------
+
+Dragonic Tactics flips the classic fantasy dungeon crawl on its head: instead
+of a party of heroes hunting a monster, you are the monster. You command a
+powerful dragon defending its lair against a band of adventurers - a Fighter, a
+Cleric, a Rogue, and a Wizard - who arrive to slay you. Hold the lair, and the
+invaders fall; lose the dragon, and they win.
+
+Combat is a turn-based, grid-based tactics duel built on tabletop foundations.
+Every attack and defense is resolved with dice rolls, every move spends movement
+and action points, and every spell is drawn from a limited pool of leveled spell
+slots. The dragon is a one-versus-many powerhouse - high health, long reach, and
+the deepest spellbook in the game - but the adventurers coordinate, heal, buff,
+debuff, and flank, so raw power alone is not enough.
+
+The dragon's toolkit rewards planning over button-mashing. Upcasting lets you
+spend a higher-level slot to amplify a spell, so you constantly weigh burst power
+against conserving resources. Terrain-altering spells let you reshape the
+battlefield - raise walls to cut off attackers or spit lava to deny ground -
+while status effects like Fear, Curse, Blessing, Haste, and Stealth swing the
+math of every exchange.
+
+Each of the four invaders is driven by its own hand-authored AI, designed as a
+decision flowchart before it was ever coded: the Fighter presses the attack, the
+Cleric heals and buffs from the back, the Rogue strikes from stealth, and the
+Wizard kites from range. They read the board and react, so no two fights play out
+the same way.
+
+The game runs across three escalating encounters - a single duel, a two-enemy
+skirmish, and a full four-adventurer raid - on a custom C++20 OpenGL engine that
+ships to both Windows and the browser via WebAssembly.
+
+
+--------------------------------------------------------------------------------
+HOW TO PLAY
+--------------------------------------------------------------------------------
+
+Objective. You control the dragon. Defeat every adventurer that invades the map
+to win the encounter. If the dragon is killed, the invaders win.
+
+The turn. The dragon and the AI take alternating turns. On your turn you have
+Movement (tiles you can travel), Action Points (AP, spent on attacks and spells),
+and Spell Slots (by level). Movement and AP refill at the start of each turn, but
+spell slots do not recover on their own - spend them deliberately.
+
+Core loop. Position the dragon, pick targets, and resolve attacks via dice rolls;
+reshape the board with walls and lava; apply status effects to tilt the odds;
+then end your turn and watch the adventurers respond. Upcasting lets you sink a
+higher-level slot into a spell to boost its effect when a fight demands it.
+
+Controls.
+  - Left-click  - select the dragon/tiles, move, and use skills (move by clicking
+                  a highlighted tile; cast by clicking a spell icon then a target).
+  - Right-click - cancel the current skill/range selection.
+  - Slot bar (bottom of the screen) - basic attack, spell slots, and the End Turn
+                  button.
+  - Hover a character - inspect HP, AP, Movement, and Spell Slots; hover the
+                  dragon to preview its movement range.
+  - Esc - pause / return to menu.   F2 - screenshot.
+
+
+--------------------------------------------------------------------------------
+FEATURES
+--------------------------------------------------------------------------------
+
+  - Play as the dragon. A role-reversal premise - you're the boss monster,
+    defending your lair against the heroes.
+  - Asymmetric one-vs-many tactics. A single powerful dragon against a coordinated
+    party of up to four adventurers.
+  - Tabletop-style combat. Dice-based attack/defense resolution, action points,
+    movement, and leveled spell slots.
+  - Deep dragon spellbook with upcasting. Spend higher-level slots to amplify
+    spells - trade burst power against resource conservation.
+  - Battlefield manipulation. Terrain-altering spells raise walls and spit lava to
+    reshape the grid; knockback shoves enemies into hazards.
+  - 9 status effects (Fear, Curse, Blessing, Haste, Stealth, Lifesteal, Frenzy,
+    Exhaustion, Purify) and 20+ spells across the cast.
+  - Four hand-authored AI archetypes. Fighter (aggressor), Cleric (support/healer),
+    Rogue (stealth striker), and Wizard (ranged kiter) - each designed as a
+    decision flowchart.
+  - Three escalating encounters. A 5x7 duel, an 8x8 two-enemy skirmish, and a
+    10x10 four-adventurer raid.
+  - Custom engine, two platforms. Built on an in-house C++20 OpenGL engine; runs
+    on Windows and in the browser via WebAssembly.
+
+
+--------------------------------------------------------------------------------
+DEMO
+--------------------------------------------------------------------------------
+
+Play in your browser - the full game runs via WebAssembly. Click inside the frame
+to give it keyboard focus. (First load is large, ~40 MB, so allow a moment.)
+
+  Open the demo: https://taekyung00.github.io/dragonic_tactics_presskit/
+
+System requirements
+  - OS:      Windows 10 (64-bit), or any modern browser with WebAssembly support
+  - CPU:     Any modern x64 processor
+  - RAM:     2 GB
+  - GPU:     OpenGL-capable integrated graphics
+  - Storage: ~150 MB
+
+
+--------------------------------------------------------------------------------
+VIDEOS
+--------------------------------------------------------------------------------
+
+Gameplay video (YouTube): https://www.youtube.com/watch?v=SHi-bUXfeEI
+
+
+--------------------------------------------------------------------------------
+IMAGES
+--------------------------------------------------------------------------------
+
+Screenshots and animated effects:
+  - files/playscene1.png  - the dragon faces the full adventuring party
+  - files/playscene2.png  - lava reshaping the battlefield
+  - files/playscene3.png  - a narrow duel encounter
+  - files/meteor.gif      - Meteor spell effect
+  - files/particle.gif    - Particle / hit effect
+
+All screenshots & GIFs (zip): files/dragonic_tactics_images.zip
+
+
+--------------------------------------------------------------------------------
+LOGO & ICON
+--------------------------------------------------------------------------------
+
+Game logo      - files/logo.png
+Banner         - files/header.png
+
+Character renders (pixel art):
+  - Dragon (player) - files/dragon.png
+  - Fighter         - files/fighter.png
+  - Cleric          - files/cleric.png
+  - Rogue           - files/rogue.png
+  - Wizard          - files/wizard.png
+
+Logo & icon assets (zip): files/dragonic_tactics_logo.zip
+  Contains logo, banner, all five character renders, and the elevator-pitch
+  graphic. Screenshots and GIFs are in the Images section; the gameplay video is
+  in the Videos section.
+
+
+--------------------------------------------------------------------------------
+SELECTED ARTICLES
+--------------------------------------------------------------------------------
+
+"This is really great game, better than League of Legends."
+  - Sungwoo Cho (Friend)
+
+"I really love Dragon, let's go Dragon!!!!!"
+  - Seohyeon Min (Friend)
+
+
+--------------------------------------------------------------------------------
+TEAM
+--------------------------------------------------------------------------------
+
+CodePistols - a 5-person student team at DigiPen Institute of Technology.
+
+  - Taekyung Ho   - Producer
+  - Junyoung Ki   - Tech Lead
+  - Seungju Song  - Designer
+  - Ginam Park    - Test Lead
+  - Sangyoon Lee  - QA
+
+
+--------------------------------------------------------------------------------
+CONTACT
+--------------------------------------------------------------------------------
+
+Business inquiries: taek020422@gmail.com
+
+================================================================================
