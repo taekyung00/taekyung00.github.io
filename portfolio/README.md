@@ -26,21 +26,20 @@ portfolio/                          # 프로젝트 루트
 ├── README.md                       # 이 가이드 파일
 ├── index.html                      # 메인 SPA 진입점 (모든 뷰 포함)
 ├── css/
-│   └── style.css                   # 통합 스타일시트 (디자인 시스템 전체)
+│   ├── tokens.css                  # ★ 디자인 토큰 단일 출처 (색·글꼴·전환속도)
+│   ├── style.css                   # 홈 화면 레이아웃
+│   └── portfolio-page.css          # 프로젝트 상세 페이지 공통 스타일
 ├── js/
 │   └── index.js                    # 전체 인터랙션 로직 (뷰 전환, i18n, 애니메이션)
 ├── portfolio/                      # 프로젝트 상세 서브 페이지
 │   ├── 01_hello.html               # Hello Quad (3D 기초)
 │   ├── 02_meshes.html              # Meshes 데모
-│   ├── 03_fog.html                 # Fog 데모
-│   ├── 04_toon.html                # Toon Shading 데모
 │   ├── 05_shadow.html              # Shadow 데모
 │   ├── 06_value.html               # Value 데모
 │   └── 07_gradient.html            # Gradient 데모
 ├── img/
 │   ├── face.jpg                    # 프로필 사진 (홈 중앙 + Back 버튼 이미지)
-│   ├── cout.png                    # C++ cout 이미지 (홈 좌상단 로고)
-│   ├── portfolio_thumbnails/       # 01~07 프로젝트 썸네일 JPG
+│   ├── portfolio_thumbnails/       # 프로젝트 썸네일 JPG
 ├── docs/
 │   ├── Resume.pdf                  # 실제 이력서 (다운로드용)
 │   └── Resume.docx                 # 이력서 원본
@@ -71,10 +70,24 @@ portfolio/                          # 프로젝트 루트
 
 ---
 
+## 🎨 무엇을 바꾸려면 어디를 고치나
+
+| 하고 싶은 것 | 고칠 곳 |
+|---|---|
+| 사이트 전체 색감 | `css/tokens.css` **한 곳** (홈 + 상세 페이지 모두 따라옴) |
+| 전환 애니메이션 속도 | `css/tokens.css` 의 `--dur-*` (JS 가 이 값을 읽어 씀) |
+| 홈 화면 전체 크기 | `css/style.css` 의 `--node-radius` 한 줄 |
+| 상세 페이지 레이아웃 | `css/portfolio-page.css` |
+| 영문 문구 | `index.html` 본문 (JS 가 여기서 읽어감) |
+| 한국어 문구 | `js/index.js` 의 `ko` 객체 |
+
+---
+
 ## 📑 변경 이력
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-21 | 전반 | 디자인 토큰을 `css/tokens.css` 로 단일화(색상 리터럴 0개), 상세 페이지 인라인 CSS 5벌(약 720줄) 을 `css/portfolio-page.css` 로 통합, 상세 페이지에 홈 복귀 링크 추가, 영문 문구 중복 제거(HTML 을 원본으로), 애니메이션 타이밍 토큰화, 미완성 상태로 공개돼 있던 `03_fog`/`04_toon` 삭제 |
 | 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | 노드 각도/전환 코너/back 버튼 위치를 개수 기반 자동 계산으로 전환(노드 추가·제거 용이화), 누락 시 조용히 깨지던 `opposite-south` 추가 및 i18n 누락 경고 |
 | 2026-09-21 | `index.html`, `css/style.css` | 홈 좌상단 `cout.png` 로고 제거, 노드 정원형 배치, 레이아웃 크기를 `--node-radius` 기준 비례 계산으로 통일 |
 | 2026-09-21 | `js/index.js` | 노드 호버 시 히트박스가 커서 밖으로 밀려나 깜빡이던 문제 수정(제자리 확대로 변경) |

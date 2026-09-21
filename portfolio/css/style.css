@@ -1,36 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 :root {
-  --ff-primary: 'Outfit', sans-serif;
-  --ff-secondary: "Source Code Pro", monospace;
+  /* 색·글꼴·전환 속도는 css/tokens.css 가 단일 출처다. 여기에는 홈 화면
+     레이아웃에만 쓰이는 값만 둔다. */
 
-  --fw-reg: 300;
-  --fw-bold: 700;
-  --fw-black: 900;
-
-  --clr-light: #ffffff;
-  --clr-dark: #0f172a;
-  --clr-accent: #38bdf8;
-  --clr-bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --clr-glass: rgba(255, 255, 255, 0.05);
-  --clr-glass-border: rgba(255, 255, 255, 0.1);
-
-  --bs: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-fast: 0.3s ease;
-
-  /* Every home-layout size (orbit radius, node diameter, photo, title/
-     subtitle font, node font) is derived from this ONE value via calc()
-     below, instead of each having its own independent clamp(). That keeps
-     every ratio between them exactly fixed at any browser zoom or window
-     size — nothing can drift out of proportion or make text spill past a
-     node's edge, because everything grows/shrinks together by construction.
-     The base is in px so browser zoom actually scales the whole layout (a
-     vmin-only size is zoom-invariant, and it also pushed the small fonts
-     under the browser's minimum-font-size floor, which then enlarged only
-     the text and broke the proportions). 39vmin caps it so the ring can
-     never overflow: the top node reaches R + half a node, which has to
-     stay inside half the viewport height. */
+  /* 노드 궤도 반지름. 홈 화면의 모든 크기(노드 지름, 노드 글자, 사진,
+     제목/부제목, 간격)가 이 값의 비율로 calc() 계산되므로, 홈 전체를
+     키우거나 줄이려면 이 한 줄만 바꾸면 된다.
+     px 기준이라 브라우저 확대/축소가 실제로 레이아웃을 키우고 줄인다.
+     39vmin 상한은 링이 화면 밖으로 나가지 않도록 막는다: 12시 노드가
+     R + 노드 반지름 만큼 뻗으므로 화면 높이 절반 안에 들어와야 한다. */
   --node-radius: min(345px, 39vmin);
 }
 
@@ -94,7 +73,7 @@ body {
   gap: calc(var(--node-radius) * 0.06);
   z-index: 5;
   pointer-events: none;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+  transition: transform var(--dur-node-fly) var(--ease-emphasized), opacity 0.5s ease;
   transform: translate(var(--tx, 0), var(--ty, 0)) scale(var(--scale, 1));
 }
 
@@ -104,7 +83,7 @@ body {
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: linear-gradient(to right, #38bdf8, #818cf8);
+  background: linear-gradient(to right, var(--clr-accent), var(--clr-accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   pointer-events: auto;
@@ -116,7 +95,7 @@ body {
 .home-subtitle {
   font-size: calc(var(--node-radius) * 0.05);
   font-weight: var(--fw-medium);
-  color: #94a3b8;
+  color: var(--clr-text-muted);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.115em;
@@ -132,7 +111,7 @@ body {
   border-radius: calc(var(--node-radius) * 0.135);
   overflow: hidden;
   border: 5px solid var(--clr-accent);
-  box-shadow: 0 0 60px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 60px var(--clr-accent-glow);
   transition: var(--transition-fast);
   pointer-events: auto;
 }
@@ -180,7 +159,7 @@ body {
   font-family: var(--ff-primary);
   font-weight: var(--fw-bold);
   font-size: calc(var(--node-size) * 0.15);
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, opacity 0.5s ease;
+  transition: transform var(--dur-node-fly) var(--ease-emphasized), background 0.3s ease, opacity 0.5s ease;
   /* --dist defaults to the shared --node-radius, giving every node the same
      orbit radius (a true circle); only --angle differs per node. */
   --dist: var(--node-radius);
@@ -286,7 +265,7 @@ body {
 
 /* When Korean is active */
 .toggle-switch.ko-active {
-  background: rgba(48, 236, 200, 0.2);
+  background: color-mix(in srgb, var(--clr-accent) 20%, transparent);
   border-color: var(--clr-accent);
 }
 
@@ -378,7 +357,7 @@ h2.section__title {
 
 .section__subtitle {
   font-size: 1.2rem;
-  color: #94a3b8;
+  color: var(--clr-text-muted);
   margin-bottom: 1.5rem; /* Reduced from 2rem */
   text-align: center;
   display: block;
@@ -456,7 +435,7 @@ h2.section__title {
 }
 
 .resume-item b {
-  color: #f8fafc;
+  color: var(--clr-light);
 }
 
 /* SNS Styles */
@@ -523,7 +502,7 @@ h2.section__title {
 .service p {
   line-height: 1.8; /* Significantly increased line-height */
   font-size: 1rem;
-  color: #e2e8f0;
+  color: var(--clr-text);
   word-break: keep-all; /* Prevents awkward breaks in Korean words */
   overflow-wrap: break-word;
   letter-spacing: -0.01em; /* Subtle letter-spacing for premium feel */
@@ -543,7 +522,7 @@ h2.section__title {
 
 .btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 20px var(--clr-accent-glow);
 }
 
 /* Responsive adjustments */

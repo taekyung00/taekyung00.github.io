@@ -3,6 +3,13 @@
 // 노드를 추가/제거하면 각도·전환 방향·back 버튼 위치가 모두 여기서 다시
 // 계산되므로, 나머지 노드는 손댈 필요가 없다.
 
+// 애니메이션 시간의 단일 출처는 css/tokens.css 의 --dur-* 토큰이다.
+// 여기서는 그 값을 읽어 setTimeout 에 쓰고, 인라인 transition 에는 var() 를
+// 그대로 넘긴다. 속도를 바꾸려면 tokens.css 만 고치면 JS 도 따라온다.
+function cssMs(token) {
+    return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(token)) * 1000;
+}
+
 // 대각선이 아닌(축에 가까운) 성분은 0으로 눌러 가장자리 중앙에 붙게 한다.
 const axisSign = (v) => (Math.abs(v) < 0.35 ? 0 : Math.sign(v));
 
@@ -53,46 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const centerGroup = document.querySelector(".center-group");
     const homeTitle = document.querySelector(".home-title");
     
-    // --- i18n Translation Data ---
-    const translations = {
-        en: {
-            "home-title": "Taekyung Ho",
-            "home-subtitle": "Software Engineer & Graphics Engineer",
-            "node-skills": "Skills",
-            "node-projects": "Graphics",
-            "node-resume": "Resume",
-            "node-sns": "Social Media",
-            "node-about": "About Me",
-            "node-q1": "?",
-            "node-q2": "?",
-            "about-title": "About Me",
-            "about-subtitle": "Student Programmer Taekyung",
-            "about-p1": "I am Taekyung, a student programmer who finds the greatest joy in developing tools that make people's lives easier and more beneficial.",
-            "about-p2": "I am currently building my technical foundation based on C++ and OpenGL. Leveraging these skills, I am gaining practical experience by designing a custom 2D engine from scratch and developing game projects.",
-            "skills-title": "SKILLS",
-            "skill1-title": "C++ Systems Programming",
-            "skill1-desc": "I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.",
-            "skill2-title": "Computer Graphics Development",
-            "skill2-desc": "I built a foundational rendering pipeline through 2D graphics programming and later expanded my capabilities to <b>OpenGL</b>-based 3D implementation. Proficient in sophisticated spatial transformations and graphics using <b>linear algebra</b>, I build optimized rendering environments that secure both visual quality and performance through <b>advanced shader writing techniques</b> like <b>Post-processing</b> and <b>MSAA</b>.",
-            "skill3-title": "Architecture Programming & Engine Development",
-            "skill3-desc": "During engine development, including the <b>Dragonic Tactics</b> project, I applied major design patterns such as <b>Singleton</b> and designed a high-performance architecture based on <b>ECS (Entity Component System)</b>. I directly implemented a custom 2D graphics pipeline and maximized the engine's runtime performance by applying graphics optimization techniques like <b>Batch Rendering</b> and <b>Instancing Rendering</b> to resolve rendering bottlenecks.",
-            "projects-title": "Graphics Demos",
-            "projects-subtitle": "Advanced rendering techniques and real-time shader demonstrations",
-            "resume-title": "Resume",
-            "resume-download": " Download PDF",
-            "resume-exp-title": "Experience",
-            "resume-exp1": "<b>Producer &amp; Engine/Graphics Engineer, Dragonic Tactics</b><br>Sept 2025 – June 2026<br><em>Daegu, Korea</em><br>Architected a high-performance 2D engine using <b>C++ and OpenGL</b> with <b>ECS architecture</b>, implementing batch rendering to optimize runtime performance.",
-            "resume-exp2": "<b>Staff Sergeant (ROMAD Specialist), Republic of Korea Air Force</b><br>Aug 2022 – May 2024<br><em>South Korea</em><br>Managed mission-critical tactical communication systems and radio equipment, ensuring <b>100% operational readiness</b> in high-pressure field environments.",
-            "resume-edu-title": "Education",
-            "resume-edu1": "<b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>March 2022 – April 2028<br><em>Daegu, Korea &amp; Redmond, WA, USA</em>",
-            "sns-title": "Connect with Me",
-            "sns-email": "taek020422@gmail.com",
-            "q1-title": "Coming Soon",
-            "q1-desc": "This section is under development.",
-            "q2-title": "Secret Node",
-            "q2-desc": "Wait for it..."
-        },
-                ko: {
+    // --- i18n ---
+    // 영문은 index.html 의 내용이 원본이다. 최초 로드 때 DOM 에서 읽어두므로
+    // 여기에 영문을 또 적지 않는다(예전엔 두 벌이 따로 놀아 6군데가 어긋나 있었다).
+    // 새 문구를 추가할 때는 HTML 에 data-i18n 을 달고, 아래에 한국어만 넣으면 된다.
+    const ko = {
             "home-title": "허태경",
             "home-subtitle": "소프트웨어 엔지니어 & 그래픽스 엔지니어",
             "node-skills": "기술",
@@ -128,8 +100,13 @@ document.addEventListener("DOMContentLoaded", () => {
             "q1-desc": "이 섹션은 현재 개발 중입니다.",
             "q2-title": "비밀 노드",
             "q2-desc": "조금만 기다려주세요..."
-        }
     };
+
+    const en = {};
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        en[el.getAttribute("data-i18n")] = el.innerHTML.trim();
+    });
+    const translations = { en, ko };
 
     let currentLang = "en";
     const langSwitch = document.getElementById("lang-toggle-btn");
@@ -283,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 switchView(target);
                 isAnimating = false;
-            }, 300); // Reduced from 500ms to 300ms for even faster transition
+            }, cssMs("--dur-view-swap"));
         });
     });
 
@@ -297,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // 1. The clicked back button expands massively
             btn.classList.add("expanding-node");
             btn.style.pointerEvents = "none"; // Prevent the giant bubble from intercepting mouse events
-            btn.style.transition = "transform 1.1s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease";
+            btn.style.transition = "transform var(--dur-back-expand) var(--ease-emphasized), background var(--transition-fast)";
             btn.style.transform = `scale(30)`;
             
             // 2. The detail page content shrinks towards the opposite corner (the original node position)
@@ -306,7 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const contentWrapper = btn.closest('.view').querySelector('.content-wrapper');
             if (contentWrapper) {
-                contentWrapper.style.transition = "transform 1.0s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease";
+                contentWrapper.style.transition = "transform var(--dur-back-shrink) var(--ease-emphasized), opacity var(--transition-slow)";
                 contentWrapper.style.transform = `translate(${-corner.x}px, ${-corner.y}px) scale(0)`;
                 contentWrapper.style.opacity = "0";
             }
@@ -349,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     isAnimating = false;
                 });
                 
-                // WAIT for the detail view to completely fade out (var(--transition-slow) is 0.6s)
+                // 상세 view 가 완전히 사라진 뒤에 잔여 스타일을 정리한다
                 setTimeout(() => {
                     // Instantly snap the hidden detail view elements back to normal without animation
                     btn.style.transition = "none";
@@ -367,8 +344,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         btn.style.pointerEvents = "auto"; // Restore pointer events
                         if (contentWrapper) contentWrapper.style.transition = "";
                     }, 50);
-                }, 1000); // Wait 1000ms to ensure the crossfade and slower expansion is totally finished
-            }, 450); // Increased from 300ms to 450ms to match the slower animation speed
+                }, cssMs("--dur-back-cleanup"));
+            }, cssMs("--dur-back-swap"));
         });
     });
 });

@@ -15,6 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
     <!-- 브라우저 캐시 무시용 버전. css/js 수정 시 함께 올릴 것 -->
+    <!-- tokens.css 가 먼저 와야 style.css 가 토큰을 읽을 수 있다 -->
+    <link rel="stylesheet" href="css/tokens.css?v=7" />
     <link rel="stylesheet" href="css/style.css?v=7" />
 </head>
 
@@ -76,7 +78,7 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--about" data-i18n="about-title">Who I am</h2>
+                    <h2 class="section__title section__title--about" data-i18n="about-title">About Me</h2>
                     <p class="section__subtitle section__subtitle--about" data-i18n="about-subtitle">
                         Student Programmer Taekyung
                     </p>
@@ -103,21 +105,15 @@
                     <div class="services">
                         <div class="service">
                             <h3 data-i18n="skill1-title">C++ Systems Programming</h3>
-                            <p data-i18n="skill1-desc">
-                                I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.
-                            </p>
+                            <p data-i18n="skill1-desc">I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.</p>
                         </div>
                         <div class="service">
                             <h3 data-i18n="skill2-title">Computer Graphics Development</h3>
-                            <p data-i18n="skill2-desc">
-                                I built a foundational rendering pipeline through 2D graphics programming and later expanded my capabilities to <b>OpenGL</b>-based 3D implementation. Proficient in sophisticated spatial transformations and graphics using <b>linear algebra</b>, I build optimized rendering environments that secure both visual quality and performance through <b>advanced shader writing techniques</b> like <b>Post-processing</b> and <b>MSAA</b>.
-                            </p>
+                            <p data-i18n="skill2-desc">I built a foundational rendering pipeline through 2D graphics programming and later expanded my capabilities to <b>OpenGL</b>-based 3D implementation. Proficient in sophisticated spatial transformations and graphics using <b>linear algebra</b>, I build optimized rendering environments that secure both visual quality and performance through <b>advanced shader writing techniques</b> like <b>Post-processing</b> and <b>MSAA</b>.</p>
                         </div>
                         <div class="service">
                             <h3 data-i18n="skill3-title">Architecture Programming & Engine Development</h3>
-                            <p data-i18n="skill3-desc">
-                                During engine development, including the <b>Dragonic Tactics</b> project, I applied major design patterns such as <b>Singleton</b> and designed a high-performance architecture based on <b>ECS (Entity Component System)</b>. I directly implemented a custom 2D graphics pipeline and maximized the engine's runtime performance by applying graphics optimization techniques like <b>Batch Rendering</b> and <b>Instancing Rendering</b> to resolve rendering bottlenecks.
-                            </p>
+                            <p data-i18n="skill3-desc">During engine development, including the <b>Dragonic Tactics</b> project, I applied major design patterns such as <b>Singleton</b> and designed a high-performance architecture based on <b>ECS (Entity Component System)</b>. I directly implemented a custom 2D graphics pipeline and maximized the engine's runtime performance by applying graphics optimization techniques like <b>Batch Rendering</b> and <b>Instancing Rendering</b> to resolve rendering bottlenecks.</p>
                         </div>
                     </div>
                 </div>
@@ -131,22 +127,14 @@
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--projects" data-i18n="projects-title">My Projects</h2>
-                    <p class="section__subtitle section__subtitle--projects" data-i18n="projects-subtitle">
-                        A selection of my range of projects
-                    </p>
+                    <h2 class="section__title section__title--projects" data-i18n="projects-title">Graphics Demos</h2>
+                    <p class="section__subtitle section__subtitle--projects" data-i18n="projects-subtitle">Advanced rendering techniques and real-time shader demonstrations</p>
                     <div class="portfolio-grid">
                         <a href="portfolio/01_hello.html" class="portfolio__item">
                             <img src="img/portfolio_thumbnails/01_hello.jpg" alt="" class="portfolio__img" />
                         </a>
                         <a href="portfolio/02_meshes.html" class="portfolio__item">
                             <img src="img/portfolio_thumbnails/02_meshes.jpg" alt="" class="portfolio__img" />
-                        </a>
-                        <a href="portfolio/03_fog.html" class="portfolio__item">
-                            <img src="img/portfolio_thumbnails/03_fog.jpg" alt="" class="portfolio__img" />
-                        </a>
-                        <a href="portfolio/04_toon.html" class="portfolio__item">
-                            <img src="img/portfolio_thumbnails/04_toon.jpg" alt="" class="portfolio__img" />
                         </a>
                         <a href="portfolio/05_shadow.html" class="portfolio__item">
                             <img src="img/portfolio_thumbnails/05_shadow.jpg" alt="" class="portfolio__img" />
@@ -176,28 +164,14 @@
                     <div class="resume-section">
                         <h3 data-i18n="resume-exp-title">Experience</h3>
                         <div class="resume-item">
-                            <p data-i18n="resume-exp1">
-                                <b>Producer &amp; Engine/Graphics Engineer, Dragonic Tactics</b><br>
-                                Sept 2025 ??June 2026<br>
-                                <em>Daegu, Korea</em><br>
-                                Architected a high-performance 2D engine using <b>C++ and OpenGL</b> with <b>ECS architecture</b>, implementing batch rendering to optimize runtime performance.
-                            </p>
+                            <p data-i18n="resume-exp1"><b>Producer &amp; Engine/Graphics Engineer, Dragonic Tactics</b><br>Sept 2025 – June 2026<br><em>Daegu, Korea</em><br>Architected a high-performance 2D engine using <b>C++ and OpenGL</b> with <b>ECS architecture</b>, implementing batch rendering to optimize runtime performance.</p>
                         </div>
                         <div class="resume-item">
-                            <p data-i18n="resume-exp2">
-                                <b>Staff Sergeant (ROMAD Specialist), Republic of Korea Air Force</b><br>
-                                Aug 2022 ??May 2024<br>
-                                <em>South Korea</em><br>
-                                Managed mission-critical tactical communication systems and radio equipment, ensuring <b>100% operational readiness</b> in high-pressure field environments.
-                            </p>
+                            <p data-i18n="resume-exp2"><b>Staff Sergeant (ROMAD Specialist), Republic of Korea Air Force</b><br>Aug 2022 – May 2024<br><em>South Korea</em><br>Managed mission-critical tactical communication systems and radio equipment, ensuring <b>100% operational readiness</b> in high-pressure field environments.</p>
                         </div>
                         <h3 data-i18n="resume-edu-title">Education</h3>
                         <div class="resume-item">
-                            <p data-i18n="resume-edu1">
-                                <b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>
-                                March 2022 ??April 2028<br>
-                                <em>Daegu, Korea &amp; Redmond, WA, USA</em>
-                            </p>
+                            <p data-i18n="resume-edu1"><b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>March 2022 – April 2028<br><em>Daegu, Korea &amp; Redmond, WA, USA</em></p>
                         </div>
                     </div>
                 </div>

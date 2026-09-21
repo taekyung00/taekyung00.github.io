@@ -38,15 +38,22 @@ The 8 `opposite-*` classes cover 8 compass directions, so past 8 nodes two views
 - Translated strings are **not** in the HTML; they live inline in `js/index.js` as `translations.en` / `translations.ko` objects, keyed by the string used in each element's `data-i18n="..."` attribute.
 - To add or change copy: add/update the `data-i18n` attribute on the HTML element, then add matching entries to **both** `translations.en` and `translations.ko`. `updateLanguage()` sets `innerHTML` (not `textContent`), so translation strings may include inline tags like `<b>`/`<br>`.
 
-### Styling (`css/style.css`)
-- Single stylesheet; theme values (colors, fonts, shadows, transition timing) are CSS custom properties on `:root`.
-- `index.html` loads it with a cache-busting query string (`css/style.css?v=3`) — bump this version when shipping CSS changes, since GitHub Pages/browsers otherwise cache the file aggressively.
+### Styling — three files, one source of truth
+- **`css/tokens.css`** holds every color, font, shadow and transition duration as a `:root` custom property. Nothing else in the codebase contains a color literal, so a palette change is a single-file edit. Both the home page and the project pages load it **first**, before their own stylesheet.
+- **`css/style.css`** is home-screen layout only. Its `:root` keeps just `--node-radius`; every home dimension (node diameter, node font, photo, title/subtitle, gaps) is a `calc()` ratio of it, so the whole home screen scales from one line. It is px-based so browser zoom actually resizes it, capped at `39vmin` so the node ring can never overflow the viewport height.
+- **`css/portfolio-page.css`** is shared by all `portfolio/*.html` detail pages. These used to carry ~150 lines of identical inline `<style>` each; don't reintroduce per-page styles.
+- Animation durations live in `tokens.css` as `--dur-*`. `js/index.js` reads them with `cssMs()` for its `setTimeout`s and passes `var(--dur-…)` straight into inline `transition` strings, so timing is never hardcoded in two places.
+- `index.html` cache-busts with `?v=N` on both CSS and JS — bump it when shipping changes, since GitHub Pages caches aggressively.
 - `external/normalize.css` is a vendored reset; don't hand-edit it.
 
+### Text content and i18n
+- English is authored **in `index.html`** as the element's own content. On load, `js/index.js` reads every `[data-i18n]` element's `innerHTML` into the `en` table — so English exists in exactly one place and can't drift.
+- Korean lives in the `ko` object in `js/index.js`. Adding a string means: put it in the HTML with a `data-i18n` key, then add the Korean. A missing key logs an `[i18n]` console warning.
+
 ### Graphics demo pages (`portfolio/*.html`)
-- `portfolio/01_hello.html` through `07_gradient.html` are standalone, self-contained detail pages (each has its own inline `<style>`) describing individual graphics/coursework projects (WebGL/OpenGL, C++). They're linked from the "Graphics" view's `.portfolio-grid` in `index.html`.
-- Several of these embed a live demo via `<iframe>`, pointing either to a local sibling file (`quad_demo.html`, `meshes_demo.html`, `shadow_demo.html`, `value_demo.html`, `gradient_demo.html`) or to `../webgl/<Project>/graphics_fun.html`.
-- **Known incomplete state**: the local `*_demo.html` iframe targets currently exist as empty (0-byte) placeholder files, and the referenced `../webgl/` directory does not exist yet in the repo. This is a known gap, tracked in `TODO.txt` ("그래픽 데모 수정하기" — fix graphics demos). Don't assume these iframes currently render anything.
+- `01_hello`, `02_meshes`, `05_shadow`, `06_value`, `07_gradient` are the project detail pages, linked from the "Graphics" view's `.portfolio-grid`. They share `css/portfolio-page.css` and each starts with a `.home-link` back to `../index.html`. (`03_fog` and `04_toon` were deleted — they were unfilled template copies with broken styling and placeholder contact details.)
+- Each embeds a live demo via `<iframe>` pointing at a local sibling file (`quad_demo.html`, `meshes_demo.html`, `shadow_demo.html`, `value_demo.html`, `gradient_demo.html`).
+- **Known incomplete state**: those `*_demo.html` targets are empty (0-byte) placeholders, so no iframe currently renders anything. Tracked in `TODO.txt` ("그래픽 데모 수정하기").
 
 ## Other notes
 - `TODO.txt` and `README.md` (a Korean "AI agent guide") track outstanding work items and a duplicate description of the directory/node layout; `README.md` also documents the node-position table this file summarizes above.
