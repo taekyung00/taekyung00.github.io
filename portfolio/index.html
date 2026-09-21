@@ -14,8 +14,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
-    <!-- 브라우저 캐시 무시를 위해 v=3 추가 -->
-    <link rel="stylesheet" href="css/style.css?v=3" />
+    <!-- 브라우저 캐시 무시용 버전. css/js 수정 시 함께 올릴 것 -->
+    <link rel="stylesheet" href="css/style.css?v=7" />
 </head>
 
 <body data-view="home">
@@ -23,7 +23,6 @@
         <!-- Home View -->
         <section id="home" class="view active">
             <div class="home-content">
-                <img src="img/cout.png" alt="C++ cout logo" class="home-corner-logo">
                 <div class="lang-toggle-container">
                     <span class="lang-label en-label active">ENG</span>
                     <div class="toggle-switch" id="lang-toggle-btn">
@@ -39,28 +38,32 @@
                     <p class="home-subtitle" data-i18n="home-subtitle">Software Engineer & Graphics Engineer</p>
                 </div>
                 
+                <!-- 노드 추가/제거: 아래 button 하나를 넣거나 지우기만 하면 됩니다.
+                     각도(원형 배치)는 개수에 맞춰 js/index.js 가 자동 계산하고,
+                     해당 view 의 back 버튼 위치도 자동으로 잡힙니다.
+                     같이 해줘야 할 일: 같은 data-target 을 id 로 갖는 <section class="view">
+                     추가 + js/index.js 의 translations 에 en/ko 문구 추가. -->
                 <nav class="node-nav">
-                    <!-- 칠각형 형태에서 양옆(Graphics, About Me)은 420px, 대각선 상단(Skills, ?)은 360px로 벌려 타원형 배치를 획득 -->
-                    <button class="node-btn" data-target="skills" id="node-skills" style="--angle: -38.6deg; --dist: 360px;">
-                        <span data-i18n="node-skills">Skills</span>
-                    </button>
-                    <button class="node-btn" data-target="projects" id="node-projects" style="--angle: 12.8deg; --dist: 420px;">
-                        <span data-i18n="node-projects">Graphics</span>
-                    </button>
-                    <button class="node-btn" data-target="resume" id="node-resume" style="--angle: 218.4deg; --dist: 360px;">
-                        <span data-i18n="node-resume">Resume</span>
-                    </button>
-                    <button class="node-btn" data-target="sns" id="node-sns" style="--angle: 167deg; --dist: 420px;">
-                        <span data-i18n="node-sns">Social Media</span>
-                    </button>
-                    <button class="node-btn" data-target="about" id="node-about" style="--angle: -90deg; --dist: 300px;">
+                    <button class="node-btn" data-target="about">
                         <span data-i18n="node-about">About Me</span>
                     </button>
-                    <button class="node-btn" data-target="q1" id="node-q1" style="--angle: 115.6deg; --dist: 300px;">
+                    <button class="node-btn" data-target="skills">
+                        <span data-i18n="node-skills">Skills</span>
+                    </button>
+                    <button class="node-btn" data-target="projects">
+                        <span data-i18n="node-projects">Graphics</span>
+                    </button>
+                    <button class="node-btn" data-target="q2">
+                        <span data-i18n="node-q2">?</span>
+                    </button>
+                    <button class="node-btn" data-target="q1">
                         <span data-i18n="node-q1">?</span>
                     </button>
-                    <button class="node-btn" data-target="q2" id="node-q2" style="--angle: 64.2deg; --dist: 300px;">
-                        <span data-i18n="node-q2">?</span>
+                    <button class="node-btn" data-target="sns">
+                        <span data-i18n="node-sns">Social Media</span>
+                    </button>
+                    <button class="node-btn" data-target="resume">
+                        <span data-i18n="node-resume">Resume</span>
                     </button>
                 </nav>
             </div>
@@ -69,7 +72,7 @@
         <!-- About Me View -->
         <section id="about" class="view">
             <div class="view-content">
-                <button class="home-back-btn opposite-north" data-target="home">
+                <button class="home-back-btn" data-target="home">
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
@@ -92,7 +95,7 @@
         <!-- Skills View -->
         <section id="skills" class="view">
             <div class="view-content">
-                <button class="home-back-btn opposite-ne" data-target="home">
+                <button class="home-back-btn" data-target="home">
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
@@ -124,7 +127,7 @@
         <!-- Projects View -->
         <section id="projects" class="view">
             <div class="view-content">
-                <button class="home-back-btn opposite-east" data-target="home">
+                <button class="home-back-btn" data-target="home">
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
@@ -162,7 +165,7 @@
         <!-- Resume View -->
         <section id="resume" class="view">
             <div class="view-content">
-                <button class="home-back-btn opposite-nw" data-target="home">
+                <button class="home-back-btn" data-target="home">
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
@@ -204,7 +207,7 @@
         <!-- SNS View -->
         <section id="sns" class="view">
             <div class="view-content">
-                <button class="home-back-btn opposite-west" data-target="home">
+                <button class="home-back-btn" data-target="home">
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
@@ -229,7 +232,7 @@
         <!-- Question View 1 -->
         <section id="q1" class="view">
             <div class="view-content">
-                <button class="home-back-btn opposite-sw" data-target="home">
+                <button class="home-back-btn" data-target="home">
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
@@ -242,7 +245,7 @@
         <!-- Question View 2 -->
         <section id="q2" class="view">
             <div class="view-content">
-                <button class="home-back-btn opposite-se" data-target="home">
+                <button class="home-back-btn" data-target="home">
                     <img src="img/face.jpg" alt="Home">
                 </button>
                 <div class="content-wrapper">
@@ -253,7 +256,7 @@
         </section>
     </div>
 
-    <script src="js/index.js"></script>
+    <script src="js/index.js?v=7"></script>
 </body>
 
 </html>

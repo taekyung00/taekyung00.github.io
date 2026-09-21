@@ -18,6 +18,20 @@
   --bs: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
   --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: 0.3s ease;
+
+  /* Every home-layout size (orbit radius, node diameter, photo, title/
+     subtitle font, node font) is derived from this ONE value via calc()
+     below, instead of each having its own independent clamp(). That keeps
+     every ratio between them exactly fixed at any browser zoom or window
+     size — nothing can drift out of proportion or make text spill past a
+     node's edge, because everything grows/shrinks together by construction.
+     The base is in px so browser zoom actually scales the whole layout (a
+     vmin-only size is zoom-invariant, and it also pushed the small fonts
+     under the browser's minimum-font-size floor, which then enlarged only
+     the text and broke the proportions). 39vmin caps it so the ring can
+     never overflow: the top node reaches R + half a node, which has to
+     stay inside half the viewport height. */
+  --node-radius: min(345px, 39vmin);
 }
 
 *, *::before, *::after {
@@ -73,33 +87,11 @@ body {
   height: 100%;
 }
 
-/* Home corner logo (top-left) */
-.home-corner-logo {
-  position: absolute;
-  top: 32px;
-  left: 32px;
-  width: 200px;
-  height: auto;
-  opacity: 0.9;
-  pointer-events: none;   /* 클릭 이벤트 통과 — 노드 간섭 없음 */
-  user-select: none;
-  z-index: 50;
-  transition: opacity var(--transition-fast);
-}
-
-@media (max-width: 768px) {
-  .home-corner-logo {
-    width: 110px;
-    top: 20px;
-    left: 20px;
-  }
-}
-
 .center-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: calc(var(--node-radius) * 0.06);
   z-index: 5;
   pointer-events: none;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
@@ -107,11 +99,11 @@ body {
 }
 
 .home-title {
-  font-size: clamp(1.8rem, 6vmin, 2.5rem); /* Changed to vmin to react to height */
+  font-size: calc(var(--node-radius) * 0.115);
   font-weight: var(--fw-black);
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 0.05em;
   background: linear-gradient(to right, #38bdf8, #818cf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -122,12 +114,12 @@ body {
 }
 
 .home-subtitle {
-  font-size: clamp(0.75rem, 2.5vmin, 0.95rem); /* Changed to vmin */
+  font-size: calc(var(--node-radius) * 0.05);
   font-weight: var(--fw-medium);
   color: #94a3b8;
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 0.115em;
   opacity: 0.8;
   pointer-events: auto;
   line-height: 1.2;
@@ -135,9 +127,9 @@ body {
 }
 
 .center-picture {
-  width: 280px;
-  height: 280px;
-  border-radius: 60px;
+  width: calc(var(--node-radius) * 0.66);
+  height: calc(var(--node-radius) * 0.66);
+  border-radius: calc(var(--node-radius) * 0.135);
   overflow: hidden;
   border: 5px solid var(--clr-accent);
   box-shadow: 0 0 60px rgba(56, 189, 248, 0.4);
@@ -153,6 +145,7 @@ body {
 
 /* Node Navigation */
 .node-nav {
+  --n: 7; /* js/index.js 가 실제 노드 개수로 덮어쓴다 */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -162,9 +155,19 @@ body {
 }
 
 .node-btn {
+  /* Node diameter and font both derive from --node-radius, so the font
+     stays a fixed fraction of the node's own size at every scale — the
+     independent clamp()s this used to have could drift apart from each
+     other and let text spill past the circle at some zoom levels. */
+  --node-size: calc(var(--node-radius) * 0.32);
+  /* --i(순번)는 js/index.js 가 DOM 순서대로, --n(전체 개수)은 .node-nav 에
+     넣어준다(--n 은 상속받아야 하므로 여기서 선언하면 안 된다).
+     덕분에 노드를 추가/제거해도 나머지 각도를 손으로 고칠 필요가 없다. */
+  --i: 0;
+  --angle: calc(360deg / var(--n) * var(--i) - 90deg);
   position: absolute;
-  width: 100px; /* Reduced from 120px to save space */
-  height: 100px;
+  width: var(--node-size);
+  height: var(--node-size);
   border-radius: 50%;
   background: var(--clr-glass);
   backdrop-filter: blur(15px);
@@ -176,9 +179,11 @@ body {
   justify-content: center;
   font-family: var(--ff-primary);
   font-weight: var(--fw-bold);
-  font-size: 0.9rem; /* Slightly smaller font */
+  font-size: calc(var(--node-size) * 0.15);
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, opacity 0.5s ease;
-  /* Simplified transform, avoiding aggressive vh that caused issues */
+  /* --dist defaults to the shared --node-radius, giving every node the same
+     orbit radius (a true circle); only --angle differs per node. */
+  --dist: var(--node-radius);
   transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--dist)) rotate(calc(var(--angle) * -1)) translate(var(--tx, 0), var(--ty, 0)) scale(var(--scale, 1));
   box-shadow: var(--bs);
   z-index: 30;
@@ -192,6 +197,13 @@ body {
 }
 
 .node-btn span {
+  /* Fixed proportion of the node's own diameter, not shrink-to-fit — this
+     is what makes a label wrap the same way at every scale instead of
+     sometimes fitting on one line and sometimes crowding the circle's edge.
+     Wide enough that "Graphics" stays on one line, narrow enough that
+     "Social Media" always breaks into two. */
+  width: calc(var(--node-size) * 0.78);
+  line-height: 1.15;
   text-align: center;
   transition: opacity 0.2s ease;
 }
@@ -305,6 +317,7 @@ body {
 .opposite-sw { top: 40px; right: 40px; --back-shift-x: -20px; --back-shift-y: 20px; }    /* From SW, at NE. Return: Down/Left */
 .opposite-west { top: 50%; right: 40px; margin-top: -60px; --back-shift-x: -20px; --back-shift-y: 0; } /* From W, at E. Return: Left */
 .opposite-north { bottom: 40px; left: 50%; margin-left: -60px; --back-shift-x: 0; --back-shift-y: -20px; } /* From N, at S. Return: Up */
+.opposite-south { top: 40px; left: 50%; margin-left: -60px; --back-shift-x: 0; --back-shift-y: 20px; }   /* From S, at N. Return: Down */
 .opposite-nw { bottom: 40px; right: 40px; --back-shift-x: -20px; --back-shift-y: -20px; } /* From NW, at SE. Return: Up/Left */
 
 /* Content Wrapper inside Views */
@@ -535,9 +548,6 @@ h2.section__title {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .home-title { font-size: 2.5rem; }
-  .center-picture { width: 180px; height: 180px; }
-  .node-btn { width: 80px; height: 80px; font-size: 0.75rem; }
   .home-back-btn { width: 80px; height: 80px; }
   .view-content { padding: 40px 20px; }
   .content-wrapper { padding: 1.5rem; }

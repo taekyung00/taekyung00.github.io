@@ -1,3 +1,51 @@
+// ── 노드 원형 배치 ────────────────────────────────────────────────
+// DOM 순서가 곧 시계방향 배치 순서이고, 첫 노드가 12시(-90deg)에 놓인다.
+// 노드를 추가/제거하면 각도·전환 방향·back 버튼 위치가 모두 여기서 다시
+// 계산되므로, 나머지 노드는 손댈 필요가 없다.
+
+// 대각선이 아닌(축에 가까운) 성분은 0으로 눌러 가장자리 중앙에 붙게 한다.
+const axisSign = (v) => (Math.abs(v) < 0.35 ? 0 : Math.sign(v));
+
+function nodeButtons() {
+    return [...document.querySelectorAll(".node-btn")];
+}
+
+// data-target 에 해당하는 노드가 원 위에서 놓인 각도. 없으면 null.
+function nodeAngle(target) {
+    const btns = nodeButtons();
+    const i = btns.findIndex((b) => b.dataset.target === target);
+    return i < 0 ? null : -90 + (360 / btns.length) * i;
+}
+
+// 노드가 있는 방향 -> back 버튼을 붙일 위치 클래스(노드의 반대편).
+function backBtnClass(angleDeg) {
+    const rad = (angleDeg * Math.PI) / 180;
+    const key = `${axisSign(Math.cos(rad))},${axisSign(Math.sin(rad))}`;
+    return {
+        "0,-1": "opposite-north",
+        "1,-1": "opposite-ne",
+        "1,0": "opposite-east",
+        "1,1": "opposite-se",
+        "0,1": "opposite-south",
+        "-1,1": "opposite-sw",
+        "-1,0": "opposite-west",
+        "-1,-1": "opposite-nw",
+    }[key];
+}
+
+(() => {
+    const nav = document.querySelector(".node-nav");
+    const btns = nodeButtons();
+    nav.style.setProperty("--n", btns.length);
+    btns.forEach((btn, i) => btn.style.setProperty("--i", i));
+
+    document.querySelectorAll(".view").forEach((view) => {
+        const back = view.querySelector(".home-back-btn");
+        const angle = nodeAngle(view.id);
+        if (back && angle !== null) back.classList.add(backBtnClass(angle));
+    });
+})();
+
 document.addEventListener("DOMContentLoaded", () => {
     const views = document.querySelectorAll(".view");
     const nodeBtns = document.querySelectorAll(".node-btn");
@@ -94,6 +142,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const key = el.getAttribute("data-i18n");
             if (translations[currentLang][key]) {
                 el.innerHTML = translations[currentLang][key]; // innerHTML allows formatting like <br>
+            } else {
+                console.warn(`[i18n] '${currentLang}' 번역 누락: ${key}`);
             }
         });
         
@@ -122,24 +172,21 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLanguage();
 
     
-    // Helper to get corner translation based on target view ID
+    // 전환 애니메이션이 향하는 지점: 노드가 놓인 방향의 정반대 코너.
     function getTargetCornerTranslation(targetId) {
+        const angle = nodeAngle(targetId);
+        if (angle === null) return { x: 0, y: 0 };
+
         const halfW = window.innerWidth / 2;
         const halfH = window.innerHeight / 2;
         // The back button is 120x120, its center is 60px from the 40px margin = 100px from edge.
         const offset = 100;
-        
-        let tx = 0, ty = 0;
-        switch(targetId) {
-            case 'skills': tx = -halfW + offset; ty = halfH - offset; break;
-            case 'projects': tx = -halfW + offset; ty = 0; break;
-            case 'resume': tx = halfW - offset; ty = halfH - offset; break;
-            case 'sns': tx = halfW - offset; ty = 0; break;
-            case 'about': tx = 0; ty = halfH - offset; break;
-            case 'q1': tx = halfW - offset; ty = -halfH + offset; break;
-            case 'q2': tx = -halfW + offset; ty = -halfH + offset; break;
-        }
-        return { x: tx, y: ty };
+        const rad = (angle * Math.PI) / 180;
+
+        return {
+            x: axisSign(-Math.cos(rad)) * (halfW - offset),
+            y: axisSign(-Math.sin(rad)) * (halfH - offset),
+        };
     }
 
     let isAnimating = false;
@@ -179,10 +226,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // Hovered node itself slightly grows and moves towards the corner
-            btn.style.setProperty("--tx", `${corner.x * 0.1}px`);
-            btn.style.setProperty("--ty", `${corner.y * 0.1}px`);
-            btn.style.setProperty("--scale", "1.1");
+            // Hovered node itself grows in place only (no translate). Moving it
+            // toward the corner used to slide the hitbox out from under the
+            // cursor mid-hover, triggering a mouseleave -> mouseenter loop
+            // (visible as flickering).
+            btn.style.setProperty("--tx", "0px");
+            btn.style.setProperty("--ty", "0px");
+            btn.style.setProperty("--scale", "1.15");
         });
 
         btn.addEventListener("mouseleave", () => {

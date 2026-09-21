@@ -52,17 +52,22 @@ portfolio/                          # 프로젝트 루트
 
 ## 🛠️ 핵심 내비게이션 시스템 (노드 배치)
 
-이 사이트는 중앙 허브에서 노드가 뻗어나가는 형태의 비정형 배치를 사용합니다.
+중앙 허브를 중심으로 노드가 **정원형**으로 균등 배치됩니다. 각도는 하드코딩하지 않고 계산됩니다.
 
-| 노드 | data-target | 각도 (--angle) | 거리 (--dist) | 화면 방향 |
-|------|------------|---------------|--------------|----------|
-| About Me | `about` | -90deg | 300px | 중앙 상단 |
-| Skills | `skills` | -38.6deg | 360px | 우상단 |
-| Resume | `resume` | 218.4deg | 360px | 좌상단 |
-| Social Media | `sns` | 167deg | 420px | 좌측 |
-| Graphics | `projects` | 12.8deg | 420px | 우측 |
-| ? (미공개) | `q1` | 115.6deg | 300px | 좌하단 |
-| ? (미공개) | `q2` | 64.2deg | 300px | 우하단 |
+- `js/index.js` 가 `.node-nav` 에 `--n`(노드 개수), 각 `.node-btn` 에 `--i`(DOM 순번)를 넣습니다.
+- CSS 가 `--angle: calc(360deg / var(--n) * var(--i) - 90deg)` 로 각도를 계산합니다.
+- **DOM 순서 = 12시 방향부터 시계방향 배치 순서**이고, 반지름은 `--node-radius` 하나로 통일됩니다.
+- 전환 애니메이션이 향하는 코너와 back 버튼의 `opposite-*` 위치도 각도에서 자동 유도됩니다.
+
+### 노드 추가 / 제거 방법
+
+각도·전환 방향·back 버튼 위치는 자동 재계산되므로, 아래 3가지만 하면 됩니다.
+
+1. `<nav class="node-nav">` 안에 `<button class="node-btn" data-target="X">` 를 넣거나 지웁니다. (목록에서의 위치 = 원 위에서의 위치)
+2. 같은 id 를 갖는 `<section id="X" class="view">` 를 넣거나 지웁니다. 안의 `<button class="home-back-btn">` 에는 **위치 클래스를 붙이지 않습니다** (JS가 지정).
+3. `js/index.js` 의 `translations` 의 `en` / `ko` **양쪽**에 문구를 넣거나 지웁니다. 빠뜨리면 콘솔에 `[i18n]` 경고가 뜹니다.
+
+> `opposite-*` 위치 클래스는 8방향뿐이므로, 노드가 9개를 넘으면 두 view 가 같은 back 버튼 위치를 공유합니다.
 
 ---
 
@@ -70,6 +75,9 @@ portfolio/                          # 프로젝트 루트
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | 노드 각도/전환 코너/back 버튼 위치를 개수 기반 자동 계산으로 전환(노드 추가·제거 용이화), 누락 시 조용히 깨지던 `opposite-south` 추가 및 i18n 누락 경고 |
+| 2026-09-21 | `index.html`, `css/style.css` | 홈 좌상단 `cout.png` 로고 제거, 노드 정원형 배치, 레이아웃 크기를 `--node-radius` 기준 비례 계산으로 통일 |
+| 2026-09-21 | `js/index.js` | 노드 호버 시 히트박스가 커서 밖으로 밀려나 깜빡이던 문제 수정(제자리 확대로 변경) |
 | 2026-05-07 | `index.html`, `js/index.js`, `README.md` | 노드 위치 swap 및 전체 프로젝트 인코딩 UTF-8 통합 및 손상된 한글 복구 |
 | 2026-05-07 | `index.html`, `css/style.css` | 홈 화면 좌상단 `cout.png` 로고 추가 |
 | 2026-05-06 | `index.html`, `js/index.js` | 이력서 및 학력 정보 업데이트 (DigiPen, 공군 ROMAD 등) |
