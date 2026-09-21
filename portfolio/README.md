@@ -41,8 +41,11 @@ portfolio/                          # 프로젝트 루트
 │   ├── face.jpg                    # 프로필 사진 (Back 버튼 이미지, 파비콘)
 │   ├── portfolio_thumbnails/       # 프로젝트 썸네일 JPG
 ├── docs/
-│   ├── Resume.pdf                  # 실제 이력서 (다운로드용)
-│   └── Resume.docx                 # 이력서 원본
+│   ├── Resume/
+│   │   ├── Taekyung_Ho_Resume.pdf  # 사이트에서 내려받는 이력서 (이력서 카드 내용의 기준)
+│   │   └── …                       # 지원처별 변형본·docx 원본 (사이트와 무관)
+│   ├── Cover_Letter/               # 커버레터 모음 (사이트와 무관)
+│   └── Transcript_TAEKYUNGHO.pdf
 └── external/
     └── normalize.css               # 브라우저 기본 스타일 초기화
 ```
@@ -89,6 +92,10 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 | 사이트 전체 색감 | `css/tokens.css` **한 곳** (홈 + 상세 페이지 모두 따라옴) |
 | 전환 애니메이션 속도 | `css/tokens.css` 의 `--dur-*` (JS 가 이 값을 읽어 씀) |
 | 홈 화면 전체 크기 | `css/style.css` 의 `--node-radius` 한 줄 |
+| 카드가 커질 수 있는 범위 | `css/tokens.css` 의 `--bumper-t/r/b/l` (방향별) |
+| 특정 카드만 다른 범퍼 | 그 `<section>` 에 `--bumper-*` 덮어쓰기 |
+| 카드 비율 고정 | 그 `<section>` 에 `data-card-ratio="1/1"` 같은 속성 |
+| 본문 한 줄 길이 | `css/tokens.css` 의 `--text-measure` |
 | 상세 페이지 레이아웃 | `css/portfolio-page.css` |
 | 영문 문구 | `index.html` 본문 (JS 가 여기서 읽어감) |
 | 한국어 문구 | `js/index.js` 의 `ko` 객체 |
@@ -99,6 +106,9 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-21 | `index.html`, `js/index.js` | 이력서 카드를 `docs/Resume/Taekyung_Ho_Resume.pdf` 기준으로 재작성 — 다운로드 경로 수정, 학력(정확한 학위명·졸업 예정·GPA·수강과목) → 프로젝트(Dragonic Tactics, 10..9..8..) → 경력(공군, 제10전투비행단) 순으로 재구성. Dragonic Tactics 를 "경력"에서 "프로젝트"로 옮기고, ECS 를 실제 적용한 10..9..8.. 쪽으로 정정. 공군 항목의 근거 없는 "100% 작전 준비 태세" 문구 제거 |
+| 2026-09-21 | `css/tokens.css`, `css/style.css`, `js/index.js` | 카드 크기를 고정값이 아니라 "범퍼 상자"(화면 − 방향별 범퍼 − Jean 판 자리) 안에서 최대로 키우도록 변경. `data-card-ratio` 로 비율 고정 가능, 범퍼는 카드별 덮어쓰기 가능. 카드는 넓히되 산문만 `--text-measure` 로 제한(줄당 약 73자) |
+| 2026-09-21 | `index.html`, `css/style.css`, `js/index.js` | 스크롤을 카드가 아닌 안쪽 `.card-scroll` 이 맡도록 분리 — 스크롤바가 둥근 모서리 밖으로 나가던 문제 해결 |
 | 2026-09-21 | 전반 | 내비게이션을 허브 구조로 전환 — 뷰마다 있던 back 버튼 7개와 `opposite-*` 8방향 클래스를 없애고, Jean 판+노드 링을 `.hub` 하나로 통합(home/parked/menu 3상태). 상세→상세 직행 가능. 노드 확대 풍선을 카드 FLIP 연출로 교체. `<main>` 미닫힘 등 HTML 정합성 수정 |
 | 2026-09-21 | `css/tokens.css`, `css/style.css`, `js/index.js` | 노드 클릭 전환을 "팍 터지는" 느낌으로 조정(가속 곡선 `cubic-bezier(.16,1,.3,1)`, 0.8s->0.45s), 전환 후 빈 화면 0.6s->0.1s(`--dur-view-fade` 분리), 풍선 배율을 화면 크기 기반 계산으로 교체(고정 25 는 모서리가 비었음) |
 | 2026-09-21 | `index.html`, `css/style.css`, `js/index.js` | 홈 중앙을 이름판으로 교체(Jean / 가는 선 / Taekyung Ho, 한국어는 허태경 / Jean), 부제목 대비 개선 |

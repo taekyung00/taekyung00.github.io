@@ -414,8 +414,8 @@ body[data-hub="menu"] .node-btn.is-current {
   /* js 가 Jean 판이 있는 쪽 여백만 키워 카드를 밀어낸다. shorthand 를
      인라인으로 덮으면 아래 모바일 미디어쿼리가 조용히 무시되므로
      네 방향을 각각 커스텀 속성으로 둔다. */
-  padding: var(--pad-t, var(--view-pad)) var(--pad-r, var(--view-pad))
-           var(--pad-b, var(--view-pad)) var(--pad-l, var(--view-pad));
+  padding: var(--pad-t, var(--bumper-t)) var(--pad-r, var(--bumper-r))
+           var(--pad-b, var(--bumper-b)) var(--pad-l, var(--bumper-l));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -424,6 +424,9 @@ body[data-hub="menu"] .node-btn.is-current {
 
 .content-wrapper {
   width: var(--card-width);
+  /* 비율을 지정한 카드만 js 가 --card-height 를 px 로 넣는다.
+     지정하지 않으면 auto 라 내용이 높이를 정한다. */
+  height: var(--card-height, auto);
   background: var(--clr-glass);
   backdrop-filter: blur(20px);
   padding: var(--card-inset);
@@ -488,6 +491,18 @@ h2.section__title {
 
 .about-me__body p:last-child {
   margin-bottom: 0;
+}
+
+/* 카드는 범퍼까지 넓어지지만 산문은 그만큼 늘어나면 안 된다. 한 줄이
+   길어지면 눈이 다음 줄 첫머리를 찾기 어려워진다. 그래서 카드 폭이 아니라
+   읽기 좋은 길이(--text-measure)로 제한한다.
+   썸네일 그리드(.portfolio-grid)와 3단 기술 목록(.services)은 제외한다 —
+   그쪽은 넓을수록 좋고, .service 는 이미 400px 상한이 있다. */
+.about-me__body,
+.resume-section,
+.section__subtitle {
+  max-width: var(--text-measure);
+  width: 100%;
 }
 
 /* Portfolio Grid */

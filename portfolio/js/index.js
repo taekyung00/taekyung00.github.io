@@ -23,8 +23,10 @@ function nodeRadiusPx() {
     return v;
 }
 
-function cssNum(token) {
-    return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(token));
+// 기본은 루트에서 읽지만, 요소를 넘기면 그 요소 기준으로 읽는다.
+// 커스텀 속성은 상속되므로, 특정 섹션에만 값을 덮어쓰면 그 카드에만 적용된다.
+function cssNum(token, el = document.documentElement) {
+    return parseFloat(getComputedStyle(el).getPropertyValue(token));
 }
 
 function nodeButtons() {
@@ -83,11 +85,14 @@ document.addEventListener("DOMContentLoaded", () => {
             "projects-subtitle": "고급 렌더링 기법 및 그래픽스 알고리즘 구현 데모입니다.",
             "resume-title": "이력서",
             "resume-download": " PDF 다운로드",
-            "resume-exp-title": "경력",
-            "resume-exp1": "<b>Producer & Engine/Graphics Engineer, Dragonic Tactics</b><br>2025년 9월 – 2026년 6월<br><b>C++ 및 OpenGL</b>을 활용한 고성능 2D 엔진을 설계하고, <b>ECS 아키텍처</b> 기반 배치 렌더링을 구현하여 엔진 성능을 최적화했습니다.",
-            "resume-exp2": "<b>병장 (ROMAD 전문가), 대한민국 공군</b><br>2022년 8월 – 2024년 5월<br>임무 핵심 전술 통신 시스템 및 무선 장비를 관리하며, 고압적인 현장 환경에서 <b>100% 작전 준비 태세</b>를 유지했습니다.",
+            // 이력서 카드 — 순서·내용은 docs/Resume/Taekyung_Ho_Resume.pdf 기준
             "resume-edu-title": "학력",
-            "resume-edu1": "<b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>2022년 3월 – 2028년 4월<br><em>대구, 대한민국 & 미국 Redmond, WA</em>",
+            "resume-edu1": "<b>B.S. in Computer Science in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>2028년 5월 졸업 예정 · GPA 3.96 / 4.0<br><em>미국 워싱턴주 레드먼드</em><br>주요 수강 과목: 자료구조, 알고리즘 분석, 운영체제, 컴퓨터 그래픽스 I & II, 선형대수",
+            "resume-proj-title": "프로젝트",
+            "resume-proj1": "<b>Dragonic Tactics — Producer & Engine/Graphics Engineer</b><br>2025년 9월 – 2026년 6월<br><em>2D 턴제 전술 RPG · C++, OpenGL</em><br>raylib 의존성을 걷어내고 <b>OpenGL</b>을 직접 연동해, 텍스처 매핑·배치 렌더링·인스턴스 렌더링·가상 해상도를 갖춘 2D 렌더링 파이프라인을 직접 구축했습니다. 시스템 간 통신을 위한 <b>EventBus</b>를 설계했고, 5인 팀의 Producer를 맡았습니다.",
+            "resume-proj2": "<b>10..9..8.. — Technical Lead</b><br>2025년 봄<br><em>2D 던전 탐험 퍼즐 게임 · C++, raylib</em><br>\"10걸음\" 이동 제한을 핵심 규칙으로 삼은 퍼즐 게임입니다. DigiPen의 Game Implementation Techniques 과정에서 만든 자체 C++ 엔진 위에 <b>ECS</b>와 싱글턴 패턴을 적용하고, 재사용 가능한 엔진 시스템과 게임플레이 로직을 분리해 개발했습니다.",
+            "resume-exp-title": "경력",
+            "resume-exp1": "<b>ROMAD 전문가, 대한민국 공군</b><br>2022년 8월 – 2024년 5월<br><em>제10전투비행단, 수원</em><br>부대의 일원으로서 동료들과 협력하며, 까다로운 여건 속에서도 맡은 임무를 안정적으로 수행했습니다.",
             "sns-title": "연락처 및 소셜 미디어",
             "sns-email": "taek020422@gmail.com",
             "q1-title": "준비 중",
@@ -266,49 +271,62 @@ document.addEventListener("DOMContentLoaded", () => {
         return { left, top, right, bottom };
     }
 
-    // 판이 차지한 쪽 띠를 비우고 남은 사각형에 카드를 둔다. 크기는 그대로
-    // 두고 위치만 옮기되, 남은 자리에 안 들어갈 때만 줄인다.
+    // 카드는 "범퍼 상자" 안에서 최대한 커진다. 범퍼 상자란 화면에서
+    // 방향별 범퍼와 Jean 판이 차지한 띠를 뺀 나머지 사각형이다.
+    // 비율(data-card-ratio)을 지정한 카드는 그 비율을 지키며 상자에 맞춘다.
     function layoutCard(view, park) {
         const content = view.querySelector(".view-content");
         const card = view.querySelector(".content-wrapper");
         if (!content || !card) return;
 
+        // --- 읽기 (쓰기와 섞지 않는다) ---
         const W = window.innerWidth, H = window.innerHeight;
-        const base = cssNum("--view-pad");
+        // 범퍼는 view 기준으로 읽는다. 기본값은 :root 에서 상속되지만,
+        // 특정 카드만 다르게 하고 싶으면 그 <section> 에 --bumper-* 를
+        // 덮어쓰면 된다(내용이 다른 새 노드를 위해 열어둔 여지).
+        const bT = cssNum("--bumper-t", view), bR = cssNum("--bumper-r", view);
+        const bB = cssNum("--bumper-b", view), bL = cssNum("--bumper-l", view);
         const gap = cssNum("--card-gap");
-        const prefW = cssNum("--card-width");
-        const prefH = cssNum("--card-max-height");
         const minH = cssNum("--card-min-height");
+        const ratio = view.dataset.cardRatio;
         const p = plateRectAt(park);
 
-        // 판은 늘 가장자리에 있으므로 그쪽 여백만 키우면 된다.
-        const pads = [];
-        if (p.left > W / 2) pads.push({ t: base, r: Math.max(base, W - p.left + gap), b: base, l: base });
-        if (p.right < W / 2) pads.push({ t: base, r: base, b: base, l: Math.max(base, p.right + gap) });
-        if (p.top > H / 2) pads.push({ t: base, r: base, b: Math.max(base, H - p.top + gap), l: base });
-        if (p.bottom < H / 2) pads.push({ t: Math.max(base, p.bottom + gap), r: base, b: base, l: base });
-        if (!pads.length) pads.push({ t: base, r: base, b: base, l: base });
+        // 판은 늘 가장자리에 있으므로 그쪽 범퍼만 키우면 된다.
+        const horiz = [], vert = [];
+        if (p.left > W / 2) horiz.push({ t: bT, r: Math.max(bR, W - p.left + gap), b: bB, l: bL });
+        if (p.right < W / 2) horiz.push({ t: bT, r: bR, b: bB, l: Math.max(bL, p.right + gap) });
+        if (p.top > H / 2) vert.push({ t: bT, r: bR, b: Math.max(bB, H - p.top + gap), l: bL });
+        if (p.bottom < H / 2) vert.push({ t: Math.max(bT, p.bottom + gap), r: bR, b: bB, l: bL });
 
-        // 모서리 주차는 가로·세로 두 후보가 나온다. "카드가 줄지 않고
-        // 들어가는가"를 먼저 보고, 그 다음에 남는 면적을 본다. 면적만 보면
-        // 거의 정사각형인 창에서 축이 홱 바뀌어 카드가 튄다.
-        const free = (c) => ({ w: W - c.l - c.r, h: H - c.t - c.b });
-        pads.sort((a, b) => {
-            const A = free(a), B = free(b);
-            const af = A.w >= prefW && A.h >= prefH, bf = B.w >= prefW && B.h >= prefH;
-            if (af !== bf) return af ? -1 : 1;
-            return B.w * B.h - A.w * A.h;
-        });
-        const pick = pads[0], f = free(pick);
+        // 모서리 주차는 가로·세로 두 후보가 나온다. 면적으로 고르면 거의
+        // 정사각형인 창에서 축이 홱 바뀌어 카드가 튀므로, 화면 방향으로
+        // 정한다(가로가 길면 좌우 띠를 비우는 쪽이 늘 더 넓다).
+        const prefer = W >= H ? horiz : vert;
+        const pick = (prefer[0] || horiz[0] || vert[0]
+                      || { t: bT, r: bR, b: bB, l: bL });
 
+        const box = { w: W - pick.l - pick.r, h: H - pick.t - pick.b };
+
+        let width = box.w, height = null;
+        if (ratio) {
+            const [rw, rh] = ratio.split("/").map(Number);
+            if (rw > 0 && rh > 0) {
+                const k = Math.min(box.w / rw, box.h / rh);   // contain 맞춤
+                width = rw * k;
+                height = rh * k;
+            }
+        }
+
+        // --- 쓰기 ---
         content.style.setProperty("--pad-t", `${pick.t}px`);
         content.style.setProperty("--pad-r", `${pick.r}px`);
         content.style.setProperty("--pad-b", `${pick.b}px`);
         content.style.setProperty("--pad-l", `${pick.l}px`);
-        // 클램프는 선택이 아니라 필수다: --card-width 는 뷰포트 기준이라
-        // 부모의 padding 이 막지 못하고, 넘치면 양끝이 잘린다.
-        card.style.setProperty("--card-width", `${Math.min(prefW, f.w)}px`);
-        card.style.setProperty("--card-max-height", `${Math.max(minH, Math.min(prefH, f.h))}px`);
+        card.style.setProperty("--card-width", `${width}px`);
+        card.style.setProperty("--card-max-height", `${Math.max(minH, box.h)}px`);
+        // 비율 카드만 높이가 고정된다. 나머지는 auto 로 되돌려 내용이 정한다.
+        if (height !== null) card.style.setProperty("--card-height", `${height}px`);
+        else card.style.removeProperty("--card-height");
     }
 
     function setHub(state, target) {

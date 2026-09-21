@@ -16,8 +16,8 @@
 
     <!-- 브라우저 캐시 무시용 버전. css/js 수정 시 함께 올릴 것 -->
     <!-- tokens.css 가 먼저 와야 style.css 가 토큰을 읽을 수 있다 -->
-    <link rel="stylesheet" href="css/tokens.css?v=22" />
-    <link rel="stylesheet" href="css/style.css?v=22" />
+    <link rel="stylesheet" href="css/tokens.css?v=26" />
+    <link rel="stylesheet" href="css/style.css?v=26" />
 </head>
 
 <body data-view="home">
@@ -158,19 +158,25 @@
                     <div class="card-scroll">
                         <h2 class="section__title section__title--resume" data-i18n="resume-title">Resume</h2>
                         <div class="resume-download">
-                            <a target="_blank" href="docs/Resume.pdf" class="btn"><i class="far fa-file-pdf"></i><span data-i18n="resume-download"> Download PDF</span></a>
+                            <a target="_blank" href="docs/Resume/Taekyung_Ho_Resume.pdf" class="btn"><i class="far fa-file-pdf"></i><span data-i18n="resume-download"> Download PDF</span></a>
                         </div>
+                        <!-- 섹션 순서·문구는 docs/Resume/Taekyung_Ho_Resume.pdf 를 따른다.
+                             이력서를 고치면 여기와 js/index.js 의 ko 도 같이 맞출 것. -->
                         <div class="resume-section">
-                            <h3 data-i18n="resume-exp-title">Experience</h3>
-                            <div class="resume-item">
-                                <p data-i18n="resume-exp1"><b>Producer &amp; Engine/Graphics Engineer, Dragonic Tactics</b><br>Sept 2025 – June 2026<br><em>Daegu, Korea</em><br>Architected a high-performance 2D engine using <b>C++ and OpenGL</b> with <b>ECS architecture</b>, implementing batch rendering to optimize runtime performance.</p>
-                            </div>
-                            <div class="resume-item">
-                                <p data-i18n="resume-exp2"><b>Staff Sergeant (ROMAD Specialist), Republic of Korea Air Force</b><br>Aug 2022 – May 2024<br><em>South Korea</em><br>Managed mission-critical tactical communication systems and radio equipment, ensuring <b>100% operational readiness</b> in high-pressure field environments.</p>
-                            </div>
                             <h3 data-i18n="resume-edu-title">Education</h3>
                             <div class="resume-item">
-                                <p data-i18n="resume-edu1"><b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>March 2022 – April 2028<br><em>Daegu, Korea &amp; Redmond, WA, USA</em></p>
+                                <p data-i18n="resume-edu1"><b>B.S. in Computer Science in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>Expected May 2028 · GPA 3.96 / 4.0<br><em>Redmond, WA, USA</em><br>Relevant coursework: Data Structures, Algorithm Analysis, Operating Systems, Computer Graphics I &amp; II, Linear Algebra</p>
+                            </div>
+                            <h3 data-i18n="resume-proj-title">Projects</h3>
+                            <div class="resume-item">
+                                <p data-i18n="resume-proj1"><b>Dragonic Tactics — Producer &amp; Engine/Graphics Engineer</b><br>Sep 2025 – Jun 2026<br><em>2D turn-based tactical RPG · C++, OpenGL</em><br>Removed the raylib dependency and integrated <b>OpenGL</b> directly, building a custom 2D rendering pipeline with texture mapping, batch and instanced rendering, and virtual resolution. Designed an <b>EventBus</b> for inter-system communication and served as Producer on a 5-person team.</p>
+                            </div>
+                            <div class="resume-item">
+                                <p data-i18n="resume-proj2"><b>10..9..8.. — Technical Lead</b><br>Spring 2025<br><em>2D dungeon exploration puzzle game · C++, raylib</em><br>A puzzle built around a 10-step movement constraint, on a custom C++ engine from DigiPen's Game Implementation Techniques coursework. Structured with <b>ECS</b> and Singleton patterns, keeping reusable engine systems separate from gameplay logic.</p>
+                            </div>
+                            <h3 data-i18n="resume-exp-title">Work Experience</h3>
+                            <div class="resume-item">
+                                <p data-i18n="resume-exp1"><b>ROMAD Specialist, Republic of Korea Air Force</b><br>Aug 2022 – May 2024<br><em>10th Fighter Wing, Suwon, South Korea</em><br>Served as part of a military unit, collaborating with teammates to carry out assigned duties reliably under demanding conditions.</p>
                             </div>
                         </div>
                 </div>
@@ -227,7 +233,7 @@
         </section>
     </main>
 
-    <script src="js/index.js?v=22"></script>
+    <script src="js/index.js?v=26"></script>
 </body>
 
 </html>

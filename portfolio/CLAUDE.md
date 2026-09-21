@@ -57,6 +57,15 @@ Two traps worth remembering:
 - English is authored **in `index.html`** as the element's own content. On load, `js/index.js` reads every `[data-i18n]` element's `innerHTML` into the `en` table — so English exists in exactly one place and can't drift.
 - Korean lives in the `ko` object in `js/index.js`. Adding a string means: put it in the HTML with a `data-i18n` key, then add the Korean. A missing key logs an `[i18n]` console warning.
 
+### Detail card sizing
+`layoutCard()` in `js/index.js` sizes each card from a **bumper box**: the viewport minus the per-direction bumpers (`--bumper-t/r/b/l`) minus the strip occupied by the parked Jean plate. Within that box:
+- default — the card fills the box **width**; height follows content and only scrolls past the box height
+- `data-card-ratio="16/9"` on a `<section>` — the card becomes the largest box of that ratio that fits, height included
+
+Bumpers are read **from the view element**, not the root, so a single `<section>` can override `--bumper-*` for itself. Scrolling lives on the inner `.card-scroll`, inset by `--card-inset`, because a scrollbar on the rounded card escapes its corners — the inset must stay above `r - r/√2`.
+
+Cards grow wide, so prose containers (`.about-me__body`, `.resume-section`, `.section__subtitle`) are capped at `--text-measure`; grids (`.portfolio-grid`, `.services`) are deliberately left full-width.
+
 ### Graphics demo pages (`portfolio/*.html`)
 - `01_hello`, `02_meshes`, `05_shadow`, `06_value`, `07_gradient` are the project detail pages, linked from the "Graphics" view's `.portfolio-grid`. They share `css/portfolio-page.css` and each starts with a `.home-link` back to `../index.html`. (`03_fog` and `04_toon` were deleted — they were unfilled template copies with broken styling and placeholder contact details.)
 - Each embeds a live demo via `<iframe>` pointing at a local sibling file (`quad_demo.html`, `meshes_demo.html`, `shadow_demo.html`, `value_demo.html`, `gradient_demo.html`).
