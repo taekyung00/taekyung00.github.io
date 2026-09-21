@@ -29,18 +29,16 @@ then open `http://localhost:8000`. There is no lint, test, or build command — 
 Only three edits, all additive — angles, transition corners and back-button placement recalculate themselves:
 1. Add/remove a `<button class="node-btn" data-target="X">` in `<nav class="node-nav">` (position in the list = position on the ring).
 2. Add/remove the matching `<section id="X" class="view">`, including a `<button class="home-back-btn">` (no position class — JS assigns it).
-3. Add/remove the `data-i18n` keys in **both** `translations.en` and `translations.ko`. A missing key logs an `[i18n]` console warning rather than silently falling back.
+3. Write the English label in the HTML itself and add the Korean to the `ko` object in `js/index.js`. A missing Korean key logs an `[i18n]` console warning rather than silently falling back.
 
 The 8 `opposite-*` classes cover 8 compass directions, so past 8 nodes two views can share a back-button slot.
-- Clicking a node or a `.home-back-btn` doesn't just toggle visibility — it drives a multi-stage transform animation (shrink/expand via `--tx`/`--ty`/`--scale` CSS vars, an `expanding-node` class that scales a button to cover the screen) timed with `setTimeout`s that must stay in sync with the CSS transition durations (`--transition-slow` / `--transition-fast` in `css/style.css`). When editing this animation, the JS timeouts and CSS transition durations must be changed together or the crossfade breaks.
 
-### i18n
-- Translated strings are **not** in the HTML; they live inline in `js/index.js` as `translations.en` / `translations.ko` objects, keyed by the string used in each element's `data-i18n="..."` attribute.
-- To add or change copy: add/update the `data-i18n` attribute on the HTML element, then add matching entries to **both** `translations.en` and `translations.ko`. `updateLanguage()` sets `innerHTML` (not `textContent`), so translation strings may include inline tags like `<b>`/`<br>`.
+### Transition animation
+Clicking a node or a `.home-back-btn` doesn't just toggle visibility — it drives a multi-stage transform animation (shrink/expand via `--tx`/`--ty`/`--scale` CSS vars, plus an `expanding-node` class that scales a button until it covers the screen). Every duration involved is a `--dur-*` token in `tokens.css`; the JS reads them rather than repeating the numbers, so retiming the sequence is a token edit.
 
 ### Styling — three files, one source of truth
 - **`css/tokens.css`** holds every color, font, shadow and transition duration as a `:root` custom property. Nothing else in the codebase contains a color literal, so a palette change is a single-file edit. Both the home page and the project pages load it **first**, before their own stylesheet.
-- **`css/style.css`** is home-screen layout only. Its `:root` keeps just `--node-radius`; every home dimension (node diameter, node font, photo, title/subtitle, gaps) is a `calc()` ratio of it, so the whole home screen scales from one line. It is px-based so browser zoom actually resizes it, capped at `39vmin` so the node ring can never overflow the viewport height.
+- **`css/style.css`** is home-screen layout only. Its `:root` keeps just `--node-radius`; every home dimension (node diameter, node font, the centre name plate, title/subtitle, gaps) is a `calc()` ratio of it, so the whole home screen scales from one line. It is px-based so browser zoom actually resizes it, capped at `39vmin` so the node ring can never overflow the viewport height.
 - **`css/portfolio-page.css`** is shared by all `portfolio/*.html` detail pages. These used to carry ~150 lines of identical inline `<style>` each; don't reintroduce per-page styles.
 - Animation durations live in `tokens.css` as `--dur-*`. `js/index.js` reads them with `cssMs()` for its `setTimeout`s and passes `var(--dur-…)` straight into inline `transition` strings, so timing is never hardcoded in two places.
 - `index.html` cache-busts with `?v=N` on both CSS and JS — bump it when shipping changes, since GitHub Pages caches aggressively.

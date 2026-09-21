@@ -38,7 +38,7 @@ portfolio/                          # 프로젝트 루트
 │   ├── 06_value.html               # Value 데모
 │   └── 07_gradient.html            # Gradient 데모
 ├── img/
-│   ├── face.jpg                    # 프로필 사진 (홈 중앙 + Back 버튼 이미지)
+│   ├── face.jpg                    # 프로필 사진 (Back 버튼 이미지, 파비콘)
 │   ├── portfolio_thumbnails/       # 프로젝트 썸네일 JPG
 ├── docs/
 │   ├── Resume.pdf                  # 실제 이력서 (다운로드용)
@@ -64,7 +64,7 @@ portfolio/                          # 프로젝트 루트
 
 1. `<nav class="node-nav">` 안에 `<button class="node-btn" data-target="X">` 를 넣거나 지웁니다. (목록에서의 위치 = 원 위에서의 위치)
 2. 같은 id 를 갖는 `<section id="X" class="view">` 를 넣거나 지웁니다. 안의 `<button class="home-back-btn">` 에는 **위치 클래스를 붙이지 않습니다** (JS가 지정).
-3. `js/index.js` 의 `translations` 의 `en` / `ko` **양쪽**에 문구를 넣거나 지웁니다. 빠뜨리면 콘솔에 `[i18n]` 경고가 뜹니다.
+3. 영문은 HTML 본문에 그대로 쓰고, 한국어만 `js/index.js` 의 `ko` 객체에 넣습니다. 빠뜨리면 콘솔에 `[i18n]` 경고가 뜹니다.
 
 > `opposite-*` 위치 클래스는 8방향뿐이므로, 노드가 9개를 넘으면 두 view 가 같은 back 버튼 위치를 공유합니다.
 
@@ -87,6 +87,9 @@ portfolio/                          # 프로젝트 루트
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-21 | `css/tokens.css`, `css/style.css`, `js/index.js` | 노드 클릭 전환을 "팍 터지는" 느낌으로 조정(가속 곡선 `cubic-bezier(.16,1,.3,1)`, 0.8s->0.45s), 전환 후 빈 화면 0.6s->0.1s(`--dur-view-fade` 분리), 풍선 배율을 화면 크기 기반 계산으로 교체(고정 25 는 모서리가 비었음) |
+| 2026-09-21 | `index.html`, `css/style.css`, `js/index.js` | 홈 중앙을 이름판으로 교체(Jean / 가는 선 / Taekyung Ho, 한국어는 허태경 / Jean), 부제목 대비 개선 |
+| 2026-09-21 | `index.html`, `css/style.css` | 홈 중앙 프로필 사진을 이름판(`.center-plate`)으로 교체(크기·라운드 정사각형 유지), 부제목 대비 4.61:1 -> 13.29:1 로 개선 |
 | 2026-09-21 | 전반 | 디자인 토큰을 `css/tokens.css` 로 단일화(색상 리터럴 0개), 상세 페이지 인라인 CSS 5벌(약 720줄) 을 `css/portfolio-page.css` 로 통합, 상세 페이지에 홈 복귀 링크 추가, 영문 문구 중복 제거(HTML 을 원본으로), 애니메이션 타이밍 토큰화, 미완성 상태로 공개돼 있던 `03_fog`/`04_toon` 삭제 |
 | 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | 노드 각도/전환 코너/back 버튼 위치를 개수 기반 자동 계산으로 전환(노드 추가·제거 용이화), 누락 시 조용히 깨지던 `opposite-south` 추가 및 i18n 누락 경고 |
 | 2026-09-21 | `index.html`, `css/style.css` | 홈 좌상단 `cout.png` 로고 제거, 노드 정원형 배치, 레이아웃 크기를 `--node-radius` 기준 비례 계산으로 통일 |

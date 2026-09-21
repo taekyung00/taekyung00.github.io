@@ -43,7 +43,10 @@ body {
   height: 100%;
   opacity: 0;
   visibility: hidden;
-  transition: var(--transition-slow);
+  /* all 이 아니라 필요한 두 가지만. 이 시간이 곧 전환 중 빈 화면이 보이는
+     길이라서 --transition-slow 와 분리해 따로 조절한다. */
+  transition: opacity var(--dur-view-fade) var(--ease-emphasized),
+              visibility var(--dur-view-fade);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,49 +80,84 @@ body {
   transform: translate(var(--tx, 0), var(--ty, 0)) scale(var(--scale, 1));
 }
 
+/* 이름판의 두 이름은 같은 그라데이션을 쓴다 */
+.home-title,
+.home-subname {
+  background: linear-gradient(to right, var(--clr-accent), var(--clr-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  pointer-events: auto;
+}
+
 .home-title {
-  font-size: calc(var(--node-radius) * 0.115);
+  font-size: calc(var(--node-radius) * 0.155);
   font-weight: var(--fw-black);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: linear-gradient(to right, var(--clr-accent), var(--clr-accent-2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  pointer-events: auto;
   transition: var(--transition-slow);
-  text-align: center;
-  line-height: 1;
+  line-height: 1.1;
+}
+
+/* 한글 이름(3글자)은 영문 preferred name(Jean, 4글자)보다 글자당 폭이 넓어
+   같은 크기로 두면 판 밖으로 나간다. 언어별로 판을 비슷하게 채우도록 맞춘다. */
+body[data-lang="ko"] .home-title {
+  font-size: calc(var(--node-radius) * 0.135);
+}
+
+/* 큰 이름 아래의 보조 이름. 영문에서는 legal name(Taekyung Ho),
+   한글에서는 preferred name(Jean)이 들어간다. */
+.home-subname {
+  font-size: calc(var(--node-radius) * 0.06);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+/* 두 이름을 가르는 가는 선. 글자와 같은 그라데이션을 쓰되, 이 요소는
+   자기 배경을 그대로 칠하므로 부모의 background-clip:text 와 무관하다. */
+.home-subname::before {
+  content: "";
+  display: block;
+  width: calc(var(--node-radius) * 0.11);
+  height: max(1px, calc(var(--node-radius) * 0.006));
+  margin: 0 auto calc(var(--node-radius) * 0.028);
+  background: linear-gradient(to right, var(--clr-accent), var(--clr-accent-2));
+  border-radius: 999px;
 }
 
 .home-subtitle {
   font-size: calc(var(--node-radius) * 0.05);
   font-weight: var(--fw-medium);
-  color: var(--clr-text-muted);
+  color: var(--clr-text);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.115em;
-  opacity: 0.8;
   pointer-events: auto;
   line-height: 1.2;
   text-align: center;
 }
 
-.center-picture {
+/* 가운데 이름판. 예전 프로필 사진 자리를 대신하며, 크기와 라운드 정사각형
+   모양은 그대로 두고 노드와 같은 유리 질감을 쓴다. */
+.center-plate {
   width: calc(var(--node-radius) * 0.66);
   height: calc(var(--node-radius) * 0.66);
   border-radius: calc(var(--node-radius) * 0.135);
-  overflow: hidden;
-  border: 5px solid var(--clr-accent);
+  padding: calc(var(--node-radius) * 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--node-radius) * 0.025);
+  background: var(--clr-glass);
+  backdrop-filter: blur(15px);
+  border: 2px solid var(--clr-accent);
   box-shadow: 0 0 60px var(--clr-accent-glow);
   transition: var(--transition-fast);
   pointer-events: auto;
-}
-
-.center-picture img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* Node Navigation */

@@ -13,6 +13,22 @@ function cssMs(token) {
 // 대각선이 아닌(축에 가까운) 성분은 0으로 눌러 가장자리 중앙에 붙게 한다.
 const axisSign = (v) => (Math.abs(v) < 0.35 ? 0 : Math.sign(v));
 
+// 노드가 부풀어 화면을 덮을 때 필요한 배율. 노드는 원이므로 바깥 사각형이
+// 아니라 화면 네 모서리까지의 거리를 기준으로 삼아야 한다. 예전의 고정값
+// 25 는 이 화면에 맞춘 값이라 더 큰 모니터에서는 모서리에 배경이 비쳤다.
+// 화면을 덮기도 전에 view 를 교체하므로 여유(1.3)를 둔다.
+function coverScale(btn, corner) {
+    const r = btn.getBoundingClientRect();
+    const cx = r.left + r.width / 2 + corner.x * 0.3;
+    const cy = r.top + r.height / 2 + corner.y * 0.3;
+    const w = window.innerWidth, h = window.innerHeight;
+    const far = Math.max(
+        Math.hypot(cx, cy), Math.hypot(w - cx, cy),
+        Math.hypot(cx, h - cy), Math.hypot(w - cx, h - cy)
+    );
+    return (far / (r.width / 2)) * 1.3;
+}
+
 function nodeButtons() {
     return [...document.querySelectorAll(".node-btn")];
 }
@@ -58,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const nodeBtns = document.querySelectorAll(".node-btn");
     const backBtns = document.querySelectorAll(".home-back-btn");
     const centerGroup = document.querySelector(".center-group");
-    const homeTitle = document.querySelector(".home-title");
+    const centerPlate = document.querySelector(".center-plate");
     
     // --- i18n ---
     // 영문은 index.html 의 내용이 원본이다. 최초 로드 때 DOM 에서 읽어두므로
@@ -66,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 새 문구를 추가할 때는 HTML 에 data-i18n 을 달고, 아래에 한국어만 넣으면 된다.
     const ko = {
             "home-title": "허태경",
+            "home-subname": "Jean",
             "home-subtitle": "소프트웨어 엔지니어 & 그래픽스 엔지니어",
             "node-skills": "기술",
             "node-projects": "그래픽스",
@@ -114,6 +131,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const koLabel = document.querySelector(".ko-label");
 
     function updateLanguage() {
+        // 언어에 따라 조판이 달라져야 하는 곳이 있어 CSS 에서도 알 수 있게 표시한다
+        // (예: 3글자뿐인 한글 이름은 이름판 안에서 더 크게).
+        document.body.dataset.lang = currentLang;
+
         const elements = document.querySelectorAll("[data-i18n]");
         elements.forEach(el => {
             const key = el.getAttribute("data-i18n");
@@ -238,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
             centerGroup.style.setProperty("--tx", `${corner.x}px`);
             centerGroup.style.setProperty("--ty", `${corner.y}px`);
             centerGroup.style.setProperty("--scale", "0.42"); // 120px / 280px = 0.428 (size of back btn)
-            if(homeTitle) homeTitle.style.opacity = "0";
+            if (centerPlate) centerPlate.style.opacity = "0";
 
             // 2. Unclicked nodes shrink to 0 and move to corner
             nodeBtns.forEach(otherBtn => {
@@ -252,9 +273,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 3. Clicked node expands massively to cover screen
             btn.classList.add("expanding-node");
-            btn.style.setProperty("--tx", `${corner.x * 0.3}px`); 
+            btn.style.setProperty("--tx", `${corner.x * 0.3}px`);
             btn.style.setProperty("--ty", `${corner.y * 0.3}px`);
-            btn.style.setProperty("--scale", "25"); // Massive scale
+            btn.style.setProperty("--scale", coverScale(btn, corner));
 
             // Wait for transition to mostly finish, then switch view earlier to remove pause
             setTimeout(() => {
@@ -300,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 centerGroup.style.setProperty("--tx", "0px");
                 centerGroup.style.setProperty("--ty", "0px");
                 centerGroup.style.setProperty("--scale", "1");
-                if(homeTitle) homeTitle.style.opacity = "1";
+                if (centerPlate) centerPlate.style.opacity = "1";
                 
                 nodeBtns.forEach(nodeBtn => {
                     nodeBtn.classList.remove("expanding-node");
