@@ -16,13 +16,15 @@
 
     <!-- 브라우저 캐시 무시용 버전. css/js 수정 시 함께 올릴 것 -->
     <!-- tokens.css 가 먼저 와야 style.css 가 토큰을 읽을 수 있다 -->
-    <link rel="stylesheet" href="css/tokens.css?v=14" />
-    <link rel="stylesheet" href="css/style.css?v=14" />
+    <link rel="stylesheet" href="css/tokens.css?v=22" />
+    <link rel="stylesheet" href="css/style.css?v=22" />
 </head>
 
 <body data-view="home">
     <main>
         <!-- Home View -->
+        <!-- 이 섹션은 항상 활성 상태로 남아 상세 페이지 위의 내비게이션 레이어가 된다.
+             .hub 이 상태에 따라 화면 중앙(home) / 코너(parked, menu)로 이동한다. -->
         <section id="home" class="view active">
             <div class="home-content">
                 <div class="lang-toggle-container">
@@ -32,64 +34,65 @@
                     </div>
                     <span class="lang-label ko-label">KOR</span>
                 </div>
-                <div class="center-group">
-                    <div class="center-plate">
-                        <h1 class="home-title" data-i18n="home-title">Jean</h1>
-                        <span class="home-subname" data-i18n="home-subname">Taekyung Ho</span>
-                    </div>
-                    <p class="home-subtitle" data-i18n="home-subtitle">Software Engineer & Graphics Engineer</p>
-                </div>
-                
+
                 <!-- 노드 추가/제거: 아래 button 하나를 넣거나 지우기만 하면 됩니다.
-                     각도(원형 배치)는 개수에 맞춰 js/index.js 가 자동 계산하고,
-                     해당 view 의 back 버튼 위치도 자동으로 잡힙니다.
+                     원형 배치 각도와 전환 방향은 js/index.js 가 개수에 맞춰 자동 계산합니다.
                      같이 해줘야 할 일: 같은 data-target 을 id 로 갖는 <section class="view">
-                     추가 + js/index.js 의 translations 에 en/ko 문구 추가. -->
-                <nav class="node-nav">
-                    <button class="node-btn" data-target="about">
-                        <span data-i18n="node-about">About Me</span>
-                    </button>
-                    <button class="node-btn" data-target="skills">
-                        <span data-i18n="node-skills">Skills</span>
-                    </button>
-                    <button class="node-btn" data-target="projects">
-                        <span data-i18n="node-projects">Graphics</span>
-                    </button>
-                    <button class="node-btn" data-target="q2">
-                        <span data-i18n="node-q2">?</span>
-                    </button>
-                    <button class="node-btn" data-target="q1">
-                        <span data-i18n="node-q1">?</span>
-                    </button>
-                    <button class="node-btn" data-target="sns">
-                        <span data-i18n="node-sns">Social Media</span>
-                    </button>
-                    <button class="node-btn" data-target="resume">
-                        <span data-i18n="node-resume">Resume</span>
-                    </button>
-                </nav>
+                     추가 + js/index.js 의 ko 객체에 한국어 문구 추가. -->
+                <div class="hub">
+                    <div class="center-group">
+                        <div class="center-plate" role="button" tabindex="0">
+                            <h1 class="home-title" data-i18n="home-title">Jean</h1>
+                            <span class="home-subname" data-i18n="home-subname">Taekyung Ho</span>
+                            <span class="plate-hint" aria-hidden="true"></span>
+                        </div>
+                        <p class="home-subtitle" data-i18n="home-subtitle">Software Engineer &amp; Graphics Engineer</p>
+                    </div>
+                    <nav class="node-nav">
+                        <button class="node-btn" data-target="about">
+                            <span data-i18n="node-about">About Me</span>
+                        </button>
+                        <button class="node-btn" data-target="skills">
+                            <span data-i18n="node-skills">Skills</span>
+                        </button>
+                        <button class="node-btn" data-target="projects">
+                            <span data-i18n="node-projects">Graphics</span>
+                        </button>
+                        <button class="node-btn" data-target="q2">
+                            <span data-i18n="node-q2">?</span>
+                        </button>
+                        <button class="node-btn" data-target="q1">
+                            <span data-i18n="node-q1">?</span>
+                        </button>
+                        <button class="node-btn" data-target="sns">
+                            <span data-i18n="node-sns">Social Media</span>
+                        </button>
+                        <button class="node-btn" data-target="resume">
+                            <span data-i18n="node-resume">Resume</span>
+                        </button>
+                    </nav>
+                </div>
             </div>
         </section>
 
         <!-- About Me View -->
         <section id="about" class="view">
             <div class="view-content">
-                <button class="home-back-btn" data-target="home">
-                    <img src="img/face.jpg" alt="Home">
-                </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--about" data-i18n="about-title">About Me</h2>
-                    <p class="section__subtitle section__subtitle--about" data-i18n="about-subtitle">
-                        Student Programmer Taekyung
-                    </p>
-                    <div class="about-me__body">
-                        <p data-i18n="about-p1">
-                            I am Taekyung, a student programmer who finds the greatest joy in developing tools that make people's lives easier and more beneficial.
+                    <div class="card-scroll">
+                        <h2 class="section__title section__title--about" data-i18n="about-title">About Me</h2>
+                        <p class="section__subtitle section__subtitle--about" data-i18n="about-subtitle">
+                            Student Programmer Taekyung
                         </p>
-                        <p data-i18n="about-p2">
-                            I am currently building my technical foundation based on C++ and OpenGL. Leveraging these skills, I am gaining practical experience by designing a custom 2D engine from scratch and developing game projects.
-                        </p>
-                    </div>
+                        <div class="about-me__body">
+                            <p data-i18n="about-p1">
+                                I am Taekyung, a student programmer who finds the greatest joy in developing tools that make people's lives easier and more beneficial.
+                            </p>
+                            <p data-i18n="about-p2">
+                                I am currently building my technical foundation based on C++ and OpenGL. Leveraging these skills, I am gaining practical experience by designing a custom 2D engine from scratch and developing game projects.
+                            </p>
+                        </div>
+                </div>
                 </div>
             </div>
         </section>
@@ -97,25 +100,24 @@
         <!-- Skills View -->
         <section id="skills" class="view">
             <div class="view-content">
-                <button class="home-back-btn" data-target="home">
-                    <img src="img/face.jpg" alt="Home">
-                </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--services" data-i18n="skills-title">SKILLS</h2>
-                    <div class="services">
-                        <div class="service">
-                            <h3 data-i18n="skill1-title">C++ Systems Programming</h3>
-                            <p data-i18n="skill1-desc">I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.</p>
+                    <div class="card-scroll">
+                        <h2 class="section__title section__title--services" data-i18n="skills-title">SKILLS</h2>
+                        <div class="services">
+                            <div class="service">
+                                <h3 data-i18n="skill1-title">C++ Systems Programming</h3>
+                                <p data-i18n="skill1-desc">I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.</p>
+                            </div>
+                            <div class="service">
+                                <h3 data-i18n="skill2-title">Computer Graphics Development</h3>
+                                <p data-i18n="skill2-desc">I built a foundational rendering pipeline through 2D graphics programming and later expanded my capabilities to <b>OpenGL</b>-based 3D implementation. Proficient in sophisticated spatial transformations and graphics using <b>linear algebra</b>, I build optimized rendering environments that secure both visual quality and performance through <b>advanced shader writing techniques</b> like <b>Post-processing</b> and <b>MSAA</b>.</p>
+                            </div>
+                            <div class="service">
+                                <h3 data-i18n="skill3-title">Architecture Programming & Engine Development</h3>
+                                <p data-i18n="skill3-desc">During engine development, including the <b>Dragonic Tactics</b> project, I applied major design patterns such as <b>Singleton</b> and designed a high-performance architecture based on <b>ECS (Entity Component System)</b>. I directly implemented a custom 2D graphics pipeline and maximized the engine's runtime performance by applying graphics optimization techniques like <b>Batch Rendering</b> and <b>Instancing Rendering</b> to resolve rendering bottlenecks.</p>
+                            </div>
                         </div>
-                        <div class="service">
-                            <h3 data-i18n="skill2-title">Computer Graphics Development</h3>
-                            <p data-i18n="skill2-desc">I built a foundational rendering pipeline through 2D graphics programming and later expanded my capabilities to <b>OpenGL</b>-based 3D implementation. Proficient in sophisticated spatial transformations and graphics using <b>linear algebra</b>, I build optimized rendering environments that secure both visual quality and performance through <b>advanced shader writing techniques</b> like <b>Post-processing</b> and <b>MSAA</b>.</p>
-                        </div>
-                        <div class="service">
-                            <h3 data-i18n="skill3-title">Architecture Programming & Engine Development</h3>
-                            <p data-i18n="skill3-desc">During engine development, including the <b>Dragonic Tactics</b> project, I applied major design patterns such as <b>Singleton</b> and designed a high-performance architecture based on <b>ECS (Entity Component System)</b>. I directly implemented a custom 2D graphics pipeline and maximized the engine's runtime performance by applying graphics optimization techniques like <b>Batch Rendering</b> and <b>Instancing Rendering</b> to resolve rendering bottlenecks.</p>
-                        </div>
-                    </div>
+                </div>
                 </div>
             </div>
         </section>
@@ -123,29 +125,28 @@
         <!-- Projects View -->
         <section id="projects" class="view">
             <div class="view-content">
-                <button class="home-back-btn" data-target="home">
-                    <img src="img/face.jpg" alt="Home">
-                </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--projects" data-i18n="projects-title">Graphics Demos</h2>
-                    <p class="section__subtitle section__subtitle--projects" data-i18n="projects-subtitle">Advanced rendering techniques and real-time shader demonstrations</p>
-                    <div class="portfolio-grid">
-                        <a href="portfolio/01_hello.html" class="portfolio__item">
-                            <img src="img/portfolio_thumbnails/01_hello.jpg" alt="" class="portfolio__img" />
-                        </a>
-                        <a href="portfolio/02_meshes.html" class="portfolio__item">
-                            <img src="img/portfolio_thumbnails/02_meshes.jpg" alt="" class="portfolio__img" />
-                        </a>
-                        <a href="portfolio/05_shadow.html" class="portfolio__item">
-                            <img src="img/portfolio_thumbnails/05_shadow.jpg" alt="" class="portfolio__img" />
-                        </a>
-                        <a href="portfolio/06_value.html" class="portfolio__item">
-                            <img src="img/portfolio_thumbnails/06_value.jpg" alt="" class="portfolio__img" />
-                        </a>
-                        <a href="portfolio/07_gradient.html" class="portfolio__item">
-                            <img src="img/portfolio_thumbnails/07_gradient.jpg" alt="" class="portfolio__img" />
-                        </a>
-                    </div>
+                    <div class="card-scroll">
+                        <h2 class="section__title section__title--projects" data-i18n="projects-title">Graphics Demos</h2>
+                        <p class="section__subtitle section__subtitle--projects" data-i18n="projects-subtitle">Advanced rendering techniques and real-time shader demonstrations</p>
+                        <div class="portfolio-grid">
+                            <a href="portfolio/01_hello.html" class="portfolio__item">
+                                <img src="img/portfolio_thumbnails/01_hello.jpg" alt="" class="portfolio__img" />
+                            </a>
+                            <a href="portfolio/02_meshes.html" class="portfolio__item">
+                                <img src="img/portfolio_thumbnails/02_meshes.jpg" alt="" class="portfolio__img" />
+                            </a>
+                            <a href="portfolio/05_shadow.html" class="portfolio__item">
+                                <img src="img/portfolio_thumbnails/05_shadow.jpg" alt="" class="portfolio__img" />
+                            </a>
+                            <a href="portfolio/06_value.html" class="portfolio__item">
+                                <img src="img/portfolio_thumbnails/06_value.jpg" alt="" class="portfolio__img" />
+                            </a>
+                            <a href="portfolio/07_gradient.html" class="portfolio__item">
+                                <img src="img/portfolio_thumbnails/07_gradient.jpg" alt="" class="portfolio__img" />
+                            </a>
+                        </div>
+                </div>
                 </div>
             </div>
         </section>
@@ -153,27 +154,26 @@
         <!-- Resume View -->
         <section id="resume" class="view">
             <div class="view-content">
-                <button class="home-back-btn" data-target="home">
-                    <img src="img/face.jpg" alt="Home">
-                </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title section__title--resume" data-i18n="resume-title">Resume</h2>
-                    <div class="resume-download">
-                        <a target="_blank" href="docs/Resume.pdf" class="btn"><i class="far fa-file-pdf"></i><span data-i18n="resume-download"> Download PDF</span></a>
-                    </div>
-                    <div class="resume-section">
-                        <h3 data-i18n="resume-exp-title">Experience</h3>
-                        <div class="resume-item">
-                            <p data-i18n="resume-exp1"><b>Producer &amp; Engine/Graphics Engineer, Dragonic Tactics</b><br>Sept 2025 – June 2026<br><em>Daegu, Korea</em><br>Architected a high-performance 2D engine using <b>C++ and OpenGL</b> with <b>ECS architecture</b>, implementing batch rendering to optimize runtime performance.</p>
+                    <div class="card-scroll">
+                        <h2 class="section__title section__title--resume" data-i18n="resume-title">Resume</h2>
+                        <div class="resume-download">
+                            <a target="_blank" href="docs/Resume.pdf" class="btn"><i class="far fa-file-pdf"></i><span data-i18n="resume-download"> Download PDF</span></a>
                         </div>
-                        <div class="resume-item">
-                            <p data-i18n="resume-exp2"><b>Staff Sergeant (ROMAD Specialist), Republic of Korea Air Force</b><br>Aug 2022 – May 2024<br><em>South Korea</em><br>Managed mission-critical tactical communication systems and radio equipment, ensuring <b>100% operational readiness</b> in high-pressure field environments.</p>
+                        <div class="resume-section">
+                            <h3 data-i18n="resume-exp-title">Experience</h3>
+                            <div class="resume-item">
+                                <p data-i18n="resume-exp1"><b>Producer &amp; Engine/Graphics Engineer, Dragonic Tactics</b><br>Sept 2025 – June 2026<br><em>Daegu, Korea</em><br>Architected a high-performance 2D engine using <b>C++ and OpenGL</b> with <b>ECS architecture</b>, implementing batch rendering to optimize runtime performance.</p>
+                            </div>
+                            <div class="resume-item">
+                                <p data-i18n="resume-exp2"><b>Staff Sergeant (ROMAD Specialist), Republic of Korea Air Force</b><br>Aug 2022 – May 2024<br><em>South Korea</em><br>Managed mission-critical tactical communication systems and radio equipment, ensuring <b>100% operational readiness</b> in high-pressure field environments.</p>
+                            </div>
+                            <h3 data-i18n="resume-edu-title">Education</h3>
+                            <div class="resume-item">
+                                <p data-i18n="resume-edu1"><b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>March 2022 – April 2028<br><em>Daegu, Korea &amp; Redmond, WA, USA</em></p>
+                            </div>
                         </div>
-                        <h3 data-i18n="resume-edu-title">Education</h3>
-                        <div class="resume-item">
-                            <p data-i18n="resume-edu1"><b>B.S. in Real-Time Interactive Simulation, DigiPen Institute of Technology</b><br>March 2022 – April 2028<br><em>Daegu, Korea &amp; Redmond, WA, USA</em></p>
-                        </div>
-                    </div>
+                </div>
                 </div>
             </div>
         </section>
@@ -181,24 +181,23 @@
         <!-- SNS View -->
         <section id="sns" class="view">
             <div class="view-content">
-                <button class="home-back-btn" data-target="home">
-                    <img src="img/face.jpg" alt="Home">
-                </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title" data-i18n="sns-title">Connect with Me</h2>
-                    <a href="mailto:taek020422@gmail.com" class="footer__link" data-i18n="sns-email">taek020422@gmail.com</a>
-                    <ul class="social-list">
-                        <li class="social-list__item">
-                            <a class="social-list__link" href="https://www.linkedin.com/in/taekyung-ho-929bba312/" target="_blank" rel="noopener noreferrer">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        </li>
-                        <li class="social-list__item">
-                            <a class="social-list__link" href="https://github.com/taekyung00" target="_blank" rel="noopener noreferrer">
-                                <i class="fab fa-github"></i>
-                            </a>
-                        </li>
-                    </ul>
+                    <div class="card-scroll">
+                        <h2 class="section__title" data-i18n="sns-title">Connect with Me</h2>
+                        <a href="mailto:taek020422@gmail.com" class="footer__link" data-i18n="sns-email">taek020422@gmail.com</a>
+                        <ul class="social-list">
+                            <li class="social-list__item">
+                                <a class="social-list__link" href="https://www.linkedin.com/in/taekyung-ho-929bba312/" target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            </li>
+                            <li class="social-list__item">
+                                <a class="social-list__link" href="https://github.com/taekyung00" target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </li>
+                        </ul>
+                </div>
                 </div>
             </div>
         </section>
@@ -206,12 +205,11 @@
         <!-- Question View 1 -->
         <section id="q1" class="view">
             <div class="view-content">
-                <button class="home-back-btn" data-target="home">
-                    <img src="img/face.jpg" alt="Home">
-                </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title" data-i18n="q1-title">Coming Soon</h2>
-                    <p data-i18n="q1-desc">This section is under development.</p>
+                    <div class="card-scroll">
+                        <h2 class="section__title" data-i18n="q1-title">Coming Soon</h2>
+                        <p data-i18n="q1-desc">This section is under development.</p>
+                </div>
                 </div>
             </div>
         </section>
@@ -219,18 +217,17 @@
         <!-- Question View 2 -->
         <section id="q2" class="view">
             <div class="view-content">
-                <button class="home-back-btn" data-target="home">
-                    <img src="img/face.jpg" alt="Home">
-                </button>
                 <div class="content-wrapper">
-                    <h2 class="section__title" data-i18n="q2-title">Secret Node</h2>
-                    <p data-i18n="q2-desc">Wait for it...</p>
+                    <div class="card-scroll">
+                        <h2 class="section__title" data-i18n="q2-title">Secret Node</h2>
+                        <p data-i18n="q2-desc">Wait for it...</p>
+                </div>
                 </div>
             </div>
         </section>
-    </div>
+    </main>
 
-    <script src="js/index.js?v=14"></script>
+    <script src="js/index.js?v=22"></script>
 </body>
 
 </html>

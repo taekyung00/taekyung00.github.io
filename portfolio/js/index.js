@@ -13,20 +13,18 @@ function cssMs(token) {
 // 대각선이 아닌(축에 가까운) 성분은 0으로 눌러 가장자리 중앙에 붙게 한다.
 const axisSign = (v) => (Math.abs(v) < 0.35 ? 0 : Math.sign(v));
 
-// 노드가 부풀어 화면을 덮을 때 필요한 배율. 노드는 원이므로 바깥 사각형이
-// 아니라 화면 네 모서리까지의 거리를 기준으로 삼아야 한다. 예전의 고정값
-// 25 는 이 화면에 맞춘 값이라 더 큰 모니터에서는 모서리에 배경이 비쳤다.
-// 화면을 덮기도 전에 view 를 교체하므로 여유(1.3)를 둔다.
-function coverScale(btn, corner) {
-    const r = btn.getBoundingClientRect();
-    const cx = r.left + r.width / 2 + corner.x * 0.3;
-    const cy = r.top + r.height / 2 + corner.y * 0.3;
-    const w = window.innerWidth, h = window.innerHeight;
-    const far = Math.max(
-        Math.hypot(cx, cy), Math.hypot(w - cx, cy),
-        Math.hypot(cx, h - cy), Math.hypot(w - cx, h - cy)
-    );
-    return (far / (r.width / 2)) * 1.3;
+// 링 반지름(px). @property 로 등록해 둔 덕에 계산된 값이 나온다.
+function nodeRadiusPx() {
+    const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--node-radius"));
+    if (!Number.isFinite(v) || v === 0) {
+        console.warn("[hub] --node-radius 를 읽지 못했습니다(@property 미지원?)");
+        return 345;
+    }
+    return v;
+}
+
+function cssNum(token) {
+    return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(token));
 }
 
 function nodeButtons() {
@@ -40,41 +38,20 @@ function nodeAngle(target) {
     return i < 0 ? null : -90 + (360 / btns.length) * i;
 }
 
-// 노드가 있는 방향 -> back 버튼을 붙일 위치 클래스(노드의 반대편).
-function backBtnClass(angleDeg) {
-    const rad = (angleDeg * Math.PI) / 180;
-    const key = `${axisSign(Math.cos(rad))},${axisSign(Math.sin(rad))}`;
-    return {
-        "0,-1": "opposite-north",
-        "1,-1": "opposite-ne",
-        "1,0": "opposite-east",
-        "1,1": "opposite-se",
-        "0,1": "opposite-south",
-        "-1,1": "opposite-sw",
-        "-1,0": "opposite-west",
-        "-1,-1": "opposite-nw",
-    }[key];
-}
-
 (() => {
     const nav = document.querySelector(".node-nav");
     const btns = nodeButtons();
     nav.style.setProperty("--n", btns.length);
     btns.forEach((btn, i) => btn.style.setProperty("--i", i));
 
-    document.querySelectorAll(".view").forEach((view) => {
-        const back = view.querySelector(".home-back-btn");
-        const angle = nodeAngle(view.id);
-        if (back && angle !== null) back.classList.add(backBtnClass(angle));
-    });
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
     const views = document.querySelectorAll(".view");
     const nodeBtns = document.querySelectorAll(".node-btn");
-    const backBtns = document.querySelectorAll(".home-back-btn");
     const centerGroup = document.querySelector(".center-group");
     const centerPlate = document.querySelector(".center-plate");
+    const plateHint = document.querySelector(".plate-hint");
     
     // --- i18n ---
     // 영문은 index.html 의 내용이 원본이다. 최초 로드 때 DOM 에서 읽어두므로
@@ -119,6 +96,13 @@ document.addEventListener("DOMContentLoaded", () => {
             "q2-desc": "조금만 기다려주세요..."
     };
 
+    // Jean 판의 호버 힌트. 언어뿐 아니라 허브 상태에 따라서도 달라지므로
+    // data-i18n(요소 1개 = 문구 1개)으로는 표현되지 않아 여기서 관리한다.
+    const PLATE_HINT = {
+        en: { parked: "MENU", menu: "HOME" },
+        ko: { parked: "메뉴", menu: "홈" },
+    };
+
     const en = {};
     document.querySelectorAll("[data-i18n]").forEach(el => {
         en[el.getAttribute("data-i18n")] = el.innerHTML.trim();
@@ -145,6 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
         
+        updatePlateAffordance();
+
         // Update switch UI
         if (langSwitch && enLabel && koLabel) {
             if (currentLang === "ko") {
@@ -189,184 +175,339 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let isAnimating = false;
 
+    const hub = document.querySelector(".hub");
+
+    // 홈은 항상 활성 상태로 남아 상세 페이지 위의 내비게이션 레이어가 된다.
     function switchView(targetId) {
         views.forEach(view => {
-            if (view.id === targetId) {
-                view.classList.add("active");
-            } else {
-                view.classList.remove("active");
-            }
+            if (view.id === "home") return;
+            view.classList.toggle("active", view.id === targetId);
         });
-        document.body.setAttribute("data-view", targetId);
+        document.body.dataset.view = targetId;
     }
 
-    // Hover logic (Hint Animation)
+    // ── 허브 상태 ────────────────────────────────────────────────
+    // home   : Jean 판이 화면 중앙, 노드 링 원본 크기
+    // parked : 페이지가 열려 있고 Jean 버튼만 코너에 축소되어 남음
+    // menu   : parked + 노드 링이 Jean 주위로 다시 나옴
+
+    // 허브를 화면 가장자리 쪽으로 얼마나 들여 놓을지 계산한다.
+    // 들이는 양은 상태마다 다르다: parked 에서는 노드가 Jean 안으로 들어가
+    // 보이지 않으므로 판만 피하면 되고, menu 에서는 링 전체가 화면 안에
+    // 들어와야 한다. 예전에는 둘 다 링 기준이라 parked 일 때 Jean 이
+    // 필요보다 한참 안쪽에 놓여 카드 위에 올라앉았다.
+    function hubPark(target, state) {
+        const angle = nodeAngle(target);
+        if (angle === null) return { tx: 0, ty: 0, s: 1 };
+
+        const R = nodeRadiusPx();
+        // 계산된 width 는 레이아웃 값이라 허브의 transform 에 영향받지 않는다.
+        // offsetWidth 는 border-box 이고 transform 의 영향도 받지 않는다.
+        // getComputedStyle().width 는 box-sizing 과 무관하게 content-box 라
+        // 패딩·테두리만큼 짧게 나온다(판은 약 19px 차이).
+        const rNode = nodeBtns[0].offsetWidth / 2;
+        const plateHalf = centerPlate.offsetWidth / 2;
+        const M = cssNum("--hub-margin");
+        const W = window.innerWidth, H = window.innerHeight;
+
+        // 축척은 링 기준으로 한 번만 정한다. 상태마다 달라지면 메뉴를 여닫을
+        // 때 Jean 판 크기까지 변해 버린다.
+        const s = Math.min(cssNum("--hub-scale-parked"),
+                           (Math.min(W, H) / 2 - M) / (R + rNode));
+        const E = (state === "menu" ? R + rNode : plateHalf) * s;
+        const rad = (angle * Math.PI) / 180;
+
+        return {
+            tx: axisSign(-Math.cos(rad)) * Math.max(0, W / 2 - E - M),
+            ty: axisSign(-Math.sin(rad)) * Math.max(0, H / 2 - E - M),
+            s,
+        };
+    }
+
+    // 홈에서는 Jean 판이 버튼이 아니므로 버튼 의미도 붙이지 않는다.
+    function updatePlateAffordance() {
+        const state = document.body.dataset.hub;
+        const clickable = state === "parked" || state === "menu";
+        const word = clickable ? PLATE_HINT[currentLang][state] : "";
+        plateHint.textContent = word;
+        centerPlate.setAttribute("tabindex", clickable ? "0" : "-1");
+        if (clickable) centerPlate.setAttribute("aria-label", word);
+        else centerPlate.removeAttribute("aria-label");
+    }
+
+
+    // 주차된 Jean 판이 화면에서 실제로 차지하는 사각형.
+    // offsetLeft/Top/Width/Height 는 레이아웃 값이라 transform 에 영향받지
+    // 않고, .hub 이 inset:0 이라 허브 좌표계가 곧 뷰포트 좌표계다.
+    // {tx,ty,s} 로 역산하면 안 된다 — .center-group 안에서 부제목이 자리를
+    // 차지해 판 중심이 허브 중심보다 약 20px 위에 있기 때문이다.
+    // 허브 좌표계에서의 위치. offsetParent 가 .hub 라고 단정하면 안 된다 —
+    // 판의 offsetParent 는 .center-group 이고(부제목이 판보다 넓어 그만큼
+    // 안쪽으로 들어가 있다), 그래서 .hub 에 닿을 때까지 누적해야 한다.
+    function offsetWithinHub(el) {
+        let x = 0, y = 0, n = el;
+        while (n && n !== hub) {
+            x += n.offsetLeft;
+            y += n.offsetTop;
+            n = n.offsetParent;
+        }
+        return { x, y };
+    }
+
+    function plateRectAt(park) {
+        const W = window.innerWidth, H = window.innerHeight;
+        const cx = W / 2, cy = H / 2;
+        const o = offsetWithinHub(centerPlate);
+        const map = (x, y) => [cx + (x - cx) * park.s + park.tx,
+                               cy + (y - cy) * park.s + park.ty];
+        const [left, top] = map(o.x, o.y);
+        const [right, bottom] = map(o.x + centerPlate.offsetWidth,
+                                    o.y + centerPlate.offsetHeight);
+        return { left, top, right, bottom };
+    }
+
+    // 판이 차지한 쪽 띠를 비우고 남은 사각형에 카드를 둔다. 크기는 그대로
+    // 두고 위치만 옮기되, 남은 자리에 안 들어갈 때만 줄인다.
+    function layoutCard(view, park) {
+        const content = view.querySelector(".view-content");
+        const card = view.querySelector(".content-wrapper");
+        if (!content || !card) return;
+
+        const W = window.innerWidth, H = window.innerHeight;
+        const base = cssNum("--view-pad");
+        const gap = cssNum("--card-gap");
+        const prefW = cssNum("--card-width");
+        const prefH = cssNum("--card-max-height");
+        const minH = cssNum("--card-min-height");
+        const p = plateRectAt(park);
+
+        // 판은 늘 가장자리에 있으므로 그쪽 여백만 키우면 된다.
+        const pads = [];
+        if (p.left > W / 2) pads.push({ t: base, r: Math.max(base, W - p.left + gap), b: base, l: base });
+        if (p.right < W / 2) pads.push({ t: base, r: base, b: base, l: Math.max(base, p.right + gap) });
+        if (p.top > H / 2) pads.push({ t: base, r: base, b: Math.max(base, H - p.top + gap), l: base });
+        if (p.bottom < H / 2) pads.push({ t: Math.max(base, p.bottom + gap), r: base, b: base, l: base });
+        if (!pads.length) pads.push({ t: base, r: base, b: base, l: base });
+
+        // 모서리 주차는 가로·세로 두 후보가 나온다. "카드가 줄지 않고
+        // 들어가는가"를 먼저 보고, 그 다음에 남는 면적을 본다. 면적만 보면
+        // 거의 정사각형인 창에서 축이 홱 바뀌어 카드가 튄다.
+        const free = (c) => ({ w: W - c.l - c.r, h: H - c.t - c.b });
+        pads.sort((a, b) => {
+            const A = free(a), B = free(b);
+            const af = A.w >= prefW && A.h >= prefH, bf = B.w >= prefW && B.h >= prefH;
+            if (af !== bf) return af ? -1 : 1;
+            return B.w * B.h - A.w * A.h;
+        });
+        const pick = pads[0], f = free(pick);
+
+        content.style.setProperty("--pad-t", `${pick.t}px`);
+        content.style.setProperty("--pad-r", `${pick.r}px`);
+        content.style.setProperty("--pad-b", `${pick.b}px`);
+        content.style.setProperty("--pad-l", `${pick.l}px`);
+        // 클램프는 선택이 아니라 필수다: --card-width 는 뷰포트 기준이라
+        // 부모의 padding 이 막지 못하고, 넘치면 양끝이 잘린다.
+        card.style.setProperty("--card-width", `${Math.min(prefW, f.w)}px`);
+        card.style.setProperty("--card-max-height", `${Math.max(minH, Math.min(prefH, f.h))}px`);
+    }
+
+    function setHub(state, target) {
+        document.body.dataset.hub = state;
+        updatePlateAffordance();
+
+        // 노드를 누른 순간에는 커서가 노드 위에 있어 mouseleave 가 오지
+        // 않는다. 힌트 변형이 남아 있으면 판의 실제 위치가 계산과 어긋나므로
+        // 홈을 떠날 때 직접 지운다.
+        if (state !== "home") {
+            centerGroup.style.setProperty("--tx", "0px");
+            centerGroup.style.setProperty("--ty", "0px");
+            centerGroup.style.setProperty("--scale", "1");
+            nodeBtns.forEach(b => {
+                b.style.setProperty("--tx", "0px");
+                b.style.setProperty("--ty", "0px");
+                b.style.setProperty("--scale", "1");
+            });
+        }
+        if (state === "home") {
+            hub.style.setProperty("--hub-tx", "0px");
+            hub.style.setProperty("--hub-ty", "0px");
+            hub.style.setProperty("--hub-scale", "1");
+            return;
+        }
+        const p = hubPark(target, state);
+        hub.style.setProperty("--hub-tx", `${p.tx}px`);
+        hub.style.setProperty("--hub-ty", `${p.ty}px`);
+        hub.style.setProperty("--hub-scale", `${p.s}`);
+
+        // 카드 배치는 parked 기준으로만 잡는다. menu 에서 다시 계산하면
+        // 링이 판보다 훨씬 커서 메뉴를 여닫을 때마다 카드 크기가 변한다.
+        if (state === "parked") {
+            const view = document.getElementById(target);
+            if (view) layoutCard(view, p);
+        }
+    }
+
+    // 열려 있는 페이지의 노드는 자리를 지킨 채 흐려진다(나머지 위치 고정).
+    function markCurrent(target) {
+        nodeBtns.forEach(b => b.classList.toggle("is-current", b.dataset.target === target));
+    }
+
+    // 노드가 페이지가 되는 연출: 카드를 노드 자리·크기에서 제자리로 키운다.
+    // 화면을 덮는 풍선 대신 이 방식이라야 "노드 하나가 확대된" 느낌이 난다.
+    function flipCardIn(view, fromRect) {
+        const card = view.querySelector(".content-wrapper");
+        if (!card) return;
+        // .view 는 display:none 이 아니라 visibility:hidden 이라 활성화 전에도
+        // 레이아웃이 잡혀 있어 최종 위치를 미리 잴 수 있다.
+        const to = card.getBoundingClientRect();
+        if (!to.width || !to.height) return;
+
+        const scale = fromRect.width / to.width;   // 균일 배율 (글자가 찌그러지지 않게)
+        const dx = fromRect.left - to.left;
+        const dy = fromRect.top - to.top;
+
+        card.style.transition = "none";
+        card.style.transformOrigin = "0 0";        // 중앙 기준이면 절반 크기 보정이 더 필요하다
+        card.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+        // 스크롤은 카드가 아니라 안쪽 .card-scroll 이 한다.
+        const scroller = card.querySelector(".card-scroll");
+        if (scroller) {
+            scroller.style.overflow = "hidden";   // 확대 중 스크롤바가 같이 늘어나 보인다
+            scroller.scrollTop = 0;
+        }
+        void card.offsetWidth;                     // 시작 상태를 확정시키는 강제 reflow
+
+        requestAnimationFrame(() => {
+            card.style.transition = "transform var(--dur-node-fly) var(--ease-emphasized)";
+            card.style.transform = "";
+        });
+
+        // 정리는 rAF 밖에서 예약한다. 배경 탭처럼 rAF 가 늦게 도는 상황에서
+        // 안쪽에 두면 카드가 축소된 시작 상태로 남아버린다.
+        setTimeout(() => {
+            card.style.transition = "";
+            card.style.transform = "";
+            card.style.transformOrigin = "";
+            if (scroller) scroller.style.overflow = "";
+        }, cssMs("--dur-node-fly") + 50);
+    }
+
+    function openNode(target, btn) {
+        if (isAnimating) return;
+        isAnimating = true;
+        btn.blur();
+
+        // 순서가 중요하다. setHub 이 주차 위치를 정하고 그에 맞춰 카드
+        // 배치까지 끝낸 뒤라야, flipCardIn 이 카드의 *정정된* 최종 위치를
+        // 잰다. 읽기(주차 계산) -> 쓰기(배치) -> 읽기(rect) 순이라
+        // 강제 레이아웃은 2회로 끝난다.
+        // 전제: .view.active 는 opacity/visibility/z-index 만 바꾼다.
+        // 여기에 레이아웃에 영향 주는 속성을 넣으면 FLIP 이 조용히 깨진다.
+        setHub("parked", target);
+
+        const view = document.getElementById(target);
+        if (view) flipCardIn(view, btn.getBoundingClientRect());
+        switchView(target);
+        markCurrent(target);
+
+        setTimeout(() => { isAnimating = false; }, cssMs("--dur-node-fly"));
+    }
+
+    function goHome() {
+        if (isAnimating) return;
+        isAnimating = true;
+        switchView("home");
+        markCurrent(null);
+        setHub("home");
+        setTimeout(() => { isAnimating = false; }, cssMs("--dur-node-fly"));
+    }
+
+    // ── 노드 ────────────────────────────────────────────────────
     nodeBtns.forEach(btn => {
+        // 호버 힌트는 홈에서만. 축소된 메뉴 상태에서 돌면 화면 절반 거리만큼
+        // 날아가고, mouseleave 가 모든 노드의 --scale 을 되돌려 흐림도 풀린다.
         btn.addEventListener("mouseenter", () => {
-            if (isAnimating) return;
-            const target = btn.getAttribute("data-target");
-            const corner = getTargetCornerTranslation(target);
-            
-            // Move center group and other nodes slightly towards the target corner (shrinking)
-            const shrinkRatio = 0.05; 
-            const hintTx = corner.x * shrinkRatio;
-            const hintTy = corner.y * shrinkRatio;
-            
+            if (isAnimating || document.body.dataset.hub !== "home") return;
+            const corner = getTargetCornerTranslation(btn.dataset.target);
+            const hintTx = corner.x * 0.05;
+            const hintTy = corner.y * 0.05;
+
             centerGroup.style.setProperty("--tx", `${hintTx}px`);
             centerGroup.style.setProperty("--ty", `${hintTy}px`);
             centerGroup.style.setProperty("--scale", "0.95");
-            
-            nodeBtns.forEach(otherBtn => {
-                if (otherBtn !== btn) {
-                    otherBtn.style.setProperty("--tx", `${hintTx}px`);
-                    otherBtn.style.setProperty("--ty", `${hintTy}px`);
-                    otherBtn.style.setProperty("--scale", "0.95");
-                }
+
+            nodeBtns.forEach(other => {
+                if (other === btn) return;
+                other.style.setProperty("--tx", `${hintTx}px`);
+                other.style.setProperty("--ty", `${hintTy}px`);
+                other.style.setProperty("--scale", "0.95");
             });
 
-            // Hovered node itself grows in place only (no translate). Moving it
-            // toward the corner used to slide the hitbox out from under the
-            // cursor mid-hover, triggering a mouseleave -> mouseenter loop
-            // (visible as flickering).
+            // 호버한 노드는 제자리에서만 커진다. 커서 쪽에서 밀려나면
+            // mouseleave/mouseenter 가 번갈아 발동해 깜빡인다.
             btn.style.setProperty("--tx", "0px");
             btn.style.setProperty("--ty", "0px");
             btn.style.setProperty("--scale", "1.15");
         });
 
         btn.addEventListener("mouseleave", () => {
-            if (isAnimating) return;
+            if (isAnimating || document.body.dataset.hub !== "home") return;
             centerGroup.style.setProperty("--tx", "0px");
             centerGroup.style.setProperty("--ty", "0px");
             centerGroup.style.setProperty("--scale", "1");
-            
-            nodeBtns.forEach(otherBtn => {
-                otherBtn.style.setProperty("--tx", "0px");
-                otherBtn.style.setProperty("--ty", "0px");
-                otherBtn.style.setProperty("--scale", "1");
+            nodeBtns.forEach(other => {
+                other.style.setProperty("--tx", "0px");
+                other.style.setProperty("--ty", "0px");
+                other.style.setProperty("--scale", "1");
             });
         });
 
-        // Click logic (Full Transition)
-        btn.addEventListener("click", () => {
-            if (isAnimating) return;
-            isAnimating = true;
-            btn.blur(); // Remove focus to prevent hover/focus glitches
-            
-            const target = btn.getAttribute("data-target");
-            const corner = getTargetCornerTranslation(target);
-
-            // 1. Center group shrinks and moves to corner
-            centerGroup.style.setProperty("--tx", `${corner.x}px`);
-            centerGroup.style.setProperty("--ty", `${corner.y}px`);
-            centerGroup.style.setProperty("--scale", "0.42"); // 120px / 280px = 0.428 (size of back btn)
-            if (centerPlate) centerPlate.style.opacity = "0";
-
-            // 2. Unclicked nodes shrink to 0 and move to corner
-            nodeBtns.forEach(otherBtn => {
-                if (otherBtn !== btn) {
-                    otherBtn.style.setProperty("--tx", `${corner.x}px`);
-                    otherBtn.style.setProperty("--ty", `${corner.y}px`);
-                    otherBtn.style.setProperty("--scale", "0");
-                    otherBtn.style.opacity = "0";
-                }
-            });
-
-            // 3. Clicked node expands massively to cover screen
-            btn.classList.add("expanding-node");
-            btn.style.setProperty("--tx", `${corner.x * 0.3}px`);
-            btn.style.setProperty("--ty", `${corner.y * 0.3}px`);
-            btn.style.setProperty("--scale", coverScale(btn, corner));
-
-            // Wait for transition to mostly finish, then switch view earlier to remove pause
-            setTimeout(() => {
-                switchView(target);
-                isAnimating = false;
-            }, cssMs("--dur-view-swap"));
-        });
+        btn.addEventListener("click", () => openNode(btn.dataset.target, btn));
     });
 
-    // Back logic (Expansion Principle)
-    backBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            if (isAnimating) return;
-            isAnimating = true;
-            btn.blur(); // Remove focus to prevent hover/focus glitches
-            
-            // 1. The clicked back button expands massively
-            btn.classList.add("expanding-node");
-            btn.style.pointerEvents = "none"; // Prevent the giant bubble from intercepting mouse events
-            btn.style.transition = "transform var(--dur-back-expand) var(--ease-emphasized), background var(--transition-fast)";
-            btn.style.transform = `scale(30)`;
-            
-            // 2. The detail page content shrinks towards the opposite corner (the original node position)
-            const currentViewId = document.body.getAttribute("data-view");
-            const corner = getTargetCornerTranslation(currentViewId); 
-            
-            const contentWrapper = btn.closest('.view').querySelector('.content-wrapper');
-            if (contentWrapper) {
-                contentWrapper.style.transition = "transform var(--dur-back-shrink) var(--ease-emphasized), opacity var(--transition-slow)";
-                contentWrapper.style.transform = `translate(${-corner.x}px, ${-corner.y}px) scale(0)`;
-                contentWrapper.style.opacity = "0";
+    // ── Jean 판 ─────────────────────────────────────────────────
+    // parked 에서 누르면 노드들이 나오고, menu 에서 누르면 홈으로 간다.
+    centerPlate.addEventListener("click", () => {
+        const state = document.body.dataset.hub;
+        if (state === "parked") setHub("menu", document.body.dataset.view);
+        else if (state === "menu") goHome();
+    });
+
+    centerPlate.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            centerPlate.click();
+        }
+    });
+
+    // 빈곳 = Jean 과 노드를 제외한 전부(카드 본문 포함). 누르면 메뉴가 닫힌다.
+    // .hub 는 화면 전체를 덮지만 pointer-events:none 이라, 실제로 클릭 대상이
+    // 되는 것은 .center-plate 와 .node-btn 뿐이다.
+    document.addEventListener("click", (e) => {
+        if (document.body.dataset.hub !== "menu") return;
+        if (e.target.closest(".hub")) return;
+        setHub("parked", document.body.dataset.view);
+    });
+
+    // 창 크기가 바뀌면 주차 위치와 카드 배치를 다시 잡는다.
+    // resize 는 드래그 중 초당 수십 번 오므로 프레임 단위로 합친다.
+    let resizePending = false;
+    window.addEventListener("resize", () => {
+        if (resizePending) return;
+        resizePending = true;
+        requestAnimationFrame(() => {
+            resizePending = false;
+            const state = document.body.dataset.hub;
+            const target = document.body.dataset.view;
+            if (!state || state === "home") return;
+            setHub(state, target);
+            // menu 중에는 setHub 이 카드를 건드리지 않으므로 여기서 직접 맞춘다.
+            if (state === "menu") {
+                const view = document.getElementById(target);
+                if (view) layoutCard(view, hubPark(target, "parked"));
             }
-            
-            setTimeout(() => {
-                // Switch back to home
-                switchView("home");
-                
-                // Immediately reset the home elements because they don't need reverse animation anymore.
-                // Force a reflow to ensure transitions don't play
-                document.body.offsetHeight;
-                
-                centerGroup.style.transition = "none";
-                centerGroup.style.setProperty("--tx", "0px");
-                centerGroup.style.setProperty("--ty", "0px");
-                centerGroup.style.setProperty("--scale", "1");
-                if (centerPlate) centerPlate.style.opacity = "1";
-                
-                nodeBtns.forEach(nodeBtn => {
-                    nodeBtn.classList.remove("expanding-node");
-                    nodeBtn.style.transition = "none";
-                    nodeBtn.style.setProperty("--tx", "0px");
-                    nodeBtn.style.setProperty("--ty", "0px");
-                    nodeBtn.style.setProperty("--scale", "1");
-                    nodeBtn.style.opacity = "1";
-                });
-                
-                // Force another reflow to apply the 0px positions instantly
-                document.body.offsetHeight;
-                
-                // Use requestAnimationFrame to ensure the 'none' transition is painted
-                // BEFORE we restore the CSS transitions, preventing any race conditions.
-                requestAnimationFrame(() => {
-                    centerGroup.style.transition = "";
-                    nodeBtns.forEach(nodeBtn => {
-                        nodeBtn.style.transition = "";
-                    });
-                    
-                    // Allow user interaction immediately!
-                    isAnimating = false;
-                });
-                
-                // 상세 view 가 완전히 사라진 뒤에 잔여 스타일을 정리한다
-                setTimeout(() => {
-                    // Instantly snap the hidden detail view elements back to normal without animation
-                    btn.style.transition = "none";
-                    btn.classList.remove("expanding-node");
-                    btn.style.transform = "";
-                    if (contentWrapper) {
-                        contentWrapper.style.transition = "none";
-                        contentWrapper.style.transform = "";
-                        contentWrapper.style.opacity = "";
-                    }
-                    
-                    // Clear the inline 'none' transition after a tiny delay so future interactions work
-                    setTimeout(() => {
-                        btn.style.transition = "";
-                        btn.style.pointerEvents = "auto"; // Restore pointer events
-                        if (contentWrapper) contentWrapper.style.transition = "";
-                    }, 50);
-                }, cssMs("--dur-back-cleanup"));
-            }, cssMs("--dur-back-swap"));
         });
     });
+
+    setHub("home");
 });

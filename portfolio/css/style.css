@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
+/* 등록하지 않은 커스텀 속성은 getComputedStyle 이 계산값이 아니라 작성한
+   문자열(min(345px, 39vmin))을 그대로 돌려준다. 등록해 두면 px 로 계산된
+   값이 나와, js 가 허브의 코너 배치를 계산할 때 쓸 수 있다. */
+@property --node-radius {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
 :root {
   /* 색·글꼴·전환 속도는 css/tokens.css 가 단일 출처다. 여기에는 홈 화면
      레이아웃에만 쓰이는 값만 둔다. */
@@ -28,12 +37,6 @@ body {
   width: 100vw;
 }
 
-.app-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
 /* View Management */
 .view {
   position: absolute;
@@ -59,6 +62,23 @@ body {
   z-index: 10;
 }
 
+/* 홈 섹션은 숨기지 않고 항상 활성으로 남아, 상세 페이지 위에 떠 있는
+   투명한 내비게이션 레이어가 된다. 배경이 없으므로 카드를 가리지 않고,
+   허브(Jean + 노드)는 카드보다 위에 떠야 하므로 이 순서가 필요하다. */
+#home {
+  opacity: 1;
+  visibility: visible;
+  z-index: 50;
+  pointer-events: none; /* 아래 카드의 링크를 막지 않는다 */
+}
+
+/* 실제로 누를 수 있는 것들만 클릭을 받는다 */
+.center-plate,
+.node-btn,
+.lang-toggle-container {
+  pointer-events: auto;
+}
+
 /* Home View Layout */
 .home-content {
   position: relative;
@@ -67,6 +87,19 @@ body {
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+
+/* 허브: Jean 판 + 노드 링을 한 덩어리로 묶어 통째로 옮기고 줄인다.
+   home 에서는 화면 중앙 원본 크기, parked/menu 에서는 열린 노드의 반대편
+   코너로 축소 이동한다. --hub-* 값은 js/index.js 가 화면 크기에 맞춰 넣는다. */
+.hub {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(var(--hub-tx, 0px), var(--hub-ty, 0px)) scale(var(--hub-scale, 1));
+  transition: transform var(--dur-node-fly) var(--ease-emphasized);
 }
 
 .center-group {
@@ -135,7 +168,6 @@ body[data-lang="ko"] .home-title {
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.115em;
-  pointer-events: auto;
   line-height: 1.2;
   text-align: center;
 }
@@ -158,6 +190,48 @@ body[data-lang="ko"] .home-title {
   box-shadow: 0 0 60px var(--clr-accent-glow);
   transition: var(--transition-fast);
   pointer-events: auto;
+  position: relative; /* .plate-hint 를 판 안에 절대배치 */
+}
+
+/* 홈에서 Jean 판은 아무 동작도 하지 않으므로 클릭 대상이 아니다.
+   누를 수 있는 것처럼 보이면 그것대로 거짓 단서가 된다. */
+body[data-hub="home"] .center-plate {
+  pointer-events: none;
+}
+
+/* parked/menu 에서는 버튼이다. 노드와 같은 방식으로 불이 들어와
+   누를 수 있음을 알린다(노드만 호버 반응이 있으면 Jean 은 장식으로 보인다). */
+body[data-hub="parked"] .center-plate,
+body[data-hub="menu"] .center-plate {
+  cursor: pointer;
+}
+
+body[data-hub="parked"] .center-plate:hover,
+body[data-hub="menu"] .center-plate:hover {
+  background: color-mix(in srgb, var(--clr-accent) 18%, transparent);
+  box-shadow: 0 0 40px var(--clr-accent);
+}
+
+/* Jean 은 상태에 따라 하는 일이 다르다(메뉴 열기 / 홈). 색만 바뀌면
+   무엇이 일어날지 알 수 없으므로, 호버할 때 동작을 글자로 알려준다. */
+.plate-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--node-radius) * 0.05);
+  text-align: center;
+  font-size: calc(var(--node-radius) * 0.05);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.14em;
+  color: var(--clr-accent);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+body[data-hub="parked"] .center-plate:hover .plate-hint,
+body[data-hub="menu"] .center-plate:hover .plate-hint {
+  opacity: 1;
 }
 
 /* Node Navigation */
@@ -197,11 +271,15 @@ body[data-lang="ko"] .home-title {
   font-family: var(--ff-primary);
   font-weight: var(--fw-bold);
   font-size: calc(var(--node-size) * 0.15);
-  transition: transform var(--dur-node-fly) var(--ease-emphasized), background 0.3s ease, opacity 0.5s ease;
+  transition: transform var(--dur-node-fly) var(--ease-emphasized),
+              background var(--transition-fast),
+              opacity var(--dur-node-fly) var(--ease-emphasized);
   /* --dist defaults to the shared --node-radius, giving every node the same
      orbit radius (a true circle); only --angle differs per node. */
   --dist: var(--node-radius);
-  transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--dist)) rotate(calc(var(--angle) * -1)) translate(var(--tx, 0), var(--ty, 0)) scale(var(--scale, 1));
+  transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--dist))
+             rotate(calc(var(--angle) * -1)) translate(var(--tx, 0), var(--ty, 0))
+             scale(var(--state-scale, 1)) scale(var(--scale, 1));
   box-shadow: var(--bs);
   z-index: 30;
 }
@@ -225,26 +303,41 @@ body[data-lang="ko"] .home-title {
   transition: opacity 0.2s ease;
 }
 
-/* Expanding state to hide inner content and prevent pixelation */
-.expanding-node > span,
-.expanding-node > img {
-  opacity: 0 !important;
-  transition: none !important;
+/* ── 허브 상태 ──────────────────────────────────────────────────
+   parked: 페이지가 열려 있고 Jean 버튼만 코너에 남는다. 나머지 노드는
+           --dist 를 0 으로 만들어 Jean 중심으로 빨려들어가며 사라진다.
+   menu:   그 노드들이 다시 링으로 나온다(허브가 이미 축소돼 있으므로
+           링도 자동으로 작아진다). 현재 페이지의 노드는 자리를 지킨 채
+           흐려져, 페이지를 옮겨도 나머지 노드 위치가 흔들리지 않는다. */
+
+body[data-hub="parked"] .home-subname,
+body[data-hub="menu"] .home-subname,
+body[data-hub="parked"] .home-subtitle,
+body[data-hub="menu"] .home-subtitle {
+  opacity: 0;
+  transition: opacity var(--dur-view-fade) var(--ease-emphasized);
 }
 
-/* Detail View Back Button Positions */
-.home-back-btn {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  border-radius: 30px;
-  overflow: hidden;
-  padding: 0;
-  border: 3px solid var(--clr-accent);
-  cursor: pointer;
-  transition: var(--transition-fast);
-  z-index: 100;
-  box-shadow: var(--bs);
+body[data-hub="parked"] .node-btn {
+  --dist: 0px;
+  --state-scale: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 언어 토글은 홈에서만 둔다. 상세 페이지에서는 코너에 주차한 Jean 판과
+   겹치고, 언어는 한 번 고르는 전역 설정이라 홈에 있으면 충분하다.
+   마크업을 지우지는 않는다 — 지우면 langSwitch 가 null 이 되고
+   js 의 if (langSwitch) 가드 때문에 언어 전환이 조용히 죽는다. */
+body:not([data-hub="home"]) .lang-toggle-container {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-view-fade) var(--ease-emphasized);
+}
+
+body[data-hub="menu"] .node-btn.is-current {
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 /* Language Toggle Switch */
@@ -312,37 +405,17 @@ body[data-lang="ko"] .home-title {
   background: var(--clr-accent);
 }
 
-.home-back-btn:hover {
-  transform: scale(1.1) translate(var(--back-shift-x, 0), var(--back-shift-y, 0));
-  box-shadow: 0 0 50px var(--clr-accent);
-}
-
-.home-back-btn:active {
-  transform: scale(0.95) translate(var(--back-shift-x, 0), var(--back-shift-y, 0));
-}
-
-.home-back-btn img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity 0.2s ease;
-}
-
-.opposite-ne { bottom: 40px; left: 40px; --back-shift-x: 20px; --back-shift-y: -20px; }   /* From NE, so at SW. Return: Up/Right */
-.opposite-east { top: 50%; left: 40px; margin-top: -60px; --back-shift-x: 20px; --back-shift-y: 0; } /* From E, at W. Return: Right */
-.opposite-se { top: 40px; left: 40px; --back-shift-x: 20px; --back-shift-y: 20px; }     /* From SE, at NW. Return: Down/Right */
-.opposite-sw { top: 40px; right: 40px; --back-shift-x: -20px; --back-shift-y: 20px; }    /* From SW, at NE. Return: Down/Left */
-.opposite-west { top: 50%; right: 40px; margin-top: -60px; --back-shift-x: -20px; --back-shift-y: 0; } /* From W, at E. Return: Left */
-.opposite-north { bottom: 40px; left: 50%; margin-left: -60px; --back-shift-x: 0; --back-shift-y: -20px; } /* From N, at S. Return: Up */
-.opposite-south { top: 40px; left: 50%; margin-left: -60px; --back-shift-x: 0; --back-shift-y: 20px; }   /* From S, at N. Return: Down */
-.opposite-nw { bottom: 40px; right: 40px; --back-shift-x: -20px; --back-shift-y: -20px; } /* From NW, at SE. Return: Up/Left */
 
 /* Content Wrapper inside Views */
 .view-content {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 40px; /* Reduced to allow more room for growth */
+  /* js 가 Jean 판이 있는 쪽 여백만 키워 카드를 밀어낸다. shorthand 를
+     인라인으로 덮으면 아래 모바일 미디어쿼리가 조용히 무시되므로
+     네 방향을 각각 커스텀 속성으로 둔다. */
+  padding: var(--pad-t, var(--view-pad)) var(--pad-r, var(--view-pad))
+           var(--pad-b, var(--view-pad)) var(--pad-l, var(--view-pad));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -350,15 +423,26 @@ body[data-lang="ko"] .home-title {
 }
 
 .content-wrapper {
-  max-width: 90vw;
-  width: fit-content;
+  width: var(--card-width);
   background: var(--clr-glass);
   backdrop-filter: blur(20px);
-  padding: 2rem 3rem 3rem 3rem; /* Top padding reduced */
+  padding: var(--card-inset);
   border-radius: 40px;
   border: 1px solid var(--clr-glass-border);
-  max-height: 90vh;
+  max-height: var(--card-max-height);
+  overflow: hidden; /* 둥근 모서리로 확실히 잘라낸다 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 실제로 스크롤되는 영역. 카드보다 --card-inset 만큼 안쪽에 있어서
+   스크롤바가 둥근 모서리 밖으로 나가지 않는다. */
+.card-scroll {
+  width: 100%;
+  min-height: 0; /* flex 자식이 내용보다 작아질 수 있어야 스크롤이 생긴다 */
   overflow-y: auto;
+  padding: calc(2rem - var(--card-inset)) calc(3rem - var(--card-inset))
+           calc(3rem - var(--card-inset));
   display: flex;
   flex-direction: column;
   align-items: center; /* Center the title/subtitle within the content */
@@ -366,23 +450,16 @@ body[data-lang="ko"] .home-title {
   scrollbar-color: var(--clr-accent) transparent;
 }
 
-.content-wrapper::-webkit-scrollbar {
+.card-scroll::-webkit-scrollbar {
   width: 6px;
 }
 
-.content-wrapper::-webkit-scrollbar-thumb {
+.card-scroll::-webkit-scrollbar-thumb {
   background-color: var(--clr-accent);
   border-radius: 10px;
 }
 
 /* Specific styling for About Me to prevent overlap with home button */
-#about .content-wrapper {
-  max-width: 750px; /* Reduced width to avoid home button */
-  width: 90vw;
-  min-height: 55vh; /* Increased minimum height */
-  justify-content: center; /* Vertically center the content */
-}
-
 /* Typography & Content Styles */
 h2.section__title {
   font-size: 3rem;
@@ -565,7 +642,6 @@ h2.section__title {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .home-back-btn { width: 80px; height: 80px; }
-  .view-content { padding: 40px 20px; }
+    .view-content { --pad-r: 20px; --pad-l: 20px; }
   .content-wrapper { padding: 1.5rem; }
 }

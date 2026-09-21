@@ -23,18 +23,27 @@ then open `http://localhost:8000`. There is no lint, test, or build command — 
 ### View switching (`js/index.js`)
 - All views live in `index.html` as sibling `<section id="...">` elements with class `view`; the active one gets class `active` and `<body data-view="...">` is kept in sync.
 - Navigation is via a radial "node" menu on the home view. The ring layout is **derived, not hardcoded**: a top-level block in `js/index.js` writes `--n` (node count) onto `.node-nav` and `--i` (DOM index) onto each `.node-btn`, and CSS computes `--angle: calc(360deg / var(--n) * var(--i) - 90deg)`. DOM order is clockwise placement order, starting at 12 o'clock. All nodes share one orbit radius (`--node-radius`), so the ring is a true circle.
-- Two things follow from a node's angle and must not be hardcoded again: the corner the expand/collapse animation flies to (`getTargetCornerTranslation`) and the `opposite-*` position class applied to that view's back button. Both are the *opposite* compass direction from the node, snapped to one of 8 slots by `axisSign`.
+- `#home` is **never deactivated**. It stays `.active` at `z-index: 50` as a transparent navigation layer above the detail views, with `pointer-events: none` and `auto` re-enabled only on `.center-plate`, `.node-btn` and `.lang-toggle-container`. Detail views render their card underneath it.
 
-### Adding or removing a node
-Only three edits, all additive — angles, transition corners and back-button placement recalculate themselves:
-1. Add/remove a `<button class="node-btn" data-target="X">` in `<nav class="node-nav">` (position in the list = position on the ring).
-2. Add/remove the matching `<section id="X" class="view">`, including a `<button class="home-back-btn">` (no position class — JS assigns it).
-3. Write the English label in the HTML itself and add the Korean to the `ko` object in `js/index.js`. A missing Korean key logs an `[i18n]` console warning rather than silently falling back.
+### The hub — three states
+`.center-plate` (the "Jean" name plate) plus `<nav class="node-nav">` are wrapped in one `.hub` element. The **same DOM** serves as both the home ring and the corner menu; only a transform differs, which is what makes the states morph into each other for free. State lives in `body[data-hub]`:
 
-The 8 `opposite-*` classes cover 8 compass directions, so past 8 nodes two views can share a back-button slot.
+| state | screen |
+|---|---|
+| `home` | plate centred, full-size node ring |
+| `parked` | a page card is open; only the plate remains, shrunk to the corner **opposite** the opened node. Other nodes get `--dist: 0` so they collapse *into* the plate |
+| `menu` | the ring re-emerges around the parked plate. The open page's node keeps its slot but gets `.is-current` (dimmed, non-clickable) so the others never re-space |
+
+Transitions: node click → `parked`; plate click → `menu`; plate click again → `home`; clicking anything that is **not** the plate or a node → closes the menu; clicking another node in the menu → goes straight to that page without passing through home.
+
+`setHub()`/`hubPark()` in `js/index.js` compute the parked corner, reusing `nodeAngle()` and `axisSign()`. The hub scale is `--hub-scale-parked`; `hubPark()` clamps it further if the ring would not fit the short axis.
 
 ### Transition animation
-Clicking a node or a `.home-back-btn` doesn't just toggle visibility — it drives a multi-stage transform animation (shrink/expand via `--tx`/`--ty`/`--scale` CSS vars, plus an `expanding-node` class that scales a button until it covers the screen). Every duration involved is a `--dur-*` token in `tokens.css`; the JS reads them rather than repeating the numbers, so retiming the sequence is a token edit.
+Opening a node animates the page card **from the node's position and size** to its resting place (`flipCardIn()`), so it reads as the node becoming the page rather than a panel sliding in. Every duration is a `--dur-*` token in `tokens.css` read via `cssMs()` — never hardcode a timing.
+
+Two traps worth remembering:
+- `--node-radius` is registered with `@property` **because** `getComputedStyle` otherwise returns the literal string `min(345px, 39vmin)` and `parseFloat` gives `NaN`.
+- Release the `isAnimating` lock from a plain `setTimeout`, not inside `requestAnimationFrame`. The old code did the latter, which could leave the UI permanently locked after the first transition.
 
 ### Styling — three files, one source of truth
 - **`css/tokens.css`** holds every color, font, shadow and transition duration as a `:root` custom property. Nothing else in the codebase contains a color literal, so a palette change is a single-file edit. Both the home page and the project pages load it **first**, before their own stylesheet.
