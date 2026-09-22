@@ -97,6 +97,9 @@ Cards grow wide, so prose containers (`.about-me__body`, `.resume-section`, `.se
 - Each embeds a live demo via `<iframe>` pointing at a local sibling file (`quad_demo.html`, `meshes_demo.html`, `shadow_demo.html`, `value_demo.html`, `gradient_demo.html`).
 - **Known incomplete state**: those `*_demo.html` targets are empty (0-byte) placeholders, so no iframe currently renders anything. Tracked in `TODO.txt` ("그래픽 데모 수정하기").
 
+### Link previews (Open Graph)
+`index.html` declares `og:*` / `twitter:card` in `<head>`. Without them a scraper picks an arbitrary `<img>` from the document — it used to grab a game screenshot. Two rules: `og:image` must be an **absolute** URL (`https://taekyung00.github.io/portfolio/...`, relative paths are ignored by most scrapers), and the image is **1200×630**. `img/og-image.png` is a placeholder rendered from the site's own tokens; replacing it means dropping a new file at the same path and size, no markup change. Scrapers cache aggressively, so a changed image won't show until their cache expires or is refreshed (KakaoTalk is the stubbornest). The `portfolio/*.html` detail pages have no OG tags and no images, so they preview without a picture.
+
 ## Other notes
 - `TODO.txt` and `README.md` (a Korean "AI agent guide") track outstanding work items and a duplicate description of the directory/node layout; `README.md` also documents the node-position table this file summarizes above.
 - `docs/` holds the downloadable résumé/cover letter/transcript assets linked from the Resume view, plus `docs/1098/` (the 10..9..8.. GDD and technical spec linked from Game Projects) — treat these as user-supplied content, not something to regenerate. The GDD filename contains `..` inside a segment; that is not a dot-segment and serves fine.

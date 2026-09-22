@@ -95,6 +95,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 | 하고 싶은 것 | 고칠 곳 |
 |---|---|
 | 사이트 전체 색감 | `css/tokens.css` **한 곳** (홈 + 상세 페이지 모두 따라옴) |
+| 링크 미리보기 썸네일 | `img/og-image.png` 를 같은 크기(1200×630)로 교체. 문구는 `index.html` 의 `og:*` 태그 |
 | 강조색 | `css/tokens.css` 의 `--clr-accent` / `-soft` / `-2` / `-glow` **네 개를 세트로** (하나만 바꾸면 대비가 깨짐) |
 | 유리 재질(투명도·블러·림) | `css/tokens.css` 의 `--glass-*`. 새 표면을 유리로 만들려면 `css/style.css` 맨 위 "유리 재질" 규칙의 선택자 목록에 추가 |
 | 전환 애니메이션 속도 | `css/tokens.css` 의 `--dur-*` (JS 가 이 값을 읽어 씀) |
@@ -117,6 +118,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-22 | `index.html`, `img/og-image.png` | 링크 미리보기(Open Graph) 추가 — 태그가 없어 스크래퍼가 게임 스크린샷을 썸네일로 집어가던 문제. 사이트 토큰으로 만든 임시 썸네일 1200×630 을 `img/og-image.png` 에 두고 절대 URL 로 지정. 파비콘 MIME 도 `image/svg+xml` → `image/jpeg` 로 정정(실제 파일은 JPEG) |
 | 2026-09-22 | `css/tokens.css`, `css/style.css`, `css/portfolio-page.css`, `index.html`, `js/index.js` | 테마를 밝은 Liquid Glass 로 전환(브랜치 `portfolio_theme`) — 흰 반투명 유리 + 어두운 글자 + 차분한 청색 Ocean(#1b5e9c), 배경은 은은한 정적 그라데이션. 유리 재질을 규칙 하나로 모음(`--glass-*`). `--clr-light`/`--clr-dark` 를 역할 이름(`--clr-text-strong`/`--clr-on-accent`)으로 변경. Jean 판의 파란 테두리 제거(호버 때만 파랗게). 대비는 본문 10:1, 유리 위 강조색 글자 6.78:1. 강조색은 9개 색상 후보를 실제 카드 위에 얹어 비교한 뒤 확정(임시 데모는 제거), 움직이는 색 방울 배경도 비교 후 정적으로 확정 |
 | 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | 브라우저 히스토리 연결 — 열린 카드를 URL 해시로(`#about`, `#games/dt`), 카드 열기/홈 이동은 `pushState`, 탭 전환은 `replaceState`, `popstate` 로 ←/→ 지원(애니메이션 중 요청은 `pendingNav` 로 보관), 로드 시 해시 복원은 `body.no-motion` 으로 연출 없이 즉시. 외부 링크 13곳의 `target="_blank"` 제거(같은 탭 → 뒤로 가기로 복귀). file:// 에서도 동작 확인 |
 | 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | Game Projects 에 미디어 추가 — 각 프로젝트에 "Media" 섹션(목차에 자동 등재): 10..9..8.. 는 플레이 영상(`img/1098/play_video.mp4`, 포스터 `play.png`) + 타이틀/인게임 스크린샷 2장 그리드, Dragonic Tactics 는 키 아트(`header.png`) + 이름 옆 엠블럼(`logo.png`). 패턴: `figure.media` / `.media-grid`. 또 GAM150 과목 행 삭제, DT 팀명 "Team Code Pistols — 5 members", 목차 첫 항목은 맨 위로 스크롤(프로젝트 이름·장르가 잘리지 않게) |
