@@ -33,32 +33,53 @@
   --fw-bold: 700;
   --fw-black: 900;
 
-  /* ── 색: 바탕 ── */
-  --clr-bg: #0f172a;
-  --clr-bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --clr-surface: #1e293b;       /* 카드, 헤더 */
-  --clr-surface-deep: #0f1e35;  /* code 배경 */
-  --clr-border: #2a3a5a;
+  /* ── 색: 바탕 ──
+     밝은 유리 테마. 유리는 뒤에 색이 있어야 유리로 읽히므로 배경은
+     은은한 그라데이션이 맡는다(body 가 직접 칠한다). */
+  --clr-bg: #eef1f6;
+  --clr-bg-gradient: linear-gradient(135deg, #e8eef8 0%, #f7f2ea 100%);
+  --clr-surface: #ffffff;       /* 불투명 표면(사진 뒤 등) */
+  --clr-surface-deep: #f2f4f8;  /* code 배경, 이미지 레터박스 */
+  --clr-border: rgba(0, 0, 0, 0.12);
 
-  /* ── 색: 강조 ── */
-  --clr-accent: #38bdf8;
-  --clr-accent-2: #818cf8;      /* 제목 그라데이션 끝 */
-  --clr-accent-soft: #7dd3fc;   /* 소제목 */
-  --clr-accent-glow: rgba(56, 189, 248, 0.4);
+  /* ── 색: 강조 (Ocean — 차분한 청색) ──
+     여러 색상(블루·틸·포레스트·그라파이트·플럼 등)을 사이트 위에 얹어
+     비교한 끝에 고른 값이다. 한 색이 아니라 네 개가 한 묶음이라 따로 바꾸면
+     대비가 깨진다:
+       accent       채움(버튼·활성 탭·노드 호버). 흰 글자를 올려 6.71:1
+       accent-soft  유리 위에 놓는 작은 글자. 채움색보다 어둡다 — 6.78:1
+       accent-2     이름판 그라데이션 끝
+       accent-glow  후광(같은 색의 반투명)
+     대비는 배경 그라데이션 양끝 × 유리 두 농도 중 최악값 기준이다. */
+  --clr-accent: #1b5e9c;
+  --clr-accent-2: #2f5fa8;      /* 제목 그라데이션 끝 */
+  --clr-accent-soft: #1a5992;
+  --clr-accent-glow: rgba(27, 94, 156, 0.35);
 
-  /* ── 색: 글자 ── */
-  --clr-light: #ffffff;
-  --clr-dark: #0f172a;
-  --clr-text: #e2e8f0;
-  --clr-text-muted: #94a3b8;
-  --clr-text-faint: #64748b;
+  /* ── 색: 글자 ──
+     text-strong 은 제목·굵은 글자(거의 검정), on-accent 는 파란 채움 위 글자.
+     (예전 --clr-light/--clr-dark 를 역할 이름으로 바꾼 것) */
+  --clr-text-strong: #1d1d1f;
+  --clr-on-accent: #ffffff;
+  --clr-white: #ffffff;         /* 재질과 무관하게 진짜 흰색이 필요한 곳 */
+  --clr-text: #3a3a3c;
+  --clr-text-muted: #63636a;
+  --clr-text-faint: #84848c;
 
-  /* ── 유리 질감 ── */
-  --clr-glass: rgba(255, 255, 255, 0.05);
-  --clr-glass-border: rgba(255, 255, 255, 0.1);
+  /* ── 유리 질감 ──
+     블러만으로는 뿌연 판처럼 보인다. 채도를 올려 뒤 색을 살리고, 위쪽 안쪽에
+     밝은 림 / 아래쪽에 옅은 그늘을 넣어야 "유리 조각"처럼 읽힌다. */
+  --glass-bg: rgba(255, 255, 255, 0.55);        /* 노드·알약·태그 */
+  --glass-bg-strong: rgba(255, 255, 255, 0.72); /* 글자가 많은 카드 */
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --glass-highlight: rgba(255, 255, 255, 0.9);  /* 위쪽 안쪽 림 */
+  --glass-shade: rgba(0, 0, 0, 0.06);           /* 아래쪽 안쪽 그늘 */
+  --glass-blur: 24px;
+  --glass-saturate: 180%;
 
   /* ── 그림자 ── */
-  --bs: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  --bs: 0 10px 30px -10px rgba(0, 0, 0, 0.18);
+  --bs-float: 0 24px 60px -24px rgba(0, 0, 0, 0.28); /* 떠 있는 카드 */
 
   /* ── 전환 속도 ──
      아래 --dur-* 는 js/index.js 가 getComputedStyle 로 읽어서

@@ -11,22 +11,29 @@
 
 body {
   font-family: var(--ff-primary);
+  /* 홈과 같은 바탕. fixed 라 스크롤해도 그라데이션이 따라 흐르지 않는다.
+     방울(.bg)은 홈에만 둔다 — 긴 글 뒤에서 움직이면 읽기를 방해한다. */
+  background: var(--clr-bg-gradient) fixed;
   background-color: var(--clr-bg);
   color: var(--clr-text);
   line-height: 1.7;
 }
 
 /* ── 머리말 ── */
+/* 머리말·카드·데모는 홈과 같은 유리 재질을 쓴다(토큰은 tokens.css) */
 header {
-  background: var(--clr-bg-gradient);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   padding: 60px 40px;
   text-align: center;
-  border-bottom: 2px solid var(--clr-accent);
+  border-bottom: 1px solid var(--clr-border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--bs);
 }
 
 header h1 {
   font-size: 2.8rem;
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
   margin-bottom: 10px;
   letter-spacing: 1px;
 }
@@ -36,16 +43,16 @@ header p {
   color: var(--clr-text-muted);
 }
 
-/* 홈으로 돌아가는 링크는 일부러 없다. 이 페이지들은 Graphics 카드에서
-   새 탭으로 열리므로 탭을 닫는 것이 곧 돌아가기다. */
+/* 홈으로 돌아가는 링크는 일부러 없다. 브라우저 뒤로 가기가 index.html#projects
+   로 돌아가 Graphics 카드를 복원한다. */
 
 .badge {
   display: inline-block;
-  background: var(--clr-surface-deep);
-  border: 1px solid var(--clr-accent);
-  color: var(--clr-accent);
+  background: var(--glass-bg);
+  border: 1px solid var(--clr-accent-soft);
+  color: var(--clr-accent-soft);
   padding: 4px 14px;
-  border-radius: 20px;
+  border-radius: 999px;
   font-size: 0.85rem;
   margin: 6px 4px;
 }
@@ -63,7 +70,7 @@ section {
 
 h2 {
   font-size: 1.8rem;
-  color: var(--clr-accent);
+  color: var(--clr-accent-soft);
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--clr-border);
@@ -101,10 +108,13 @@ li {
 }
 
 .card {
-  background: var(--clr-surface);
-  border: 1px solid var(--clr-border);
-  border-radius: 10px;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 22px;
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--bs);
 }
 
 .card h3 {
@@ -130,9 +140,10 @@ code {
 
 /* ── 데모 ── */
 .demo-wrapper {
-  background: #000;
-  border: 2px solid var(--clr-accent);
-  border-radius: 10px;
+  background: var(--clr-surface-deep);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--bs);
   overflow: hidden;
   aspect-ratio: 16 / 9;
   width: 100%;
