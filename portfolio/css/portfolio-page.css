@@ -36,25 +36,8 @@ header p {
   color: var(--clr-text-muted);
 }
 
-/* 홈으로 돌아가는 링크 */
-.home-link {
-  display: inline-block;
-  margin-bottom: 24px;
-  padding: 8px 18px;
-  border: 1px solid var(--clr-glass-border);
-  border-radius: 20px;
-  background: var(--clr-glass);
-  color: var(--clr-accent);
-  font-size: 0.9rem;
-  text-decoration: none;
-  transition: var(--transition-fast);
-}
-
-.home-link:hover {
-  background: var(--clr-accent);
-  color: var(--clr-dark);
-  border-color: var(--clr-accent);
-}
+/* 홈으로 돌아가는 링크는 일부러 없다. 이 페이지들은 Graphics 카드에서
+   새 탭으로 열리므로 탭을 닫는 것이 곧 돌아가기다. */
 
 .badge {
   display: inline-block;

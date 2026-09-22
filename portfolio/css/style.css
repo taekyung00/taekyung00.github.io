@@ -496,8 +496,8 @@ h2.section__title {
 /* 카드는 범퍼까지 넓어지지만 산문은 그만큼 늘어나면 안 된다. 한 줄이
    길어지면 눈이 다음 줄 첫머리를 찾기 어려워진다. 그래서 카드 폭이 아니라
    읽기 좋은 길이(--text-measure)로 제한한다.
-   썸네일 그리드(.portfolio-grid)와 3단 기술 목록(.services)은 제외한다 —
-   그쪽은 넓을수록 좋고, .service 는 이미 400px 상한이 있다. */
+   썸네일 그리드(.portfolio-grid)는 제외한다 — 넓을수록 좋다.
+   Skills 의 탭 패널(.tabs__panels)은 자기 규칙에서 같은 값으로 제한한다. */
 .about-me__body,
 .resume-section,
 .section__subtitle {
@@ -505,37 +505,41 @@ h2.section__title {
   width: 100%;
 }
 
+/* 카드 본문은 가는 굵기(300)로 두어 <b>(700)와 확실히 구분한다. 기본 400 은
+   700 과 한 단계 차이라 강조가 눈에 띄지 않았다. normalize 의
+   b{font-weight:bolder} 는 부모가 300 이면 400 으로 풀리므로 b 는 700 으로 못박는다. */
+.about-me__body p,
+.resume-item p,
+.tabs__panel p {
+  font-weight: var(--fw-reg);
+}
+
+.about-me__body b,
+.resume-item b,
+.tabs__panel b {
+  font-weight: var(--fw-bold);
+}
+
 /* Portfolio Grid */
+/* 열 수는 카드 폭이 정한다. 예전엔 뷰포트 폭 기준 미디어쿼리로 4/3/2/1열을
+   골랐는데, 카드 폭은 뷰포트가 아니라 범퍼 상자가 정하므로 기준이 어긋났고
+   항목이 5개라 4열이면 늘 하나가 외톨이로 남았다. auto-fill 이면 들어가는
+   만큼 채운다(1888 화면에서 5열 한 줄). */
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Force 4 columns on PC */
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   gap: 1.5rem;
   width: 100%;
   margin-top: 1rem;
 }
 
-@media (max-width: 1100px) {
-  .portfolio-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 columns on small desktops/large tablets */
-  }
-}
-
-@media (max-width: 850px) {
-  .portfolio-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
-  }
-}
-
-@media (max-width: 550px) {
-  .portfolio-grid {
-    grid-template-columns: 1fr; /* 1 column on mobile */
-  }
-}
-
 .portfolio__item {
+  display: flex;
+  flex-direction: column;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid var(--clr-glass-border);
+  text-decoration: none;
   transition: var(--transition-fast);
 }
 
@@ -544,10 +548,49 @@ h2.section__title {
   border-color: var(--clr-accent);
 }
 
+/* 썸네일은 480×480 정사각형이다. 칸도 정사각형으로 맞추고 contain 으로
+   넣어 어떤 비율의 그림이 와도 잘리지 않게 한다(예전엔 height 200px +
+   cover 라 칸이 정사각형이 아닌 크기에서 좌우가 잘려 나갔다). */
 .portfolio__img {
+  display: block;
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: var(--clr-surface-deep);
+}
+
+.portfolio__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.7rem 0.9rem 0.9rem;
+  text-align: center;
+}
+
+.portfolio__name {
+  color: var(--clr-light);
+  font-weight: var(--fw-medium);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.portfolio__date {
+  color: var(--clr-text-muted);
+  font-size: 0.8rem;
+}
+
+/* "새 탭에서 열림" 힌트. 제목 span 안에 있어서 제목이 두 줄로 꺾여도
+   마지막 단어를 따라간다. */
+.portfolio__ext {
+  margin-left: 0.3em;
+  font-size: 0.8em;
+  color: var(--clr-text-faint);
+  transition: var(--transition-fast);
+}
+
+.portfolio__item:hover .portfolio__ext {
+  color: var(--clr-accent);
 }
 
 /* Resume Styles */
@@ -596,46 +639,145 @@ h2.section__title {
   font-weight: var(--fw-bold);
 }
 
-/* About Me Specific */
-.about-me__img {
-  width: 100%;
-  max-width: 400px;
-  margin: 2rem auto;
-  border-radius: 20px;
-}
-
-/* Services */
-.services {
+/* About Me — 사진 + 본문 한 줄. 본문은 --text-measure 까지만 늘어나고,
+   카드가 그보다 좁아지면 사진이 본문 위로 올라간다. */
+.about-me__profile {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
-  gap: 2rem;
+  align-items: center;
   justify-content: center;
+  gap: 2.5rem;
   width: 100%;
   margin-top: 1rem;
 }
 
-.service {
-  flex: 1 1 300px;
-  max-width: 400px;
-  min-width: 250px;
-  text-align: left; /* Align text within each service card for better readability */
+/* 원본은 709×709 정사각형. 홈의 Jean 판과 같은 둥근 사각형·강조색 테두리로
+   맞춰 "같은 사람"이라는 인상을 준다. */
+.about-me__photo {
+  flex: 0 0 auto;
+  width: 168px;
+  height: 168px;
+  object-fit: cover;
+  border-radius: 28px;
+  border: 2px solid var(--clr-accent);
+  box-shadow: 0 0 24px var(--clr-accent-glow);
 }
 
-.service h3 {
-  color: var(--clr-accent);
-  margin-bottom: 1.2rem; /* Margin increased for breathing room */
-  font-size: 1.4rem;
-  letter-spacing: -0.02em;
+.about-me__body {
+  flex: 1 1 20rem; /* 사진 옆에 최소 20rem 은 확보하고, 안 되면 줄바꿈 */
 }
 
-.service p {
-  line-height: 1.8; /* Significantly increased line-height */
+/* ── 탭 UI (Skills 카드가 첫 사용처, 규약은 index.html 의 [data-tabs] 주석) ──
+   제목 세 개를 알약형 세그먼트 컨트롤로 두고 설명은 활성 탭 하나만 보인다. */
+.tabs {
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 폭은 내용만큼(카드 폭 이내). 좁은 카드에서는 칸 안에서 줄바꿈해 넘치지 않는다. */
+.tabs__list {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 4px;
+  border: 1px solid var(--clr-glass-border);
+  border-radius: 999px;
+  background: var(--clr-glass);
+}
+
+.tabs__tab {
+  flex: 0 1 auto; /* 제 내용 폭. 균등 분할(1 1 0)이면 넓은 카드에서도 긴 제목이 꺾인다 */
+  padding: 0.6rem 1.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--clr-text-muted);
+  font: inherit;
+  font-weight: var(--fw-medium);
+  font-size: 0.95rem;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.tabs__tab:hover {
+  color: var(--clr-light);
+}
+
+.tabs__tab[aria-selected="true"] {
+  background: var(--clr-accent);
+  color: var(--clr-dark);
+}
+
+.tabs__tab:focus-visible {
+  outline: 2px solid var(--clr-accent-soft);
+  outline-offset: 2px;
+}
+
+/* 패널을 한 칸에 겹쳐 쌓는다: 높이 = 가장 긴 패널. 탭을 바꿔도(언어를 바꿔도)
+   카드 높이가 튀지 않는다. visibility 라 숨은 패널은 포커스·낭독에서도 빠진다. */
+.tabs__panels {
+  display: grid;
+  width: 100%;
+  max-width: var(--text-measure);
+  margin-top: 1.5rem;
+}
+
+.tabs__panel {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--dur-tab-fade) ease, visibility 0s linear var(--dur-tab-fade);
+}
+
+.tabs__panel.is-active {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.tabs__panel p {
+  margin: 0;
+  line-height: 1.8;
   font-size: 1rem;
   color: var(--clr-text);
-  word-break: keep-all; /* Prevents awkward breaks in Korean words */
+  word-break: keep-all; /* 한국어 단어 중간에서 끊기지 않게 */
   overflow-wrap: break-word;
-  letter-spacing: -0.01em; /* Subtle letter-spacing for premium feel */
+  letter-spacing: -0.01em;
+}
+
+/* 언어·도구 태그 줄 (이력서 Technical Skills). 제목 바로 아래, 탭 위에 온다. */
+.skill-tags__label {
+  margin: 0.25rem 0 0.8rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-text-muted);
+  text-align: center;
+}
+
+.skill-tags {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  max-width: var(--text-measure); /* 카드 폭만큼 한 줄로 퍼지지 않게 */
+}
+
+.skill-tags li {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--clr-glass-border);
+  border-radius: 999px;
+  background: var(--clr-glass);
+  color: var(--clr-text);
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 /* Buttons */

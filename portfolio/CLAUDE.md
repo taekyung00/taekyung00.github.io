@@ -57,6 +57,9 @@ Two traps worth remembering:
 - English is authored **in `index.html`** as the element's own content. On load, `js/index.js` reads every `[data-i18n]` element's `innerHTML` into the `en` table — so English exists in exactly one place and can't drift.
 - Korean lives in the `ko` object in `js/index.js`. Adding a string means: put it in the HTML with a `data-i18n` key, then add the Korean. A missing key logs an `[i18n]` console warning.
 
+### Tabs inside a card
+The Skills card shows one description at a time behind a pill-shaped segmented control. This is a **markup convention, not per-card code**: wrap in `[data-tabs]`, give each `<button role="tab">` an `aria-controls` pointing at a `role="tabpanel"` id, mark the initial pair with `aria-selected="true"` / `.is-active`. `js/index.js` wires every `[data-tabs]` on load (click + Left/Right arrows). Panels are stacked in one grid cell (`.tabs__panel { grid-area: 1/1 }`) so the container is as tall as the tallest panel and the card height never jumps on tab or language switch — keep that if you restyle it.
+
 ### Detail card sizing
 `layoutCard()` in `js/index.js` sizes each card from a **bumper box**: the viewport minus the per-direction bumpers (`--bumper-t/r/b/l`) minus the strip occupied by the parked Jean plate. Within that box:
 - default — the card fills the box **width**; height follows content and only scrolls past the box height
@@ -67,7 +70,8 @@ Bumpers are read **from the view element**, not the root, so a single `<section>
 Cards grow wide, so prose containers (`.about-me__body`, `.resume-section`, `.section__subtitle`) are capped at `--text-measure`; grids (`.portfolio-grid`, `.services`) are deliberately left full-width.
 
 ### Graphics demo pages (`portfolio/*.html`)
-- `01_hello`, `02_meshes`, `05_shadow`, `06_value`, `07_gradient` are the project detail pages, linked from the "Graphics" view's `.portfolio-grid`. They share `css/portfolio-page.css` and each starts with a `.home-link` back to `../index.html`. (`03_fog` and `04_toon` were deleted — they were unfilled template copies with broken styling and placeholder contact details.)
+- `01_hello`, `02_meshes`, `05_shadow`, `06_value`, `07_gradient` are the project detail pages, linked from the "Graphics" view's `.portfolio-grid`. They share `css/portfolio-page.css`. The Graphics card opens them in a **new tab** (`target="_blank"`), and they deliberately carry **no** link back to the portfolio — closing the tab is the way back. A same-tab round trip would reload the SPA at the hub home rather than at the Graphics card, which is what the old `← Taekyung Ho` button did; don't reintroduce it. (`03_fog` and `04_toon` were deleted — they were unfilled template copies with broken styling and placeholder contact details.)
+- The grid is ordered by **build date**, not file number (Gradient Noise 2026-06-09 comes before Value Noise 2026-06-15). Each item carries a caption: the title (same string as the detail page's `<h1>`, English only) and a `<time>` whose visible text is the only i18n'd part (`proj-date-*` keys). Thumbnails are 480×480; `.portfolio__img` is a square box with `object-fit: contain`, so a thumbnail of any ratio is letterboxed rather than cropped. Column count comes from `auto-fill` on the card width — don't reintroduce viewport media queries, the card is narrower than the viewport.
 - Each embeds a live demo via `<iframe>` pointing at a local sibling file (`quad_demo.html`, `meshes_demo.html`, `shadow_demo.html`, `value_demo.html`, `gradient_demo.html`).
 - **Known incomplete state**: those `*_demo.html` targets are empty (0-byte) placeholders, so no iframe currently renders anything. Tracked in `TODO.txt` ("그래픽 데모 수정하기").
 

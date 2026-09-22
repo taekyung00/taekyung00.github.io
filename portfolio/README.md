@@ -96,6 +96,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 | 특정 카드만 다른 범퍼 | 그 `<section>` 에 `--bumper-*` 덮어쓰기 |
 | 카드 비율 고정 | 그 `<section>` 에 `data-card-ratio="1/1"` 같은 속성 |
 | 본문 한 줄 길이 | `css/tokens.css` 의 `--text-measure` |
+| 카드 안에 탭 UI(하나씩 보여주기) | HTML 만 `[data-tabs]` 규약(`index.html` Skills 카드 주석 참고)으로 쓰면 `js/index.js` 가 자동으로 붙음 |
 | 상세 페이지 레이아웃 | `css/portfolio-page.css` |
 | 영문 문구 | `index.html` 본문 (JS 가 여기서 읽어감) |
 | 한국어 문구 | `js/index.js` 의 `ko` 객체 |
@@ -106,6 +107,13 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-21 | `index.html`, `css/style.css`, `js/index.js` | About Me 카드에 프로필 사진(`img/face.jpg`, Jean 판과 같은 둥근 사각형·강조색 테두리) 을 본문 옆에 배치(좁으면 위로 줄바꿈), 본문 두 문단을 새 문구로 교체(EN/KO). 쓰이지 않던 `.about-me__img` 규칙 삭제 |
+| 2026-09-21 | `css/tokens.css`, `css/style.css` | 위 범퍼 `--bumper-t` 0 → 24px(내용이 긴 카드가 화면 맨 위에 붙던 문제). 카드 본문 굵기를 300 으로 내려 `<b>`(700) 와 구분되게 함 — normalize 의 `b{bolder}` 가 300 부모에서 400 으로 풀리므로 `b` 는 700 명시 |
+| 2026-09-21 | `index.html`, `css/style.css`, `css/tokens.css`, `js/index.js` | Skills 카드를 탭 UI 로 — 세 제목을 알약형 세그먼트 컨트롤(버튼)로 두고 설명은 활성 하나만 표시. 태그 줄을 제목 아래로 옮기고 x86-64 Assembly·NASM 제외. 탭은 `[data-tabs]` 규약 + 범용 JS 라 다른 카드에서 재사용 가능. 패널을 그리드 한 칸에 겹쳐 쌓아 탭·언어 전환 때 카드 높이가 안 튐 |
+| 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | Skills 카드를 이력서·프로젝트 사실에 맞춤 — 엔진 문단을 "10..9..8..에서 ECS 뼈대 → Dragonic Tactics에서 raylib→OpenGL 교체"로 정정, 그래픽스 문단에 실제 데모 항목(shadow mapping·procedural modeling·noise) 추가, 이력서 Technical Skills 를 `.skill-tags` 태그 줄로 추가 |
+| 2026-09-21 | `index.html`, `css/style.css`, `portfolio/0*.html`, `css/portfolio-page.css` | Graphics 데모를 새 탭에서 열도록 변경(캡션에 ↗ 힌트). 상세 페이지의 `← Taekyung Ho` 홈 링크 제거 — 같은 탭 왕복은 SPA 를 다시 로드해 허브 홈으로 떨어질 뿐 Graphics 카드로 돌아오지 않았다. `.home-link` CSS 삭제 |
+| 2026-09-21 | `index.html`, `css/style.css`, `js/index.js` | Graphics 카드 정리 — 썸네일이 잘리던 문제(`height:200px`+`cover`) 를 정사각형 칸+`contain` 으로 수정, 각 데모에 제목+제작일 캡션 추가(날짜만 i18n), 제작일 순으로 정렬(Gradient→Value), 부제에 "2026년 상반기 OpenGL 3D 데모" 맥락 추가. 그리드 열 수를 뷰포트 미디어쿼리 대신 `auto-fill` 로 카드 폭에 맞춤(5개가 한 줄) |
+| 2026-09-21 | `index.html` | Social Media 카드의 LinkedIn 주소를 최신 `linkedin.com/in/taekyung-jean` 으로 교체 |
 | 2026-09-21 | `index.html`, `js/index.js` | 이력서 카드를 `docs/Resume/Taekyung_Ho_Resume.pdf` 기준으로 재작성 — 다운로드 경로 수정, 학력(정확한 학위명·졸업 예정·GPA·수강과목) → 프로젝트(Dragonic Tactics, 10..9..8..) → 경력(공군, 제10전투비행단) 순으로 재구성. Dragonic Tactics 를 "경력"에서 "프로젝트"로 옮기고, ECS 를 실제 적용한 10..9..8.. 쪽으로 정정. 공군 항목의 근거 없는 "100% 작전 준비 태세" 문구 제거 |
 | 2026-09-21 | `css/tokens.css`, `css/style.css`, `js/index.js` | 카드 크기를 고정값이 아니라 "범퍼 상자"(화면 − 방향별 범퍼 − Jean 판 자리) 안에서 최대로 키우도록 변경. `data-card-ratio` 로 비율 고정 가능, 범퍼는 카드별 덮어쓰기 가능. 카드는 넓히되 산문만 `--text-measure` 로 제한(줄당 약 73자) |
 | 2026-09-21 | `index.html`, `css/style.css`, `js/index.js` | 스크롤을 카드가 아닌 안쪽 `.card-scroll` 이 맡도록 분리 — 스크롤바가 둥근 모서리 밖으로 나가던 문제 해결 |

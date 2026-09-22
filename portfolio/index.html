@@ -16,8 +16,8 @@
 
     <!-- 브라우저 캐시 무시용 버전. css/js 수정 시 함께 올릴 것 -->
     <!-- tokens.css 가 먼저 와야 style.css 가 토큰을 읽을 수 있다 -->
-    <link rel="stylesheet" href="css/tokens.css?v=26" />
-    <link rel="stylesheet" href="css/style.css?v=26" />
+    <link rel="stylesheet" href="css/tokens.css?v=33" />
+    <link rel="stylesheet" href="css/style.css?v=33" />
 </head>
 
 <body data-view="home">
@@ -84,13 +84,17 @@
                         <p class="section__subtitle section__subtitle--about" data-i18n="about-subtitle">
                             Student Programmer Taekyung
                         </p>
-                        <div class="about-me__body">
-                            <p data-i18n="about-p1">
-                                I am Taekyung, a student programmer who finds the greatest joy in developing tools that make people's lives easier and more beneficial.
-                            </p>
-                            <p data-i18n="about-p2">
-                                I am currently building my technical foundation based on C++ and OpenGL. Leveraging these skills, I am gaining practical experience by designing a custom 2D engine from scratch and developing game projects.
-                            </p>
+                        <!-- 사진 + 본문을 한 줄에. 카드가 좁아지면 사진이 위로 올라간다(flex-wrap). -->
+                        <div class="about-me__profile">
+                            <img src="img/face.jpg" alt="Taekyung Ho" class="about-me__photo" width="709" height="709" />
+                            <div class="about-me__body">
+                                <p data-i18n="about-p1">
+                                    I am Taekyung, a computer science student focused on building reliable software and tools that make people's lives easier and more productive.
+                                </p>
+                                <p data-i18n="about-p2">
+                                    My strongest foundation is in C++, systems, computer graphics, and software architecture. Through team projects, I have built and refactored custom C++ engines, developed OpenGL rendering systems, and gained practical experience turning technical ideas into maintainable software.
+                                </p>
+                            </div>
                         </div>
                 </div>
                 </div>
@@ -103,18 +107,36 @@
                 <div class="content-wrapper">
                     <div class="card-scroll">
                         <h2 class="section__title section__title--services" data-i18n="skills-title">SKILLS</h2>
-                        <div class="services">
-                            <div class="service">
-                                <h3 data-i18n="skill1-title">C++ Systems Programming</h3>
-                                <p data-i18n="skill1-desc">I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.</p>
+                        <!-- 이력서 Technical Skills 와 같은 순서(언어 -> 그래픽스 -> 도구).
+                             고유명사라 번역하지 않고, 태그는 <li> 하나로 넣고 뺀다. -->
+                        <p class="skill-tags__label" data-i18n="skills-tags-label">Languages &amp; Tools</p>
+                        <ul class="skill-tags">
+                            <li>C++</li><li>C</li><li>JavaScript</li>
+                            <li>OpenGL</li><li>GLSL</li>
+                            <li>CMake</li><li>Git / GitHub</li><li>Linux</li><li>Visual Studio</li><li>VS Code</li>
+                        </ul>
+                        <!-- 탭: 제목 세 개가 버튼이고 설명은 활성 탭 하나만 보인다(한 번에 보이는
+                             정보를 제한). 다른 카드에서도 같은 규약으로 쓸 수 있다 —
+                             [data-tabs] 안에 role=tab 버튼(aria-controls=패널 id) + role=tabpanel.
+                             js/index.js 가 [data-tabs] 를 찾아 자동으로 붙는다. -->
+                        <div class="tabs" data-tabs>
+                            <div class="tabs__list" role="tablist">
+                                <button class="tabs__tab" role="tab" id="tab-skill1" aria-controls="panel-skill1" aria-selected="true" data-i18n="skill1-title">C++ Systems Programming</button>
+                                <button class="tabs__tab" role="tab" id="tab-skill2" aria-controls="panel-skill2" aria-selected="false" tabindex="-1" data-i18n="skill2-title">Computer Graphics Development</button>
+                                <button class="tabs__tab" role="tab" id="tab-skill3" aria-controls="panel-skill3" aria-selected="false" tabindex="-1" data-i18n="skill3-title">Architecture Programming &amp; Engine Development</button>
                             </div>
-                            <div class="service">
-                                <h3 data-i18n="skill2-title">Computer Graphics Development</h3>
-                                <p data-i18n="skill2-desc">I built a foundational rendering pipeline through 2D graphics programming and later expanded my capabilities to <b>OpenGL</b>-based 3D implementation. Proficient in sophisticated spatial transformations and graphics using <b>linear algebra</b>, I build optimized rendering environments that secure both visual quality and performance through <b>advanced shader writing techniques</b> like <b>Post-processing</b> and <b>MSAA</b>.</p>
-                            </div>
-                            <div class="service">
-                                <h3 data-i18n="skill3-title">Architecture Programming & Engine Development</h3>
-                                <p data-i18n="skill3-desc">During engine development, including the <b>Dragonic Tactics</b> project, I applied major design patterns such as <b>Singleton</b> and designed a high-performance architecture based on <b>ECS (Entity Component System)</b>. I directly implemented a custom 2D graphics pipeline and maximized the engine's runtime performance by applying graphics optimization techniques like <b>Batch Rendering</b> and <b>Instancing Rendering</b> to resolve rendering bottlenecks.</p>
+                            <div class="tabs__panels">
+                                <div class="tabs__panel is-active" role="tabpanel" id="panel-skill1" aria-labelledby="tab-skill1">
+                                    <p data-i18n="skill1-desc">I have a broad understanding from fundamental C++ syntax to the latest features of <b>Modern C++</b>. I develop efficient programs that balance hardware control and software design by utilizing <b>low-level system optimization</b>, <b>direct memory management</b>, and high-level abstraction techniques like <b>TMP</b> (Template Metaprogramming) and <b>Modules</b>.</p>
+                                </div>
+                                <div class="tabs__panel" role="tabpanel" id="panel-skill2" aria-labelledby="tab-skill2">
+                                    <p data-i18n="skill2-desc">I built a foundational rendering pipeline through 2D graphics programming and later expanded to <b>OpenGL</b>-based 3D. Grounded in the <b>linear algebra</b> behind spatial transforms, I have implemented <b>shadow mapping</b>, <b>procedural geometric modeling</b>, and <b>value/gradient noise</b> in <b>GLSL</b> (see the Graphics demos), and I use <b>post-processing</b> and <b>MSAA</b> to secure both visual quality and performance.</p>
+                                </div>
+                                <div class="tabs__panel" role="tabpanel" id="panel-skill3" aria-labelledby="tab-skill3">
+                                    <!-- 사실관계는 이력서 카드(resume-proj1/2)와 같아야 한다:
+                                         ECS 뼈대는 10..9..8.., raylib->OpenGL 교체는 Dragonic Tactics. -->
+                                    <p data-i18n="skill3-desc">In <b>10..9..8..</b> I laid down the engine's architectural skeleton — an <b>ECS (Entity Component System)</b> core with Singleton-managed services, keeping reusable engine systems separate from gameplay logic. In <b>Dragonic Tactics</b> I then removed the engine's raylib dependency and replaced it with a direct <b>OpenGL</b> backend: a custom 2D pipeline with texture mapping, <b>batch and instanced rendering</b>, and virtual resolution, plus an <b>EventBus</b> for inter-system communication.</p>
+                                </div>
                             </div>
                         </div>
                 </div>
@@ -128,22 +150,46 @@
                 <div class="content-wrapper">
                     <div class="card-scroll">
                         <h2 class="section__title section__title--projects" data-i18n="projects-title">Graphics Demos</h2>
-                        <p class="section__subtitle section__subtitle--projects" data-i18n="projects-subtitle">Advanced rendering techniques and real-time shader demonstrations</p>
+                        <p class="section__subtitle section__subtitle--projects" data-i18n="projects-subtitle">OpenGL 3D demos built in the first half of 2026 — advanced rendering techniques and real-time shader demonstrations</p>
+                        <!-- 제작일 순. 제목은 상세 페이지 <h1> 과 같은 영문 고유명사라 번역하지 않고,
+                             날짜만 data-i18n 으로 바꾼다(연도는 부제에 있으므로 월·일만 표시).
+                             데모는 새 탭에서 연다 — 같은 탭으로 가면 돌아올 때 SPA 가 다시 로드돼
+                             허브 홈으로 떨어지지, 이 카드로 돌아오지 않는다. -->
                         <div class="portfolio-grid">
-                            <a href="portfolio/01_hello.html" class="portfolio__item">
+                            <a href="portfolio/01_hello.html" class="portfolio__item" target="_blank" rel="noopener noreferrer">
                                 <img src="img/portfolio_thumbnails/01_hello.jpg" alt="" class="portfolio__img" />
+                                <span class="portfolio__caption">
+                                    <span class="portfolio__name">Hello Quad<span class="portfolio__ext" aria-hidden="true">↗</span></span>
+                                    <time class="portfolio__date" datetime="2026-05-21" data-i18n="proj-date-hello">May 21</time>
+                                </span>
                             </a>
-                            <a href="portfolio/02_meshes.html" class="portfolio__item">
+                            <a href="portfolio/02_meshes.html" class="portfolio__item" target="_blank" rel="noopener noreferrer">
                                 <img src="img/portfolio_thumbnails/02_meshes.jpg" alt="" class="portfolio__img" />
+                                <span class="portfolio__caption">
+                                    <span class="portfolio__name">Procedural Geometric Modeling<span class="portfolio__ext" aria-hidden="true">↗</span></span>
+                                    <time class="portfolio__date" datetime="2026-05-30" data-i18n="proj-date-meshes">May 30</time>
+                                </span>
                             </a>
-                            <a href="portfolio/05_shadow.html" class="portfolio__item">
+                            <a href="portfolio/05_shadow.html" class="portfolio__item" target="_blank" rel="noopener noreferrer">
                                 <img src="img/portfolio_thumbnails/05_shadow.jpg" alt="" class="portfolio__img" />
+                                <span class="portfolio__caption">
+                                    <span class="portfolio__name">Shadow Mapping<span class="portfolio__ext" aria-hidden="true">↗</span></span>
+                                    <time class="portfolio__date" datetime="2026-06-02" data-i18n="proj-date-shadow">June 2</time>
+                                </span>
                             </a>
-                            <a href="portfolio/06_value.html" class="portfolio__item">
-                                <img src="img/portfolio_thumbnails/06_value.jpg" alt="" class="portfolio__img" />
-                            </a>
-                            <a href="portfolio/07_gradient.html" class="portfolio__item">
+                            <a href="portfolio/07_gradient.html" class="portfolio__item" target="_blank" rel="noopener noreferrer">
                                 <img src="img/portfolio_thumbnails/07_gradient.jpg" alt="" class="portfolio__img" />
+                                <span class="portfolio__caption">
+                                    <span class="portfolio__name">Gradient Noise<span class="portfolio__ext" aria-hidden="true">↗</span></span>
+                                    <time class="portfolio__date" datetime="2026-06-09" data-i18n="proj-date-gradient">June 9</time>
+                                </span>
+                            </a>
+                            <a href="portfolio/06_value.html" class="portfolio__item" target="_blank" rel="noopener noreferrer">
+                                <img src="img/portfolio_thumbnails/06_value.jpg" alt="" class="portfolio__img" />
+                                <span class="portfolio__caption">
+                                    <span class="portfolio__name">Value Noise<span class="portfolio__ext" aria-hidden="true">↗</span></span>
+                                    <time class="portfolio__date" datetime="2026-06-15" data-i18n="proj-date-value">June 15</time>
+                                </span>
                             </a>
                         </div>
                 </div>
@@ -233,7 +279,7 @@
         </section>
     </main>
 
-    <script src="js/index.js?v=26"></script>
+    <script src="js/index.js?v=33"></script>
 </body>
 
 </html>

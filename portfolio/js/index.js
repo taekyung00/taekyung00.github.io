@@ -72,17 +72,24 @@ document.addEventListener("DOMContentLoaded", () => {
             "node-q2": "?",
             "about-title": "About Me",
             "about-subtitle": "학생 프로그래머 허태경",
-            "about-p1": "사람들의 삶을 더 편리하고 이롭게 만드는 도구를 개발하는 데서 가장 큰 즐거움을 느끼는 학생 프로그래머 허태경입니다.",
-            "about-p2": "현재 C++와 OpenGL을 기반으로 기술적 기반을 다지고 있습니다. 이를 활용해 커스텀 2D 엔진을 직접 설계하고 게임 프로젝트를 개발하며 실무 경험을 쌓고 있습니다.",
+            "about-p1": "사람들의 삶을 더 편하고 생산적으로 만드는, 믿을 수 있는 소프트웨어와 도구를 만드는 데 집중하는 컴퓨터과학 전공 학생 허태경입니다.",
+            "about-p2": "가장 탄탄한 기반은 C++, 시스템, 컴퓨터 그래픽스, 소프트웨어 아키텍처입니다. 팀 프로젝트를 통해 자체 C++ 엔진을 만들고 리팩터링했으며, OpenGL 렌더링 시스템을 개발하면서 기술적 아이디어를 유지보수 가능한 소프트웨어로 옮기는 실무 경험을 쌓았습니다.",
             "skills-title": "보유 기술",
             "skill1-title": "C++ Systems Programming",
             "skill1-desc": "C++의 기초 문법부터 Modern C++의 최신 기능까지 깊이 있게 이해하고 활용합니다. 하드웨어와 밀접한 low-level 시스템 최적화 및 직접적인 메모리 관리는 물론, TMP(Template Metaprogramming)와 Modules 같은 고수준 추상화 기법을 활용하여 하드웨어 제어와 소프트웨어 설계의 균형을 맞춘 효율적인 프로그램을 개발합니다.",
             "skill2-title": "Computer Graphics Development",
-            "skill2-desc": "2D 그래픽스 프로그래밍 학습을 통해 기본적인 렌더링 파이프라인을 구축하였으며, 이후 OpenGL 기반의 3D 구현으로 역량을 확장했습니다. 선형대수학(linear algebra)을 활용한 정교한 공간 변환 및 그래픽 구현에 능숙하며, Post-processing 및 MSAA(Multisample Anti-Aliasing)와 같은 고급 셰이더 작성 기술을 통해 시각적 품질과 성능을 동시에 확보하는 최적화된 렌더링 환경을 구축합니다.",
+            "skill2-desc": "2D 그래픽스 프로그래밍으로 기본 렌더링 파이프라인을 구축한 뒤 <b>OpenGL</b> 기반 3D로 역량을 확장했습니다. 공간 변환의 바탕이 되는 <b>선형대수</b>를 토대로 <b>shadow mapping</b>, <b>procedural geometric modeling</b>, <b>value/gradient noise</b>를 <b>GLSL</b>로 직접 구현했으며(Graphics 데모 참고), <b>Post-processing</b>과 <b>MSAA</b>로 시각적 품질과 성능을 함께 확보합니다.",
             "skill3-title": "Architecture Programming & Engine Development",
-            "skill3-desc": "<b>Dragonic Tactics</b> 프로젝트를 포함한 엔진 개발 과정에서 Singleton 등 주요 디자인 패턴을 활용하고, ECS(Entity Component System) 기반의 고성능 아키텍처를 설계하였습니다. 커스텀 2D 그래픽스 파이프라인을 직접 구현하였으며, 특히 렌더링 병목 현상을 해결하기 위해 Batch Rendering 및 Instancing Rendering과 같은 그래픽스 최적화 기법을 적용하여 엔진의 런타임 성능을 극대화한 경험이 있습니다.",
+            // 사실관계는 resume-proj1/2 와 같아야 한다: ECS 뼈대는 10..9..8.., raylib->OpenGL 은 Dragonic Tactics
+            "skill3-desc": "<b>10..9..8..</b>에서 엔진 아키텍처의 뼈대를 세웠습니다 — <b>ECS(Entity Component System)</b>를 중심으로 Singleton 패턴을 적용하고, 재사용 가능한 엔진 시스템과 게임플레이 로직을 분리했습니다. 이어 <b>Dragonic Tactics</b>에서는 엔진의 raylib 의존성을 걷어내고 <b>OpenGL</b>을 직접 연동한 백엔드로 교체해, 텍스처 매핑·<b>배치/인스턴스 렌더링</b>·가상 해상도를 갖춘 커스텀 2D 파이프라인을 구축하고 시스템 간 통신을 위한 <b>EventBus</b>를 설계했습니다.",
+            "skills-tags-label": "언어 · 도구",
             "projects-title": "그래픽스 데모",
-            "projects-subtitle": "고급 렌더링 기법 및 그래픽스 알고리즘 구현 데모입니다.",
+            "projects-subtitle": "2026년 상반기에 만든 OpenGL 3D 데모 — 고급 렌더링 기법과 실시간 셰이더 구현",
+            "proj-date-hello": "5월 21일",
+            "proj-date-meshes": "5월 30일",
+            "proj-date-shadow": "6월 2일",
+            "proj-date-gradient": "6월 9일",
+            "proj-date-value": "6월 15일",
             "resume-title": "이력서",
             "resume-download": " PDF 다운로드",
             // 이력서 카드 — 순서·내용은 docs/Resume/Taekyung_Ho_Resume.pdf 기준
@@ -524,6 +531,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 const view = document.getElementById(target);
                 if (view) layoutCard(view, hubPark(target, "parked"));
             }
+        });
+    });
+
+    // ── 카드 안 탭 UI ─────────────────────────────────────────────
+    // [data-tabs] 안의 role=tab 버튼이 aria-controls 가 가리키는 패널을 켠다.
+    // 카드마다 다시 쓰려고 마크업 규약만 맞추면 되게 했다(Skills 가 첫 사용처).
+    // 탭 클릭은 문서 클릭 리스너(메뉴 닫기)와 겹치지만 그쪽은 preventDefault
+    // 를 하지 않으므로 서로 방해하지 않는다.
+    document.querySelectorAll("[data-tabs]").forEach(tabs => {
+        const btns = [...tabs.querySelectorAll("[role=tab]")];
+        const select = (btn) => btns.forEach(b => {
+            const on = b === btn;
+            b.setAttribute("aria-selected", on);
+            b.tabIndex = on ? 0 : -1;
+            const panel = document.getElementById(b.getAttribute("aria-controls"));
+            if (panel) panel.classList.toggle("is-active", on);
+        });
+        btns.forEach((b, i) => {
+            b.addEventListener("click", () => select(b));
+            // 좌우 화살표로 이동 (WAI-ARIA tabs 관례). 끝에서는 반대편으로 감는다.
+            b.addEventListener("keydown", (e) => {
+                const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+                if (!d) return;
+                e.preventDefault();
+                const next = btns[(i + d + btns.length) % btns.length];
+                next.focus();
+                select(next);
+            });
         });
     });
 
