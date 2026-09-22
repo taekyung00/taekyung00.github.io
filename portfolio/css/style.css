@@ -357,8 +357,18 @@ body:not([data-hub="home"]) .lang-toggle-container {
   transition: opacity var(--dur-view-fade) var(--ease-emphasized);
 }
 
+/* 열려 있는 페이지의 노드. 예전에는 opacity: 0.3 으로 흐리게 해 "지금 여기"를
+   알렸는데, 밝은 유리 위에서는 글자까지 사라지고 뒤 카드 본문과 겹쳐 얼룩처럼
+   보였다. 흐리게 하는 대신 강조색으로 물들여 표시한다 — 글자는 또렷하게 읽히고,
+   누를 수 없다는 것은 커서와 pointer-events 로 전한다.
+   틴트를 올릴수록 글자 대비가 떨어진다 — 지금 색에서는 5.5:1 이지만, 더 밝은
+   강조색으로 바꾸면 16%에서 4.5:1 아래로 내려간다. 10%는 검토했던 색 전부에서
+   4.68:1 이상이라 여유가 있다. */
 body[data-hub="menu"] .node-btn.is-current {
-  opacity: 0.3;
+  background: color-mix(in srgb, var(--clr-accent) 10%, var(--glass-bg-strong));
+  border-color: var(--clr-accent);
+  color: var(--clr-accent-soft);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--bs);
   pointer-events: none;
 }
 
