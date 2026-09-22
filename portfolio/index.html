@@ -16,8 +16,8 @@
 
     <!-- 브라우저 캐시 무시용 버전. css/js 수정 시 함께 올릴 것 -->
     <!-- tokens.css 가 먼저 와야 style.css 가 토큰을 읽을 수 있다 -->
-    <link rel="stylesheet" href="css/tokens.css?v=36" />
-    <link rel="stylesheet" href="css/style.css?v=36" />
+    <link rel="stylesheet" href="css/tokens.css?v=38" />
+    <link rel="stylesheet" href="css/style.css?v=38" />
 </head>
 
 <body data-view="home">
@@ -282,9 +282,13 @@
                                 <div class="tabs__panel project is-active" role="tabpanel" id="panel-1098" aria-labelledby="tab-1098">
                                     <nav class="project__toc" data-toc></nav>
                                     <div class="project__scroll" data-toc-scroller>
+                                        <!-- 대표 이미지는 스크롤러 맨 위(이름보다 위)에 둔다 -->
+                                        <img class="project__hero" src="img/1098/start_screen.png" alt="" width="1024" height="766">
                                         <header class="project__head">
-                                            <h3 class="project__name">10..9..8..</h3>
-                                            <p class="project__tagline" data-i18n="p1098-tagline">2D Top-Down Dungeon Exploration Roguelike / Puzzle Game</p>
+                                            <div class="project__head-text">
+                                                <h3 class="project__name">10..9..8..</h3>
+                                                <p class="project__tagline" data-i18n="p1098-tagline">2D Top-Down Dungeon Exploration Roguelike / Puzzle Game</p>
+                                            </div>
                                         </header>
                                         <section class="project__section" id="p1098-info">
                                             <h4 data-i18n="sec-info">Basic Info</h4>
@@ -295,6 +299,20 @@
                                                 <dt data-i18n="fact-platform">Platform</dt><dd>Windows</dd>
                                                 <dt data-i18n="fact-tech">Technology</dt><dd>C++, raylib, Custom C++ Engine, ECS</dd>
                                             </dl>
+                                        </section>
+                                        <!-- 미디어도 .project__section 이라 목차에 올라간다 -->
+                                        <section class="project__section" id="p1098-media">
+                                            <h4 data-i18n="sec-media">Media</h4>
+                                            <figure class="media">
+                                                <video class="media__video" controls preload="metadata" playsinline poster="img/1098/play.png">
+                                                    <source src="img/1098/play_video.mp4" type="video/mp4">
+                                                </video>
+                                                <figcaption data-i18n="p1098-media-video">Gameplay video</figcaption>
+                                            </figure>
+                                            <figure class="media">
+                                                <img src="img/1098/play.png" alt="" loading="lazy" width="1012" height="762">
+                                                <figcaption data-i18n="p1098-media-play">In-game — Chessboard stage</figcaption>
+                                            </figure>
                                         </section>
                                         <section class="project__section" id="p1098-overview">
                                             <h4 data-i18n="sec-overview">Game Overview</h4>
@@ -341,9 +359,12 @@
                                 <div class="tabs__panel project" role="tabpanel" id="panel-dt" aria-labelledby="tab-dt">
                                     <nav class="project__toc" data-toc></nav>
                                     <div class="project__scroll" data-toc-scroller>
+                                        <img class="project__hero" src="img/dragonic_tactics/header.png" alt="" width="1500" height="500">
                                         <header class="project__head">
-                                            <h3 class="project__name">Dragonic Tactics</h3>
-                                            <p class="project__tagline" data-i18n="dt-tagline">2D Turn-Based Tactical RPG</p>
+                                            <div class="project__head-text">
+                                                <h3 class="project__name">Dragonic Tactics</h3>
+                                                <p class="project__tagline" data-i18n="dt-tagline">2D Turn-Based Tactical RPG</p>
+                                            </div>
                                         </header>
                                         <section class="project__section" id="dt-info">
                                             <h4 data-i18n="sec-info">Basic Info</h4>
@@ -413,7 +434,7 @@
                                         <section class="project__section" id="dt-links">
                                             <h4 data-i18n="sec-links">Project Links</h4>
                                             <div class="project__doc">
-                                                <a class="project__link" href="https://taekyung00.github.io/DT/" target="_blank" rel="noopener noreferrer"><span data-i18n="dt-presskit-title">Press Kit &amp; Play Demo</span><span class="link-ext" aria-hidden="true">↗</span></a>
+                                                <a class="project__link" href="https://taekyung00.github.io/DT/" target="_blank" rel="noopener noreferrer"><span data-i18n="dt-presskit-title">Press Kit &amp; Media &amp; Demo</span><span class="link-ext" aria-hidden="true">↗</span></a>
                                                 <p data-i18n="dt-presskit-desc">Includes the playable WebAssembly demo, detailed game description, gameplay instructions, features, videos, screenshots, character assets, reviews, team information, and additional media.</p>
                                             </div>
                                             <div class="project__doc">
@@ -430,7 +451,7 @@
         </section>
     </main>
 
-    <script src="js/index.js?v=36"></script>
+    <script src="js/index.js?v=38"></script>
 </body>
 
 </html>

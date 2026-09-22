@@ -896,6 +896,24 @@ h2.section__title {
   border-radius: 10px;
 }
 
+/* 대표 이미지: 스크롤러 맨 위, 이름보다 위. 본문 폭에 맞추고 원본 비율 그대로. */
+.project__hero {
+  display: block;
+  width: 100%;
+  max-width: var(--text-measure);
+  height: auto;
+  margin: 0 0 1.25rem;
+  border-radius: 16px;
+  border: 1px solid var(--clr-glass-border);
+  background: var(--clr-surface-deep);
+}
+
+.project__head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .project__name {
   margin: 0;
   font-size: 2rem;
@@ -952,6 +970,29 @@ h2.section__title {
 .project__facts dd {
   margin: 0;
   color: var(--clr-text);
+}
+
+/* 미디어(영상·스크린샷·키 아트). 산문과 같은 폭으로 맞추고, 그림 비율은
+   width/height 속성이 미리 잡아 줘 로드 전에도 자리가 튀지 않는다. */
+.media {
+  margin: 0 0 1rem;
+  max-width: var(--text-measure);
+}
+
+.media img,
+.media video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  border: 1px solid var(--clr-glass-border);
+  background: var(--clr-surface-deep);
+}
+
+.media figcaption {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
 }
 
 /* 문서·링크 항목: 이력서 항목과 같은 왼쪽 강조선 */

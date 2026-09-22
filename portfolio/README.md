@@ -111,6 +111,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | Game Projects 에 미디어 추가 — 각 프로젝트에 "Media" 섹션(목차에 자동 등재): 10..9..8.. 는 플레이 영상(`img/1098/play_video.mp4`, 포스터 `play.png`) + 타이틀/인게임 스크린샷 2장 그리드, Dragonic Tactics 는 키 아트(`header.png`) + 이름 옆 엠블럼(`logo.png`). 패턴: `figure.media` / `.media-grid`. 또 GAM150 과목 행 삭제, DT 팀명 "Team Code Pistols — 5 members", 목차 첫 항목은 맨 위로 스크롤(프로젝트 이름·장르가 잘리지 않게) |
 | 2026-09-21 | `index.html`, `css/style.css` | Game Projects 카드 세로 공간 확보 — 링에서 Graphics 와 자리를 바꿔(6시 → 모서리) Jean 판이 위가 아닌 왼쪽 위 모서리에 주차되게 하고, 제목·부제·전환기를 한 줄 헤더로 합침. 본문 스크롤 영역 372px → 660px(1886×915). `.tabs` 래퍼 대신 `.card-scroll` 에 `data-tabs` |
 | 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | `?` 노드 둘 중 하나 삭제, 하나를 **Game Projects** 카드로(노드 6개). 10..9..8.. / Dragonic Tactics 를 선으로 이어진 알약 전환기(`[data-tabs]` 재사용)로 고르고, 왼쪽 목차(섹션 제목에서 자동 생성, 클릭 이동·스크롤 추적) + 오른쪽 안쪽 스크롤 본문. 새 규약: `data-card-fill`(카드가 상자를 채움), `[data-toc]`/`[data-toc-scroller]`. 전문 한국어 번역, GDD/TSD PDF 링크(`docs/1098/`) |
 | 2026-09-21 | `index.html`, `css/style.css`, `js/index.js` | About Me 카드에 프로필 사진(`img/face.jpg`, Jean 판과 같은 둥근 사각형·강조색 테두리) 을 본문 옆에 배치(좁으면 위로 줄바꿈), 본문 두 문단을 새 문구로 교체(EN/KO). 쓰이지 않던 `.about-me__img` 규칙 삭제 |
