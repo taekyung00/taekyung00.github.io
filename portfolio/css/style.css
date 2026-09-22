@@ -31,10 +31,39 @@ body {
   padding: 0;
   font-family: var(--ff-primary);
   background: var(--clr-bg-gradient);
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
   overflow: hidden; /* No scroll */
   height: 100vh;
   width: 100vw;
+}
+
+/* ── 유리 재질 ────────────────────────────────────────────────────
+   Liquid Glass 의 표면은 전부 같은 재질이다. 규칙을 하나로 두었으니
+   재질을 바꾸려면 여기(또는 tokens.css 의 --glass-*)만 고치면 된다.
+   새 표면을 유리로 만들려면 아래 목록에 선택자를 더하면 끝.
+   블러만으로는 뿌연 판이 된다 — saturate 로 뒤 색을 살리고, 위쪽 안쪽
+   밝은 림 + 아래쪽 옅은 그늘로 두께를 준다. */
+.content-wrapper,
+.node-btn,
+.center-plate,
+.toggle-switch,
+.tabs__list,
+.project-switch__pill,
+.skill-tags li,
+.portfolio__item {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight),
+              inset 0 -1px 0 var(--glass-shade),
+              var(--bs);
+}
+
+/* 글자가 많은 카드는 더 불투명하게(가독성) + 더 떠 보이게 */
+.content-wrapper {
+  background: var(--glass-bg-strong);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--bs-float);
 }
 
 /* View Management */
@@ -184,10 +213,6 @@ body[data-lang="ko"] .home-title {
   align-items: center;
   justify-content: center;
   gap: calc(var(--node-radius) * 0.025);
-  background: var(--clr-glass);
-  backdrop-filter: blur(15px);
-  border: 2px solid var(--clr-accent);
-  box-shadow: 0 0 60px var(--clr-accent-glow);
   transition: var(--transition-fast);
   pointer-events: auto;
   position: relative; /* .plate-hint 를 판 안에 절대배치 */
@@ -208,8 +233,8 @@ body[data-hub="menu"] .center-plate {
 
 body[data-hub="parked"] .center-plate:hover,
 body[data-hub="menu"] .center-plate:hover {
-  background: color-mix(in srgb, var(--clr-accent) 18%, transparent);
-  box-shadow: 0 0 40px var(--clr-accent);
+  background: color-mix(in srgb, var(--clr-accent) 14%, var(--glass-bg-strong));
+  box-shadow: 0 0 40px var(--clr-accent-glow);
 }
 
 /* Jean 은 상태에 따라 하는 일이 다르다(메뉴 열기 / 홈). 색만 바뀌면
@@ -260,10 +285,7 @@ body[data-hub="menu"] .center-plate:hover .plate-hint {
   width: var(--node-size);
   height: var(--node-size);
   border-radius: 50%;
-  background: var(--clr-glass);
-  backdrop-filter: blur(15px);
-  border: 2px solid var(--clr-glass-border);
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -280,14 +302,14 @@ body[data-hub="menu"] .center-plate:hover .plate-hint {
   transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--dist))
              rotate(calc(var(--angle) * -1)) translate(var(--tx, 0), var(--ty, 0))
              scale(var(--state-scale, 1)) scale(var(--scale, 1));
-  box-shadow: var(--bs);
   z-index: 30;
 }
 
 .node-btn:hover {
   background: var(--clr-accent);
-  color: var(--clr-dark);
-  box-shadow: 0 0 30px var(--clr-accent);
+  color: var(--clr-on-accent);
+  border-color: var(--clr-accent);
+  box-shadow: 0 8px 24px var(--clr-accent-glow);
   z-index: 40;
 }
 
@@ -352,7 +374,7 @@ body[data-hub="menu"] .node-btn.is-current {
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
   font-size: 0.85rem;
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
 }
 
 .lang-label {
@@ -362,20 +384,16 @@ body[data-hub="menu"] .node-btn.is-current {
 
 .lang-label.active {
   opacity: 1;
-  color: var(--clr-accent);
+  color: var(--clr-accent-soft);
 }
 
 .toggle-switch {
   width: 50px;
   height: 26px;
-  background: var(--clr-glass);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--clr-glass-border);
   border-radius: 13px;
   position: relative;
   cursor: pointer;
   transition: var(--transition-fast);
-  box-shadow: var(--bs);
 }
 
 .toggle-switch:hover {
@@ -386,7 +404,7 @@ body[data-hub="menu"] .node-btn.is-current {
 .toggle-knob {
   width: 20px;
   height: 20px;
-  background: var(--clr-light);
+  background: var(--clr-white); /* 손잡이는 재질과 무관하게 흰색 */
   border-radius: 50%;
   position: absolute;
   top: 2px;
@@ -427,11 +445,8 @@ body[data-hub="menu"] .node-btn.is-current {
   /* 비율을 지정한 카드만 js 가 --card-height 를 px 로 넣는다.
      지정하지 않으면 auto 라 내용이 높이를 정한다. */
   height: var(--card-height, auto);
-  background: var(--clr-glass);
-  backdrop-filter: blur(20px);
   padding: var(--card-inset);
   border-radius: 40px;
-  border: 1px solid var(--clr-glass-border);
   max-height: var(--card-max-height);
   overflow: hidden; /* 둥근 모서리로 확실히 잘라낸다 */
   display: flex;
@@ -450,7 +465,7 @@ body[data-hub="menu"] .node-btn.is-current {
   flex-direction: column;
   align-items: center; /* Center the title/subtitle within the content */
   scrollbar-width: thin;
-  scrollbar-color: var(--clr-accent) transparent;
+  scrollbar-color: var(--clr-text-faint) transparent;
 }
 
 .card-scroll::-webkit-scrollbar {
@@ -458,7 +473,7 @@ body[data-hub="menu"] .node-btn.is-current {
 }
 
 .card-scroll::-webkit-scrollbar-thumb {
-  background-color: var(--clr-accent);
+  background-color: var(--clr-text-faint);
   border-radius: 10px;
 }
 
@@ -486,7 +501,7 @@ h2.section__title {
   line-height: 1.8; /* Increase space between lines for better readability */
   margin-bottom: 1.5rem; /* Increase space between paragraphs */
   font-size: 1.05rem; /* Slightly larger text */
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
 }
 
 .about-me__body p:last-child {
@@ -540,7 +555,6 @@ h2.section__title {
   flex-direction: column;
   border-radius: 20px;
   overflow: hidden;
-  border: 1px solid var(--clr-glass-border);
   text-decoration: none;
   transition: var(--transition-fast);
 }
@@ -571,7 +585,7 @@ h2.section__title {
 }
 
 .portfolio__name {
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
   font-weight: var(--fw-medium);
   font-size: 0.95rem;
   line-height: 1.3;
@@ -600,7 +614,7 @@ h2.section__title {
 .resume-section h3 {
   color: var(--clr-accent);
   margin-top: 2rem;
-  border-bottom: 1px solid var(--clr-glass-border);
+  border-bottom: 1px solid var(--clr-border);
   padding-bottom: 0.5rem;
 }
 
@@ -611,7 +625,7 @@ h2.section__title {
 }
 
 .resume-item b {
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
 }
 
 /* SNS Styles */
@@ -626,7 +640,7 @@ h2.section__title {
 
 .social-list__link {
   font-size: 3rem;
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
   transition: var(--transition-fast);
 }
 
@@ -636,7 +650,7 @@ h2.section__title {
 }
 
 .footer__link {
-  color: var(--clr-accent);
+  color: var(--clr-accent-soft);
   text-decoration: none;
   font-size: 1.5rem;
   font-weight: var(--fw-bold);
@@ -662,8 +676,9 @@ h2.section__title {
   height: 168px;
   object-fit: cover;
   border-radius: 28px;
-  border: 2px solid var(--clr-accent);
-  box-shadow: 0 0 24px var(--clr-accent-glow);
+  border: 1px solid var(--glass-border);
+  background: var(--clr-surface);
+  box-shadow: var(--bs);
 }
 
 .about-me__body {
@@ -685,9 +700,7 @@ h2.section__title {
   display: inline-flex;
   max-width: 100%;
   padding: 4px;
-  border: 1px solid var(--clr-glass-border);
   border-radius: 999px;
-  background: var(--clr-glass);
 }
 
 .tabs__tab {
@@ -707,12 +720,12 @@ h2.section__title {
 }
 
 .tabs__tab:hover {
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
 }
 
 .tabs__tab[aria-selected="true"] {
   background: var(--clr-accent);
-  color: var(--clr-dark);
+  color: var(--clr-on-accent);
 }
 
 .tabs__tab:focus-visible {
@@ -785,7 +798,7 @@ h2.section__title {
   gap: 1rem 2rem;
   width: 100%;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--clr-glass-border);
+  border-bottom: 1px solid var(--clr-border);
 }
 
 .project-header__text {
@@ -817,8 +830,6 @@ h2.section__title {
 
 .project-switch__pill {
   padding: 0.7rem 1.6rem;
-  border: 1px solid var(--clr-glass-border);
-  background: var(--clr-glass);
   color: var(--clr-text-muted);
   font-weight: var(--fw-bold);
   font-size: 1rem;
@@ -826,7 +837,7 @@ h2.section__title {
 
 .project-switch__pill[aria-selected="true"] {
   background: var(--clr-accent);
-  color: var(--clr-dark);
+  color: var(--clr-on-accent);
   border-color: var(--clr-accent);
   box-shadow: 0 0 20px var(--clr-accent-glow); /* 노드처럼 "켜짐" */
 }
@@ -849,7 +860,7 @@ h2.section__title {
   flex-direction: column;
   gap: 0.25rem;
   padding-top: 0.5rem;
-  border-right: 1px solid var(--clr-glass-border);
+  border-right: 1px solid var(--clr-border);
 }
 
 .project__toc a {
@@ -862,13 +873,13 @@ h2.section__title {
 }
 
 .project__toc a:hover {
-  color: var(--clr-light);
-  background: var(--clr-glass);
+  color: var(--clr-text-strong);
+  background: var(--glass-bg);
 }
 
 .project__toc a.is-active {
-  color: var(--clr-accent);
-  background: var(--clr-glass);
+  color: var(--clr-accent-soft);
+  background: var(--glass-bg);
 }
 
 /* 좁은 카드에서는 목차를 접고 본문만 남긴다 */
@@ -885,7 +896,7 @@ h2.section__title {
   overflow-y: auto;
   padding: 0 1.5rem 2rem 0;
   scrollbar-width: thin;
-  scrollbar-color: var(--clr-accent) transparent;
+  scrollbar-color: var(--clr-text-faint) transparent;
 }
 
 .project__scroll::-webkit-scrollbar {
@@ -893,7 +904,7 @@ h2.section__title {
 }
 
 .project__scroll::-webkit-scrollbar-thumb {
-  background-color: var(--clr-accent);
+  background-color: var(--clr-text-faint);
   border-radius: 10px;
 }
 
@@ -905,7 +916,7 @@ h2.section__title {
   height: auto;
   margin: 0 0 1.25rem;
   border-radius: 16px;
-  border: 1px solid var(--clr-glass-border);
+  border: 1px solid var(--glass-border);
   background: var(--clr-surface-deep);
 }
 
@@ -919,7 +930,7 @@ h2.section__title {
   margin: 0;
   font-size: 2rem;
   font-weight: var(--fw-black);
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
 }
 
 /* .tabs__panel p (0,1,1) 가 margin 을 0 으로 만들므로 그보다 구체적으로 쓴다 */
@@ -936,14 +947,14 @@ h2.section__title {
 .project__section h4 {
   margin: 0 0 0.75rem;
   padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--clr-glass-border);
+  border-bottom: 1px solid var(--clr-border);
   color: var(--clr-accent);
   font-size: 1.25rem;
 }
 
 .project__section h5 {
   margin: 1.25rem 0 0.5rem;
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
   font-size: 1.05rem;
   font-weight: var(--fw-medium);
 }
@@ -986,7 +997,7 @@ h2.section__title {
   width: 100%;
   height: auto;
   border-radius: 16px;
-  border: 1px solid var(--clr-glass-border);
+  border: 1px solid var(--glass-border);
   background: var(--clr-surface-deep);
 }
 
@@ -1018,7 +1029,7 @@ h2.section__title {
 
 .project__link {
   display: inline-block;
-  color: var(--clr-accent);
+  color: var(--clr-accent-soft);
   font-weight: var(--fw-medium);
   text-decoration: none;
 }
@@ -1042,7 +1053,7 @@ h2.section__title {
 .cmp-table th,
 .cmp-table td {
   padding: 0.55rem 0.75rem;
-  border-bottom: 1px solid var(--clr-glass-border);
+  border-bottom: 1px solid var(--clr-border);
   text-align: left;
   vertical-align: top;
   color: var(--clr-text);
@@ -1055,7 +1066,7 @@ h2.section__title {
 }
 
 .cmp-table tbody th {
-  color: var(--clr-light);
+  color: var(--clr-text-strong);
   font-weight: var(--fw-medium);
   white-space: nowrap;
 }
@@ -1083,9 +1094,7 @@ h2.section__title {
 
 .skill-tags li {
   padding: 0.35rem 0.9rem;
-  border: 1px solid var(--clr-glass-border);
   border-radius: 999px;
-  background: var(--clr-glass);
   color: var(--clr-text);
   font-size: 0.9rem;
   white-space: nowrap;
@@ -1102,9 +1111,11 @@ body.no-motion * {
 .btn {
   display: inline-block;
   background: var(--clr-accent);
-  color: var(--clr-dark);
+  color: var(--clr-on-accent);
   padding: 0.8rem 2rem;
-  border-radius: 12px;
+  border-radius: 999px;
+  border: 0;
+  box-shadow: 0 6px 16px var(--clr-accent-glow);
   text-decoration: none;
   font-weight: var(--fw-bold);
   transition: var(--transition-fast);

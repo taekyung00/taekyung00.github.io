@@ -15,7 +15,7 @@
 | **소유자** | 허태경 (Taekyung Ho) |
 | **배포 URL** | `taekyung00.github.io` (GitHub Pages) |
 | **로컬 실행** | `python -m http.server 8000` 또는 `http://localhost:8000` |
-| **마지막 갱신** | 2026-09-21 |
+| **마지막 갱신** | 2026-09-22 |
 
 ---
 
@@ -95,6 +95,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 | 하고 싶은 것 | 고칠 곳 |
 |---|---|
 | 사이트 전체 색감 | `css/tokens.css` **한 곳** (홈 + 상세 페이지 모두 따라옴) |
+| 유리 재질(투명도·블러·림) | `css/tokens.css` 의 `--glass-*`. 새 표면을 유리로 만들려면 `css/style.css` 맨 위 "유리 재질" 규칙의 선택자 목록에 추가 |
 | 전환 애니메이션 속도 | `css/tokens.css` 의 `--dur-*` (JS 가 이 값을 읽어 씀) |
 | 홈 화면 전체 크기 | `css/style.css` 의 `--node-radius` 한 줄 |
 | 카드가 커질 수 있는 범위 | `css/tokens.css` 의 `--bumper-t/r/b/l` (방향별) |
@@ -115,6 +116,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-22 | `css/tokens.css`, `css/style.css`, `css/portfolio-page.css`, `index.html`, `js/index.js` | 테마를 밝은 Liquid Glass 로 전환(브랜치 `portfolio_theme`) — 흰 반투명 유리 + 어두운 글자 + Apple 블루(#0071e3), 배경은 은은한 정적 그라데이션. 유리 재질을 규칙 하나로 모음(`--glass-*`). `--clr-light`/`--clr-dark` 를 역할 이름(`--clr-text-strong`/`--clr-on-accent`)으로 변경. Jean 판의 파란 테두리 제거(호버 때만 파랗게). 대비는 본문 10:1, 작은 파란 글자 5.4:1. 움직이는 색 방울 배경도 만들어 비교했으나 정적 쪽으로 확정하고 제거 |
 | 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | 브라우저 히스토리 연결 — 열린 카드를 URL 해시로(`#about`, `#games/dt`), 카드 열기/홈 이동은 `pushState`, 탭 전환은 `replaceState`, `popstate` 로 ←/→ 지원(애니메이션 중 요청은 `pendingNav` 로 보관), 로드 시 해시 복원은 `body.no-motion` 으로 연출 없이 즉시. 외부 링크 13곳의 `target="_blank"` 제거(같은 탭 → 뒤로 가기로 복귀). file:// 에서도 동작 확인 |
 | 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | Game Projects 에 미디어 추가 — 각 프로젝트에 "Media" 섹션(목차에 자동 등재): 10..9..8.. 는 플레이 영상(`img/1098/play_video.mp4`, 포스터 `play.png`) + 타이틀/인게임 스크린샷 2장 그리드, Dragonic Tactics 는 키 아트(`header.png`) + 이름 옆 엠블럼(`logo.png`). 패턴: `figure.media` / `.media-grid`. 또 GAM150 과목 행 삭제, DT 팀명 "Team Code Pistols — 5 members", 목차 첫 항목은 맨 위로 스크롤(프로젝트 이름·장르가 잘리지 않게) |
 | 2026-09-21 | `index.html`, `css/style.css` | Game Projects 카드 세로 공간 확보 — 링에서 Graphics 와 자리를 바꿔(6시 → 모서리) Jean 판이 위가 아닌 왼쪽 위 모서리에 주차되게 하고, 제목·부제·전환기를 한 줄 헤더로 합침. 본문 스크롤 영역 372px → 660px(1886×915). `.tabs` 래퍼 대신 `.card-scroll` 에 `data-tabs` |
