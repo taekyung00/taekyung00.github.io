@@ -16,8 +16,8 @@
 
     <!-- 브라우저 캐시 무시용 버전. css/js 수정 시 함께 올릴 것 -->
     <!-- tokens.css 가 먼저 와야 style.css 가 토큰을 읽을 수 있다 -->
-    <link rel="stylesheet" href="css/tokens.css?v=33" />
-    <link rel="stylesheet" href="css/style.css?v=33" />
+    <link rel="stylesheet" href="css/tokens.css?v=36" />
+    <link rel="stylesheet" href="css/style.css?v=36" />
 </head>
 
 <body data-view="home">
@@ -55,14 +55,13 @@
                         <button class="node-btn" data-target="skills">
                             <span data-i18n="node-skills">Skills</span>
                         </button>
+                        <!-- Game Projects 는 긴 카드라 12시/6시(판이 위아래에 주차돼 세로가 줄어드는
+                             자리)를 피해 모서리 방향에 둔다. Graphics 는 짧아서 6시여도 된다. -->
+                        <button class="node-btn" data-target="games">
+                            <span data-i18n="node-games">Game Projects</span>
+                        </button>
                         <button class="node-btn" data-target="projects">
                             <span data-i18n="node-projects">Graphics</span>
-                        </button>
-                        <button class="node-btn" data-target="q2">
-                            <span data-i18n="node-q2">?</span>
-                        </button>
-                        <button class="node-btn" data-target="q1">
-                            <span data-i18n="node-q1">?</span>
                         </button>
                         <button class="node-btn" data-target="sns">
                             <span data-i18n="node-sns">Social Media</span>
@@ -254,32 +253,184 @@
             </div>
         </section>
 
-        <!-- Question View 1 -->
-        <section id="q1" class="view">
+        <!-- Game Projects View
+             data-card-fill: 카드가 범퍼 상자 높이를 꽉 채우고, 스크롤은 프로젝트 본문
+             (.project__scroll) 안에서만 일어난다. 전환기는 [data-tabs] 규약(Skills 와 동일).
+             목차(.project__toc)는 비워 두면 js 가 같은 패널의 .project__section > h4 로 채운다.
+             프로젝트를 추가하려면: 알약 버튼 1개 + .project 패널 1개. 섹션을 추가하려면
+             .project__section[id] 하나 — 목차는 자동으로 따라온다. -->
+        <section id="games" class="view" data-card-fill>
             <div class="view-content">
                 <div class="content-wrapper">
-                    <div class="card-scroll">
-                        <h2 class="section__title" data-i18n="q1-title">Coming Soon</h2>
-                        <p data-i18n="q1-desc">This section is under development.</p>
-                </div>
-                </div>
-            </div>
-        </section>
+                    <!-- data-tabs 를 .card-scroll 에 둔다: 전환기(헤더 오른쪽)와 패널이 형제라
+                         공통 조상이 여기다. 세로 공간을 아끼려 제목·부제·전환기를 한 줄에 놓았다. -->
+                    <div class="card-scroll card-scroll--fill" data-tabs>
+                        <header class="project-header">
+                            <div class="project-header__text">
+                                <h2 class="section__title" data-i18n="games-title">Game &amp; Engine Projects</h2>
+                                <p class="section__subtitle" data-i18n="games-subtitle">Selected team projects where I worked on C++ engine architecture, gameplay systems, graphics programming, and technical leadership.</p>
+                            </div>
+                            <div class="tabs__list project-switch" role="tablist">
+                                <button class="tabs__tab project-switch__pill" role="tab" id="tab-1098" aria-controls="panel-1098" aria-selected="true">10..9..8..</button>
+                                <span class="project-switch__line" aria-hidden="true"></span>
+                                <button class="tabs__tab project-switch__pill" role="tab" id="tab-dt" aria-controls="panel-dt" aria-selected="false" tabindex="-1">Dragonic Tactics</button>
+                            </div>
+                        </header>
+                        <div class="tabs__panels tabs__panels--fill">
 
-        <!-- Question View 2 -->
-        <section id="q2" class="view">
-            <div class="view-content">
-                <div class="content-wrapper">
-                    <div class="card-scroll">
-                        <h2 class="section__title" data-i18n="q2-title">Secret Node</h2>
-                        <p data-i18n="q2-desc">Wait for it...</p>
+                                <!-- ── 10..9..8.. ── -->
+                                <div class="tabs__panel project is-active" role="tabpanel" id="panel-1098" aria-labelledby="tab-1098">
+                                    <nav class="project__toc" data-toc></nav>
+                                    <div class="project__scroll" data-toc-scroller>
+                                        <header class="project__head">
+                                            <h3 class="project__name">10..9..8..</h3>
+                                            <p class="project__tagline" data-i18n="p1098-tagline">2D Top-Down Dungeon Exploration Roguelike / Puzzle Game</p>
+                                        </header>
+                                        <section class="project__section" id="p1098-info">
+                                            <h4 data-i18n="sec-info">Basic Info</h4>
+                                            <dl class="project__facts">
+                                                <dt data-i18n="fact-dev">Development</dt><dd data-i18n="p1098-dev">Spring 2025</dd>
+                                                <dt data-i18n="fact-team">Team</dt><dd data-i18n="p1098-team">Team Natural Disaster — 4 members</dd>
+                                                <dt data-i18n="fact-role">Role</dt><dd data-i18n="p1098-role">Technical Lead</dd>
+                                                <dt data-i18n="fact-platform">Platform</dt><dd>Windows</dd>
+                                                <dt data-i18n="fact-tech">Technology</dt><dd>C++, raylib, Custom C++ Engine, ECS</dd>
+                                            </dl>
+                                        </section>
+                                        <section class="project__section" id="p1098-overview">
+                                            <h4 data-i18n="sec-overview">Game Overview</h4>
+                                            <p data-i18n="p1098-ov1">10..9..8.. is a 2D top-down dungeon exploration game built around a simple constraint: the player has only 10 steps. Inspired by chess and roguelike games, the player explores a dungeon while deciding how to spend a limited step resource on movement, combat, and progression.</p>
+                                            <p data-i18n="p1098-ov2">Steps function as more than movement points. Moving consumes them, enemy attacks reduce them, and purchasing items can also cost steps. Healing items restore steps, making the same resource function as movement capacity, survivability, and currency. If the player's remaining steps reach zero, the run ends.</p>
+                                            <p data-i18n="p1098-ov3">Players progress through semi-randomly selected dungeon layouts, fight or avoid enemies with different movement patterns, reach stairs to advance between floors, visit store floors to purchase equipment, and ultimately confront the Chess King.</p>
+                                        </section>
+                                        <section class="project__section" id="p1098-features">
+                                            <h4 data-i18n="sec-features">Game Features</h4>
+                                            <p data-i18n="p1098-ft1">The game contains three themed stages — Chessboard, Forest, and Castle — with multiple dungeon floors and store areas between stages. Maps are assembled from separate text-based data for tile layouts, enemies, and traps, allowing stage layouts to be selected semi-randomly at runtime.</p>
+                                            <p data-i18n="p1098-ft2">Enemies are inspired by chess pieces but have distinct movement and attack behaviors. Players must manage their limited steps while responding to melee enemies, long-range attacks, traps, and the final Chess King encounter. Consumable items restore steps, while equipment such as axes, spears, shields, and boots introduces additional choices through rarity, durability, cost, and specialized effects.</p>
+                                        </section>
+                                        <section class="project__section" id="p1098-role">
+                                            <h4 data-i18n="sec-role">My Role</h4>
+                                            <p data-i18n="p1098-role1">I served as the Technical Lead for the project, taking responsibility for major technical decisions, engine architecture, and integration across the game.</p>
+                                            <p data-i18n="p1098-role2">The project was built on a custom C++ engine developed through DigiPen's Game Implementation Techniques coursework. I worked on organizing reusable engine functionality separately from game-specific gameplay logic and helped coordinate integration between the different systems used by the team.</p>
+                                        </section>
+                                        <section class="project__section" id="p1098-arch">
+                                            <h4 data-i18n="sec-arch">Technical Architecture</h4>
+                                            <p data-i18n="p1098-arch1">The engine organizes runtime objects through a GameObjectManager and component-oriented architecture. Game objects can be updated and drawn collectively, while draw priorities are used to determine rendering order.</p>
+                                            <p data-i18n="p1098-arch2">Game-level functionality is divided among systems including a TurnManager, EnemyManager, ItemManager, UI system, and audio wrapper. Reusable components such as Timer, Sprite, and Texture provide common functionality for gameplay objects and rendering.</p>
+                                        </section>
+                                        <section class="project__section" id="p1098-docs">
+                                            <h4 data-i18n="sec-docs">Development Documents</h4>
+                                            <div class="project__doc">
+                                                <h5 data-i18n="doc-gdd-title">Game Design Document</h5>
+                                                <p data-i18n="p1098-gdd-desc">Full game design documentation covering the 10-step mechanic, game flow, map generation, enemies, items, stages, controls, visual design, and audio.</p>
+                                                <a target="_blank" rel="noopener noreferrer" href="docs/1098/GAM_150_GDD_10..9..8.._NaturalDisaster.pdf" class="btn btn--sm"><i class="far fa-file-pdf"></i><span data-i18n="btn-download"> Download PDF</span></a>
+                                            </div>
+                                            <div class="project__doc">
+                                                <h5 data-i18n="doc-tsd-title">Technical Specification Document</h5>
+                                                <p data-i18n="p1098-tsd-desc">Technical documentation covering the custom engine architecture, component structure, managers, rendering components, collision handling, and enemy movement logic.</p>
+                                                <a target="_blank" rel="noopener noreferrer" href="docs/1098/1098_NaturalDisaster_Technical_Specification_Document.pdf" class="btn btn--sm"><i class="far fa-file-pdf"></i><span data-i18n="btn-download"> Download PDF</span></a>
+                                            </div>
+                                        </section>
+                                        <section class="project__section" id="p1098-links">
+                                            <h4 data-i18n="sec-link">Project Link</h4>
+                                            <a class="project__link" href="https://github.com/taekyung00/1098_Game_Project" target="_blank" rel="noopener noreferrer">GitHub<span class="link-ext" aria-hidden="true">↗</span></a>
+                                        </section>
+                                    </div>
+                                </div>
+
+                                <!-- ── Dragonic Tactics ── -->
+                                <div class="tabs__panel project" role="tabpanel" id="panel-dt" aria-labelledby="tab-dt">
+                                    <nav class="project__toc" data-toc></nav>
+                                    <div class="project__scroll" data-toc-scroller>
+                                        <header class="project__head">
+                                            <h3 class="project__name">Dragonic Tactics</h3>
+                                            <p class="project__tagline" data-i18n="dt-tagline">2D Turn-Based Tactical RPG</p>
+                                        </header>
+                                        <section class="project__section" id="dt-info">
+                                            <h4 data-i18n="sec-info">Basic Info</h4>
+                                            <dl class="project__facts">
+                                                <dt data-i18n="fact-dev">Development</dt><dd data-i18n="dt-dev">September 2025 – June 2026</dd>
+                                                <dt data-i18n="fact-team">Team</dt><dd data-i18n="dt-team">Team Code Pistols — 5 members</dd>
+                                                <dt data-i18n="fact-role">Role</dt><dd data-i18n="dt-role">Producer &amp; Engine/Graphics Engineer</dd>
+                                                <dt data-i18n="fact-platforms">Platforms</dt><dd>Windows, WebAssembly</dd>
+                                                <dt data-i18n="fact-tech">Technology</dt><dd>C++, OpenGL, GLSL, Custom C++ Engine</dd>
+                                            </dl>
+                                        </section>
+                                        <section class="project__section" id="dt-overview">
+                                            <h4 data-i18n="sec-overview">Game Overview</h4>
+                                            <p data-i18n="dt-ov1">Dragonic Tactics is a 2D turn-based tactical RPG that reverses the traditional fantasy RPG premise: instead of controlling a party of heroes, the player becomes a dragon defending its territory against a group of adventurers.</p>
+                                            <p data-i18n="dt-ov2">Combat takes place on a grid and emphasizes positioning, resource management, ability usage, and interaction with independently controlled adventurers.</p>
+                                        </section>
+                                        <section class="project__section" id="dt-features">
+                                            <h4 data-i18n="sec-features">Game Features</h4>
+                                            <p data-i18n="dt-ft1">The game's core design focuses on strategic positioning, limited-resource management, and asymmetric combat. The dragon is significantly more powerful than an individual adventurer, but must manage action points, spell slots, movement, and positioning while fighting an opposing party with complementary roles.</p>
+                                            <p data-i18n="dt-ft2">Adventurers are divided into distinct archetypes such as Fighter, Wizard, Cleric, and Rogue, each emphasizing different behaviors including frontline pressure, ranged damage, healing and support, or mobility and flanking. The dragon uses a varied set of abilities that can deal damage, apply status effects, manipulate enemy positions, and alter the battlefield by creating obstacles or hazardous terrain.</p>
+                                            <p data-i18n="dt-ft3">Facing direction, attack ranges, area-based targeting, and status effects further make spatial relationships important throughout combat.</p>
+                                        </section>
+                                        <section class="project__section" id="dt-role">
+                                            <h4 data-i18n="sec-role">My Role</h4>
+                                            <p data-i18n="dt-role1">I worked as both Producer and Engine/Graphics Engineer on the five-person team.</p>
+                                            <p data-i18n="dt-role2">On the engineering side, I refactored the custom C++ engine by removing its raylib rendering dependency and integrating OpenGL directly. I designed and implemented the engine's 2D rendering systems, including immediate, batch, and instanced rendering approaches, texture handling, sprite rendering, virtual resolution, and graphics-related engine integration.</p>
+                                            <p data-i18n="dt-role3">I also designed inter-system communication using an EventBus to reduce unnecessary dependencies between engine and gameplay systems while retaining direct access where tighter subsystem integration was appropriate.</p>
+                                            <p data-i18n="dt-role4">On the production side, I coordinated project milestones, development schedules, priorities, and integration across the team.</p>
+                                        </section>
+                                        <section class="project__section" id="dt-render">
+                                            <h4 data-i18n="sec-render">Rendering System</h4>
+                                            <p data-i18n="dt-rd0">I implemented three rendering approaches to explore different trade-offs between simplicity, CPU workload, GPU workload, memory transfer, and draw-call reduction.</p>
+                                            <h5 data-i18n="dt-rd-imm-title">Immediate Renderer</h5>
+                                            <p data-i18n="dt-rd-imm1">The immediate renderer keeps a single unit quad on the GPU and reuses it for every sprite. Each request uploads transform, texture-region, depth, and tint information through uniforms before issuing an individual draw call.</p>
+                                            <p data-i18n="dt-rd-imm2">The architecture is straightforward and requires no batching or flushing, making it appropriate for the scale of the final game. For that reason, the immediate renderer remained the default renderer used by Dragonic Tactics.</p>
+                                            <h5 data-i18n="dt-rd-bat-title">Batch Renderer</h5>
+                                            <p data-i18n="dt-rd-bat1">The batch renderer accumulates multiple sprites into a larger CPU-side vertex buffer before submitting them together.</p>
+                                            <p data-i18n="dt-rd-bat2">Instead of uploading a model transform for each sprite, the CPU calculates transformed vertex positions in advance and stores position, texture coordinates, tint, texture slot, and depth directly in the vertex data.</p>
+                                            <p data-i18n="dt-rd-bat3">A texture-slot system allows multiple textures to participate in the same batch, reducing the number of draw calls required to render larger groups of sprites.</p>
+                                            <h5 data-i18n="dt-rd-ins-title">Instanced Renderer</h5>
+                                            <p data-i18n="dt-rd-ins1">The instanced renderer keeps a single unit quad on the GPU and stores only per-sprite rendering information in an instance buffer.</p>
+                                            <p data-i18n="dt-rd-ins2">Unlike the batch renderer, the CPU does not generate transformed vertices for every sprite. Transformation is performed by the GPU using per-instance data.</p>
+                                            <p data-i18n="dt-rd-ins3">This reduces per-sprite transfer from approximately 112 bytes in the batch representation to 52 bytes in the instanced representation, while retaining the ability to draw many sprites together.</p>
+                                            <h5 data-i18n="dt-rd-cmp-title">Rendering Comparison</h5>
+                                            <!-- 표는 한 키로 통째로 번역한다(innerHTML 교체) -->
+                                            <table class="cmp-table" data-i18n="dt-cmp-table">
+                                                <thead><tr><th></th><th>Immediate</th><th>Batch</th><th>Instanced</th></tr></thead>
+                                                <tbody>
+                                                    <tr><th>Per-object data</th><td>Uniforms</td><td>Vertex attributes</td><td>Instance attributes</td></tr>
+                                                    <tr><th>GPU geometry</th><td>One unit quad</td><td>Dynamic vertex stream</td><td>One unit quad</td></tr>
+                                                    <tr><th>Model transform</th><td>GPU</td><td>CPU</td><td>GPU</td></tr>
+                                                    <tr><th>Per-quad transfer</th><td>Uniforms + state changes</td><td>112 bytes</td><td>52 bytes</td></tr>
+                                                    <tr><th>Draw calls</th><td>One per object</td><td>Reduced through batching</td><td>Reduced through instancing</td></tr>
+                                                    <tr><th>Primary trade-off</th><td>Simplicity</td><td>More CPU work for fewer draw calls</td><td>Lower transfer and GPU-side transformation</td></tr>
+                                                </tbody>
+                                            </table>
+                                            <p data-i18n="dt-rd-end">Batch rendering and instancing were implemented proactively because the engine was expected to handle more sprites as development progressed. Rather than waiting for rendering scalability to become a problem, I implemented alternative rendering architectures early and compared their trade-offs while preserving the simpler immediate renderer when it was sufficient for the actual game.</p>
+                                        </section>
+                                        <section class="project__section" id="dt-engine">
+                                            <h4 data-i18n="sec-engine">Additional Engine Work</h4>
+                                            <h5>EventBus</h5>
+                                            <p data-i18n="dt-eb1">I designed an EventBus-based communication system to decouple engine and gameplay systems where direct dependencies were unnecessary.</p>
+                                            <p data-i18n="dt-eb2">The architecture still allowed direct references where subsystems required tighter integration, rather than forcing every interaction through the event system.</p>
+                                            <h5 data-i18n="dt-vr-title">Virtual Resolution</h5>
+                                            <p data-i18n="dt-vr1">The rendering pipeline includes a virtual-resolution system that allows game content to be authored against a consistent logical resolution while being presented correctly across different display sizes.</p>
+                                        </section>
+                                        <section class="project__section" id="dt-links">
+                                            <h4 data-i18n="sec-links">Project Links</h4>
+                                            <div class="project__doc">
+                                                <a class="project__link" href="https://taekyung00.github.io/DT/" target="_blank" rel="noopener noreferrer"><span data-i18n="dt-presskit-title">Press Kit &amp; Play Demo</span><span class="link-ext" aria-hidden="true">↗</span></a>
+                                                <p data-i18n="dt-presskit-desc">Includes the playable WebAssembly demo, detailed game description, gameplay instructions, features, videos, screenshots, character assets, reviews, team information, and additional media.</p>
+                                            </div>
+                                            <div class="project__doc">
+                                                <a class="project__link" href="https://github.com/taekyung00/CodePistols_DragonicTactics" target="_blank" rel="noopener noreferrer">GitHub<span class="link-ext" aria-hidden="true">↗</span></a>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+
+                            </div>
                 </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="js/index.js?v=33"></script>
+    <script src="js/index.js?v=36"></script>
 </body>
 
 </html>

@@ -44,6 +44,7 @@ portfolio/                          # 프로젝트 루트
 │   ├── Resume/
 │   │   ├── Taekyung_Ho_Resume.pdf  # 사이트에서 내려받는 이력서 (이력서 카드 내용의 기준)
 │   │   └── …                       # 지원처별 변형본·docx 원본 (사이트와 무관)
+│   ├── 1098/                       # Game Projects 카드에서 내려받는 10..9..8.. GDD / TSD
 │   ├── Cover_Letter/               # 커버레터 모음 (사이트와 무관)
 │   └── Transcript_TAEKYUNGHO.pdf
 └── external/
@@ -97,6 +98,9 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 | 카드 비율 고정 | 그 `<section>` 에 `data-card-ratio="1/1"` 같은 속성 |
 | 본문 한 줄 길이 | `css/tokens.css` 의 `--text-measure` |
 | 카드 안에 탭 UI(하나씩 보여주기) | HTML 만 `[data-tabs]` 규약(`index.html` Skills 카드 주석 참고)으로 쓰면 `js/index.js` 가 자동으로 붙음 |
+| 카드 안쪽에서만 스크롤(카드는 상자를 꽉 채움) | 그 `<section>` 에 `data-card-fill` + 스크롤할 요소에 `overflow-y:auto`(Game Projects 카드가 예) |
+| 긴 본문에 목차 붙이기 | `.project` 안에 `[data-toc]`(비워 둠) + `[data-toc-scroller]`. 스크롤러 안의 `.project__section[id] > h4` 가 곧 목차 항목 — 섹션을 넣고 빼면 목차가 따라옴 |
+| Game Projects 에 프로젝트 추가 | 알약 `<button role="tab">` 1개 + `.tabs__panel.project` 1개(기존 것 복사), 한국어는 `ko` 에 |
 | 상세 페이지 레이아웃 | `css/portfolio-page.css` |
 | 영문 문구 | `index.html` 본문 (JS 가 여기서 읽어감) |
 | 한국어 문구 | `js/index.js` 의 `ko` 객체 |
@@ -107,6 +111,8 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-09-21 | `index.html`, `css/style.css` | Game Projects 카드 세로 공간 확보 — 링에서 Graphics 와 자리를 바꿔(6시 → 모서리) Jean 판이 위가 아닌 왼쪽 위 모서리에 주차되게 하고, 제목·부제·전환기를 한 줄 헤더로 합침. 본문 스크롤 영역 372px → 660px(1886×915). `.tabs` 래퍼 대신 `.card-scroll` 에 `data-tabs` |
+| 2026-09-21 | `index.html`, `js/index.js`, `css/style.css` | `?` 노드 둘 중 하나 삭제, 하나를 **Game Projects** 카드로(노드 6개). 10..9..8.. / Dragonic Tactics 를 선으로 이어진 알약 전환기(`[data-tabs]` 재사용)로 고르고, 왼쪽 목차(섹션 제목에서 자동 생성, 클릭 이동·스크롤 추적) + 오른쪽 안쪽 스크롤 본문. 새 규약: `data-card-fill`(카드가 상자를 채움), `[data-toc]`/`[data-toc-scroller]`. 전문 한국어 번역, GDD/TSD PDF 링크(`docs/1098/`) |
 | 2026-09-21 | `index.html`, `css/style.css`, `js/index.js` | About Me 카드에 프로필 사진(`img/face.jpg`, Jean 판과 같은 둥근 사각형·강조색 테두리) 을 본문 옆에 배치(좁으면 위로 줄바꿈), 본문 두 문단을 새 문구로 교체(EN/KO). 쓰이지 않던 `.about-me__img` 규칙 삭제 |
 | 2026-09-21 | `css/tokens.css`, `css/style.css` | 위 범퍼 `--bumper-t` 0 → 24px(내용이 긴 카드가 화면 맨 위에 붙던 문제). 카드 본문 굵기를 300 으로 내려 `<b>`(700) 와 구분되게 함 — normalize 의 `b{bolder}` 가 300 부모에서 400 으로 풀리므로 `b` 는 700 명시 |
 | 2026-09-21 | `index.html`, `css/style.css`, `css/tokens.css`, `js/index.js` | Skills 카드를 탭 UI 로 — 세 제목을 알약형 세그먼트 컨트롤(버튼)로 두고 설명은 활성 하나만 표시. 태그 줄을 제목 아래로 옮기고 x86-64 Assembly·NASM 제외. 탭은 `[data-tabs]` 규약 + 범용 JS 라 다른 카드에서 재사용 가능. 패널을 그리드 한 칸에 겹쳐 쌓아 탭·언어 전환 때 카드 높이가 안 튐 |

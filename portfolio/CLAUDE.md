@@ -58,12 +58,16 @@ Two traps worth remembering:
 - Korean lives in the `ko` object in `js/index.js`. Adding a string means: put it in the HTML with a `data-i18n` key, then add the Korean. A missing key logs an `[i18n]` console warning.
 
 ### Tabs inside a card
-The Skills card shows one description at a time behind a pill-shaped segmented control. This is a **markup convention, not per-card code**: wrap in `[data-tabs]`, give each `<button role="tab">` an `aria-controls` pointing at a `role="tabpanel"` id, mark the initial pair with `aria-selected="true"` / `.is-active`. `js/index.js` wires every `[data-tabs]` on load (click + Left/Right arrows). Panels are stacked in one grid cell (`.tabs__panel { grid-area: 1/1 }`) so the container is as tall as the tallest panel and the card height never jumps on tab or language switch — keep that if you restyle it.
+The Skills card shows one description at a time behind a pill-shaped segmented control. This is a **markup convention, not per-card code**: wrap in `[data-tabs]`, give each `<button role="tab">` an `aria-controls` pointing at a `role="tabpanel"` id, mark the initial pair with `aria-selected="true"` / `.is-active`. `js/index.js` wires every `[data-tabs]` on load (click + Left/Right arrows). Panels are stacked in one grid cell (`.tabs__panel { grid-area: 1/1 }`) so the container is as tall as the tallest panel and the card height never jumps on tab or language switch — keep that if you restyle it. The Game Projects card reuses the same controller with a different skin (`.project-switch`: two pills joined by a line, one lit).
+
+### Table of contents inside a scrolling panel
+Game Projects has a left-hand TOC per project. It is **generated**, not authored: `buildToc()` fills `[data-toc]` from every `.project__section[id] > h4` inside the sibling `[data-toc-scroller]`, wires click-to-scroll (`scrollTo` within the scroller, `preventDefault` so the hash never moves the page) and a scroll-spy that marks the current section (bottom of the scroller = last section). It runs at the end of `updateLanguage()` because the labels are copied from the headings. Adding a section is one `<section class="project__section" id="…"><h4>…</h4>…</section>`; the TOC follows.
 
 ### Detail card sizing
 `layoutCard()` in `js/index.js` sizes each card from a **bumper box**: the viewport minus the per-direction bumpers (`--bumper-t/r/b/l`) minus the strip occupied by the parked Jean plate. Within that box:
 - default — the card fills the box **width**; height follows content and only scrolls past the box height
 - `data-card-ratio="16/9"` on a `<section>` — the card becomes the largest box of that ratio that fits, height included
+- `data-card-fill` on a `<section>` — the card takes the full box height regardless of content. Use it when scrolling should happen *inside* the card (Game Projects: `.project__scroll` scrolls, the card itself doesn't). The vertical flex chain `.card-scroll--fill > .tabs__panels--fill > .tabs__panel > .project` needs `min-height: 0` on every link or the inner scroller never shrinks. Also keep a tall card **off the 12/6 o'clock ring slots**: the plate parks on the opposite edge and steals ~150px of card height there, whereas a corner slot leaves the full box height (this is why Game Projects sits before Graphics in the ring)
 
 Bumpers are read **from the view element**, not the root, so a single `<section>` can override `--bumper-*` for itself. Scrolling lives on the inner `.card-scroll`, inset by `--card-inset`, because a scrollbar on the rounded card escapes its corners — the inset must stay above `r - r/√2`.
 
@@ -77,4 +81,4 @@ Cards grow wide, so prose containers (`.about-me__body`, `.resume-section`, `.se
 
 ## Other notes
 - `TODO.txt` and `README.md` (a Korean "AI agent guide") track outstanding work items and a duplicate description of the directory/node layout; `README.md` also documents the node-position table this file summarizes above.
-- `docs/` holds the downloadable résumé/cover letter/transcript assets linked from the Resume view — treat these as user-supplied content, not something to regenerate.
+- `docs/` holds the downloadable résumé/cover letter/transcript assets linked from the Resume view, plus `docs/1098/` (the 10..9..8.. GDD and technical spec linked from Game Projects) — treat these as user-supplied content, not something to regenerate. The GDD filename contains `..` inside a segment; that is not a dot-segment and serves fine.
