@@ -48,6 +48,32 @@ function nodeAngle(target) {
 
 })();
 
+// ── 브라우저 히스토리 ──────────────────────────────────────────────
+// 열린 카드가 곧 URL 해시다(#about, #games/dt). 카드를 열고 닫을 때마다 항목을
+// 쌓고, ←/→ 에서(버튼·단축키·마우스 측면 버튼·트랙패드 스와이프는 전부
+// popstate 로 들어온다) 해시대로 화면을 맞춘다. 로드 시 해시가 있으면 연출 없이
+// 즉시 연다 — 외부 링크로 나갔다 뒤로 돌아올 때 직전 카드가 그대로 나오게.
+// 홈은 해시 없음. 홈 URL 도 같은 문서(경로+쿼리)라 file:// 에서도 pushState 가 된다.
+const VIEW_IDS = new Set(nodeButtons().map(b => b.dataset.target));
+
+function readHash() {
+    const [view, tab] = location.hash.slice(1).split("/");
+    return { view: VIEW_IDS.has(view) ? view : "home", tab: tab || null };
+}
+
+function urlFor(view, tab) {
+    const base = location.pathname + location.search;
+    return view === "home" ? base : `${base}#${view}${tab ? "/" + tab : ""}`;
+}
+
+// 현재 URL 과 같은 곳이면 항목을 쌓지 않는다(새로고침·중복 클릭 대비).
+function pushView(view, tab) {
+    const url = urlFor(view, tab);
+    const wanted = url.includes("#") ? url.slice(url.indexOf("#")) : "";
+    if (location.hash === wanted) return;
+    history.pushState({ view, tab }, "", url);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const views = document.querySelectorAll(".view");
     const nodeBtns = document.querySelectorAll(".node-btn");
@@ -537,7 +563,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }, cssMs("--dur-node-fly") + 50);
     }
 
-    function openNode(target, btn) {
+    // 애니메이션 중에 들어온 히스토리 이동은 버리지 않고 마지막 것만 보관했다가
+    // 잠금이 풀릴 때 적용한다. 버리면 URL 과 화면이 어긋난 채로 남는다.
+    let pendingNav = null;
+    function release(ms) {
+        setTimeout(() => {
+            isAnimating = false;
+            if (pendingNav) {
+                const n = pendingNav;
+                pendingNav = null;
+                navigateTo(...n);
+            }
+        }, ms);
+    }
+
+    // instant: 연출 없이 바로 그 상태로(로드 직후 해시 복원). 한 프레임 동안
+    // 모든 transition 을 끄고 값을 넣은 뒤 reflow 로 확정시킨다.
+    function withoutMotion(fn) {
+        document.body.classList.add("no-motion");
+        fn();
+        void document.body.offsetWidth;
+        setTimeout(() => document.body.classList.remove("no-motion"), 0);
+    }
+
+    function openNode(target, btn, { push = true, instant = false } = {}) {
         if (isAnimating) return;
         isAnimating = true;
         btn.blur();
@@ -548,23 +597,61 @@ document.addEventListener("DOMContentLoaded", () => {
         // 강제 레이아웃은 2회로 끝난다.
         // 전제: .view.active 는 opacity/visibility/z-index 만 바꾼다.
         // 여기에 레이아웃에 영향 주는 속성을 넣으면 FLIP 이 조용히 깨진다.
-        setHub("parked", target);
+        const apply = () => {
+            setHub("parked", target);
+            const view = document.getElementById(target);
+            if (view && !instant) flipCardIn(view, btn.getBoundingClientRect());
+            switchView(target);
+            markCurrent(target);
+        };
+        if (instant) withoutMotion(apply); else apply();
 
-        const view = document.getElementById(target);
-        if (view) flipCardIn(view, btn.getBoundingClientRect());
-        switchView(target);
-        markCurrent(target);
-
-        setTimeout(() => { isAnimating = false; }, cssMs("--dur-node-fly"));
+        if (push) pushView(target, currentTab(target));
+        release(instant ? 0 : cssMs("--dur-node-fly"));
     }
 
-    function goHome() {
+    function goHome({ push = true, instant = false } = {}) {
         if (isAnimating) return;
         isAnimating = true;
-        switchView("home");
-        markCurrent(null);
-        setHub("home");
-        setTimeout(() => { isAnimating = false; }, cssMs("--dur-node-fly"));
+        const apply = () => {
+            switchView("home");
+            markCurrent(null);
+            setHub("home");
+        };
+        if (instant) withoutMotion(apply); else apply();
+
+        if (push) pushView("home");
+        release(instant ? 0 : cssMs("--dur-node-fly"));
+    }
+
+    // 해시 → 화면. popstate 와 초기 로드가 쓴다.
+    function navigateTo(view, tab, opts = {}) {
+        if (isAnimating) { pendingNav = [view, tab, opts]; return; }
+        if (view === "home") {
+            goHome(opts);
+        } else {
+            const btn = nodeButtons().find(b => b.dataset.target === view);
+            if (!btn) return;
+            openNode(view, btn, opts);
+        }
+        applyTab(view, tab);
+    }
+
+    // 해시의 탭 부분(#games/dt -> "dt"). 탭 버튼 id 는 tab-<이름> 규약.
+    function applyTab(view, tab) {
+        if (!tab) return;
+        const btn = document.getElementById("tab-" + tab);
+        const inView = btn && btn.closest(".view");
+        if (inView && inView.id === view && btn.getAttribute("aria-selected") !== "true") btn.click();
+    }
+
+    // 기본(첫) 탭이면 null — URL 을 #games 로 깨끗하게 둔다.
+    function currentTab(view) {
+        const sel = document.querySelector(`#${view} [role=tab][aria-selected="true"]`);
+        if (!sel || !sel.id.startsWith("tab-")) return null;
+        const list = sel.closest("[role=tablist]");
+        if (list && list.querySelector("[role=tab]") === sel) return null;
+        return sel.id.slice(4);
     }
 
     // ── 노드 ────────────────────────────────────────────────────
@@ -661,13 +748,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // 를 하지 않으므로 서로 방해하지 않는다.
     document.querySelectorAll("[data-tabs]").forEach(tabs => {
         const btns = [...tabs.querySelectorAll("[role=tab]")];
-        const select = (btn) => btns.forEach(b => {
-            const on = b === btn;
-            b.setAttribute("aria-selected", on);
-            b.tabIndex = on ? 0 : -1;
-            const panel = document.getElementById(b.getAttribute("aria-controls"));
-            if (panel) panel.classList.toggle("is-active", on);
-        });
+        const select = (btn) => {
+            btns.forEach(b => {
+                const on = b === btn;
+                b.setAttribute("aria-selected", on);
+                b.tabIndex = on ? 0 : -1;
+                const panel = document.getElementById(b.getAttribute("aria-controls"));
+                if (panel) panel.classList.toggle("is-active", on);
+            });
+            // 열린 카드 안의 탭이면 URL 의 탭 부분만 갱신한다(항목은 쌓지 않음 —
+            // 탭 전환은 뒤로 가기 단위가 아니다). 돌아왔을 때 같은 탭이 나온다.
+            const view = tabs.closest(".view");
+            if (view && view.id === document.body.dataset.view) {
+                const tab = currentTab(view.id);
+                history.replaceState({ view: view.id, tab }, "", urlFor(view.id, tab));
+            }
+        };
         btns.forEach((b, i) => {
             b.addEventListener("click", () => select(b));
             // 좌우 화살표로 이동 (WAI-ARIA tabs 관례). 끝에서는 반대편으로 감는다.
@@ -683,4 +779,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     setHub("home");
+
+    // ── 히스토리 연결 ────────────────────────────────────────────
+    // ←/→ 는 해시를 읽어 화면을 맞춘다(항목은 쌓지 않음). 같은 카드 안에서
+    // 탭만 다르면 탭만 바꾼다.
+    window.addEventListener("popstate", () => {
+        const { view, tab } = readHash();
+        if (view === document.body.dataset.view) { applyTab(view, tab); return; }
+        navigateTo(view, tab, { push: false });
+    });
+
+    // 로드 시: 해시가 가리키는 카드를 연출 없이 즉시 연다(외부 링크에서 뒤로
+    // 돌아왔거나 공유된 링크로 들어온 경우). body 는 스크롤하지 않으므로
+    // 브라우저의 스크롤 복원은 끈다.
+    history.scrollRestoration = "manual";
+    const initial = readHash();
+    // 모르는 해시(#foo)는 홈으로 풀리므로 URL 도 그에 맞게 정리한다.
+    history.replaceState({ view: initial.view, tab: initial.tab }, "", urlFor(initial.view, initial.tab));
+    if (initial.view !== "home") navigateTo(initial.view, initial.tab, { push: false, instant: true });
 });

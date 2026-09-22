@@ -582,7 +582,8 @@ h2.section__title {
   font-size: 0.8rem;
 }
 
-/* "새 탭에서 열림" 힌트. 제목 span 안에 있어서 제목이 두 줄로 꺾여도
+/* "포트폴리오 밖으로 나가는 링크" 표시(같은 탭에서 열리고, 뒤로 가기로 돌아온다).
+   제목 span 안에 있어서 제목이 두 줄로 꺾여도
    마지막 단어를 따라간다. */
 .portfolio__ext {
   margin-left: 0.3em;
@@ -1088,6 +1089,13 @@ h2.section__title {
   color: var(--clr-text);
   font-size: 0.9rem;
   white-space: nowrap;
+}
+
+/* 로드 직후 해시 복원처럼 "연출 없이 바로" 상태를 맞출 때 js 가 한 프레임 동안
+   붙인다. 이게 없으면 Jean 판이 화면 중앙에서 코너로 날아가는 게 보인다. */
+body.no-motion,
+body.no-motion * {
+  transition: none !important;
 }
 
 /* Buttons */
