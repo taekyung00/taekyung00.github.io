@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/jpeg" href="img/face.jpg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover: 노치·홈 인디케이터 아래까지 그리게 하고, 대신
+         css 의 env(safe-area-inset-*) 로 범퍼를 띄운다. 이게 없으면 그 값이
+         전부 0 이라 모바일 범퍼 계산이 무의미해진다. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Taekyung Ho | Portfolio</title>
     <meta name="description" content="Computer science student focused on C++, systems, computer graphics and engine architecture." />
 
@@ -33,8 +36,8 @@
 
     <!-- 브라우저 캐시 무시용 버전. css/js 수정 시 함께 올릴 것 -->
     <!-- tokens.css 가 먼저 와야 style.css 가 토큰을 읽을 수 있다 -->
-    <link rel="stylesheet" href="css/tokens.css?v=44" />
-    <link rel="stylesheet" href="css/style.css?v=44" />
+    <link rel="stylesheet" href="css/tokens.css?v=45" />
+    <link rel="stylesheet" href="css/style.css?v=45" />
 </head>
 
 <body data-view="home">
@@ -426,7 +429,12 @@
                                             <p data-i18n="dt-rd-ins2">Unlike the batch renderer, the CPU does not generate transformed vertices for every sprite. Transformation is performed by the GPU using per-instance data.</p>
                                             <p data-i18n="dt-rd-ins3">This reduces per-sprite transfer from approximately 112 bytes in the batch representation to 52 bytes in the instanced representation, while retaining the ability to draw many sprites together.</p>
                                             <h5 data-i18n="dt-rd-cmp-title">Rendering Comparison</h5>
-                                            <!-- 표는 한 키로 통째로 번역한다(innerHTML 교체) -->
+                                            <!-- 표는 한 키로 통째로 번역한다(innerHTML 교체).
+                                                 data-i18n 은 <table> 에 붙어 innerHTML 만 바꾸므로
+                                                 바깥을 감싸는 것은 번역에 영향을 주지 않는다.
+                                                 래퍼는 좁은 화면에서 표만 옆으로 밀리게 한다 —
+                                                 행 머리글이 nowrap 이라 표는 320px 아래로 못 줄어든다. -->
+                                            <div class="table-scroll">
                                             <table class="cmp-table" data-i18n="dt-cmp-table">
                                                 <thead><tr><th></th><th>Immediate</th><th>Batch</th><th>Instanced</th></tr></thead>
                                                 <tbody>
@@ -438,6 +446,7 @@
                                                     <tr><th>Primary trade-off</th><td>Simplicity</td><td>More CPU work for fewer draw calls</td><td>Lower transfer and GPU-side transformation</td></tr>
                                                 </tbody>
                                             </table>
+                                            </div>
                                             <p data-i18n="dt-rd-end">Batch rendering and instancing were implemented proactively because the engine was expected to handle more sprites as development progressed. Rather than waiting for rendering scalability to become a problem, I implemented alternative rendering architectures early and compared their trade-offs while preserving the simpler immediate renderer when it was sufficient for the actual game.</p>
                                         </section>
                                         <section class="project__section" id="dt-engine">
@@ -468,7 +477,7 @@
         </section>
     </main>
 
-    <script src="js/index.js?v=44"></script>
+    <script src="js/index.js?v=45"></script>
 </body>
 
 </html>

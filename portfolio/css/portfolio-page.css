@@ -32,7 +32,7 @@ header {
 }
 
 header h1 {
-  font-size: 2.8rem;
+  font-size: clamp(1.75rem, 6vmin, 2.8rem);
   color: var(--clr-text-strong);
   margin-bottom: 10px;
   letter-spacing: 1px;
@@ -61,7 +61,10 @@ header p {
 main {
   max-width: 960px;
   margin: 0 auto;
-  padding: 60px 24px;
+  /* 좌우는 safe-area 만큼 더 띄운다(가로로 든 노치 기기에서 글이 잘린다).
+     이 페이지들의 viewport meta 에도 viewport-fit=cover 가 있다. */
+  padding: 60px calc(24px + env(safe-area-inset-right))
+           60px calc(24px + env(safe-area-inset-left));
 }
 
 section {
@@ -146,7 +149,11 @@ code {
   box-shadow: var(--bs);
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  width: 100%;
+  /* 폭만 100% 로 두면 가로로 든 휴대폰에서 높이가 뷰포트를 넘는다(main 796px
+     -> 448px 높이, 화면은 390px). 높이 상한에서 역산한 폭으로 같이 묶어
+     비율은 지키되 화면 안에 들어오게 한다. */
+  width: min(100%, calc(70dvh * 16 / 9));
+  margin-inline: auto;
 }
 
 .demo-wrapper iframe {
@@ -169,4 +176,27 @@ footer {
   border-top: 1px solid var(--clr-border);
   color: var(--clr-text-faint);
   font-size: 0.85rem;
+}
+
+/* ── 모바일 ──────────────────────────────────────────────────────
+   조건은 css/tokens.css / css/style.css 의 모바일 쿼리와 같다. */
+@media (max-width: 700px), (max-height: 500px) {
+  header {
+    padding: 32px 20px;
+  }
+
+  main {
+    padding: 32px calc(16px + env(safe-area-inset-right))
+             32px calc(16px + env(safe-area-inset-left));
+  }
+
+  section {
+    margin-bottom: 40px;
+  }
+
+  /* 데모는 마우스 이동과 WASD 로 조작한다. 빌드 산출물이라(각 2~3MB
+     Emscripten) 터치 입력 경로를 여기서 붙일 수 없으므로 그 사실을 알려 준다. */
+  .demo-hint::after {
+    content: " This demo is driven by mouse and keyboard — best opened on a desktop.";
+  }
 }

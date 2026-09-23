@@ -33,8 +33,12 @@ body {
   background: var(--clr-bg-gradient);
   color: var(--clr-text-strong);
   overflow: hidden; /* No scroll */
+  /* 100vh 는 모바일에서 "주소창이 접혔을 때"의 큰 높이라, 몸통이 보이는 영역보다
+     길어진다. 스크롤이 없으니 아래쪽(언어 토글)은 브라우저 크롬에 가려 영영
+     닿지 않는다. dvh 는 지금 실제로 보이는 높이다. 폴백을 먼저 적는다. */
   height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  width: 100%;
 }
 
 /* ── 유리 재질 ────────────────────────────────────────────────────
@@ -106,6 +110,34 @@ body {
 .node-btn,
 .lang-toggle-container {
   pointer-events: auto;
+}
+
+/* 누를 수 있는 것 전부. manipulation 은 더블탭 확대를 끄는 것이고(그래야 탭이
+   300ms 기다리지 않고 바로 먹는다), tap-highlight 는 안드로이드 크롬이 유리
+   표면 위에 덧씌우는 회색 사각형을 지운다 — 둥근 모서리를 무시해서 특히 튄다. */
+.center-plate,
+.node-btn,
+.toggle-switch,
+.tabs__tab,
+.project-switch__pill,
+.portfolio__item,
+.btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 호버가 사라진 자리를 메우는 누름 피드백. 터치에서는 이게 유일한 반응이다.
+   노드는 transform 을 직접 건드리면 안 된다 — 그 속성이 곧 원형 배치
+   (rotate/translate 연쇄)라서 덮어쓰면 노드가 허브 중앙으로 날아간다.
+   배치 연쇄 끝에 이미 scale(var(--scale)) 이 있으니 그 칸에 값을 넣는다. */
+@media (hover: none) {
+  .node-btn:active {
+    --scale: 0.94;
+  }
+  /* 이름판은 자기 transform 이 없다(움직이는 건 부모 .center-group). */
+  .center-plate:active {
+    transform: scale(0.94);
+  }
 }
 
 /* Home View Layout */
@@ -231,10 +263,12 @@ body[data-hub="menu"] .center-plate {
   cursor: pointer;
 }
 
-body[data-hub="parked"] .center-plate:hover,
-body[data-hub="menu"] .center-plate:hover {
-  background: color-mix(in srgb, var(--clr-accent) 14%, var(--glass-bg-strong));
-  box-shadow: 0 0 40px var(--clr-accent-glow);
+@media (hover: hover) {
+  body[data-hub="parked"] .center-plate:hover,
+  body[data-hub="menu"] .center-plate:hover {
+    background: color-mix(in srgb, var(--clr-accent) 14%, var(--glass-bg-strong));
+    box-shadow: 0 0 40px var(--clr-accent-glow);
+  }
 }
 
 /* Jean 은 상태에 따라 하는 일이 다르다(메뉴 열기 / 홈). 색만 바뀌면
@@ -254,9 +288,22 @@ body[data-hub="menu"] .center-plate:hover {
   pointer-events: none;
 }
 
-body[data-hub="parked"] .center-plate:hover .plate-hint,
-body[data-hub="menu"] .center-plate:hover .plate-hint {
-  opacity: 1;
+@media (hover: hover) {
+  body[data-hub="parked"] .center-plate:hover .plate-hint,
+  body[data-hub="menu"] .center-plate:hover .plate-hint {
+    opacity: 1;
+  }
+}
+
+/* 터치에는 호버가 없다. 힌트를 호버에만 걸어 두면 휴대폰에서 이름판은
+   "눌리긴 하는데 뭐가 나올지 모르는" 버튼이 된다 — 메뉴를 여는지 홈으로
+   가는지 알 방법이 사라진다. 그래서 상시 표시한다.
+   두 상태에서는 .home-subname 이 이미 opacity:0 이라 자리가 비어 있다. */
+@media (hover: none) {
+  body[data-hub="parked"] .plate-hint,
+  body[data-hub="menu"] .plate-hint {
+    opacity: 1;
+  }
 }
 
 /* Node Navigation */
@@ -305,12 +352,16 @@ body[data-hub="menu"] .center-plate:hover .plate-hint {
   z-index: 30;
 }
 
-.node-btn:hover {
-  background: var(--clr-accent);
-  color: var(--clr-on-accent);
-  border-color: var(--clr-accent);
-  box-shadow: 0 8px 24px var(--clr-accent-glow);
-  z-index: 40;
+/* 터치에서는 걸지 않는다. 탭으로 페이지를 연 뒤에도 :hover 가 풀리지 않아
+   그 노드만 강조색으로 물든 채 남는다(다음 탭까지). */
+@media (hover: hover) {
+  .node-btn:hover {
+    background: var(--clr-accent);
+    color: var(--clr-on-accent);
+    border-color: var(--clr-accent);
+    box-shadow: 0 8px 24px var(--clr-accent-glow);
+    z-index: 40;
+  }
 }
 
 .node-btn span {
@@ -406,9 +457,11 @@ body[data-hub="menu"] .node-btn.is-current {
   transition: var(--transition-fast);
 }
 
-.toggle-switch:hover {
-  box-shadow: 0 0 15px var(--clr-accent);
-  border-color: var(--clr-accent);
+@media (hover: hover) {
+  .toggle-switch:hover {
+    box-shadow: 0 0 15px var(--clr-accent);
+    border-color: var(--clr-accent);
+  }
 }
 
 .toggle-knob {
@@ -469,8 +522,11 @@ body[data-hub="menu"] .node-btn.is-current {
   width: 100%;
   min-height: 0; /* flex 자식이 내용보다 작아질 수 있어야 스크롤이 생긴다 */
   overflow-y: auto;
+  overscroll-behavior: contain;
+  /* 아래쪽은 휴대폰에서 카드 위에 떠 있는 Jean 판만큼 더 비켜 준다.
+     --plate-clear 는 js 가 써넣고, 데스크톱에서는 0 이다. */
   padding: calc(2rem - var(--card-inset)) calc(3rem - var(--card-inset))
-           calc(3rem - var(--card-inset));
+           calc(3rem - var(--card-inset) + var(--plate-clear, 0px));
   display: flex;
   flex-direction: column;
   align-items: center; /* Center the title/subtitle within the content */
@@ -490,7 +546,7 @@ body[data-hub="menu"] .node-btn.is-current {
 /* Specific styling for About Me to prevent overlap with home button */
 /* Typography & Content Styles */
 h2.section__title {
-  font-size: 3rem;
+  font-size: clamp(1.75rem, 7vmin, 3rem);
   font-weight: var(--fw-black);
   margin-top: 0; /* Remove top margin */
   margin-bottom: 0.5rem; /* Reduced bottom margin */
@@ -499,7 +555,7 @@ h2.section__title {
 }
 
 .section__subtitle {
-  font-size: 1.2rem;
+  font-size: clamp(0.95rem, 3.6vmin, 1.2rem);
   color: var(--clr-text-muted);
   margin-bottom: 1.5rem; /* Reduced from 2rem */
   text-align: center;
@@ -554,7 +610,7 @@ h2.section__title {
    만큼 채운다(1888 화면에서 5열 한 줄). */
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(190px, 100%), 1fr));
   gap: 1.5rem;
   width: 100%;
   margin-top: 1rem;
@@ -569,9 +625,11 @@ h2.section__title {
   transition: var(--transition-fast);
 }
 
-.portfolio__item:hover {
-  transform: translateY(-10px);
-  border-color: var(--clr-accent);
+@media (hover: hover) {
+  .portfolio__item:hover {
+    transform: translateY(-10px);
+    border-color: var(--clr-accent);
+  }
 }
 
 /* 썸네일은 480×480 정사각형이다. 칸도 정사각형으로 맞추고 contain 으로
@@ -616,8 +674,10 @@ h2.section__title {
   transition: var(--transition-fast);
 }
 
-.portfolio__item:hover .portfolio__ext {
-  color: var(--clr-accent);
+@media (hover: hover) {
+  .portfolio__item:hover .portfolio__ext {
+    color: var(--clr-accent);
+  }
 }
 
 /* Resume Styles */
@@ -643,26 +703,30 @@ h2.section__title {
   list-style: none;
   padding: 0;
   display: flex;
+  flex-wrap: wrap;
   gap: 2rem;
   justify-content: center;
   margin-top: 2rem;
 }
 
 .social-list__link {
-  font-size: 3rem;
+  font-size: clamp(2rem, 9vmin, 3rem);
   color: var(--clr-text-strong);
   transition: var(--transition-fast);
 }
 
-.social-list__link:hover {
-  color: var(--clr-accent);
-  transform: translateY(-5px);
+@media (hover: hover) {
+  .social-list__link:hover {
+    color: var(--clr-accent);
+    transform: translateY(-5px);
+  }
 }
 
 .footer__link {
   color: var(--clr-accent-soft);
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 4.5vmin, 1.5rem);
+  overflow-wrap: anywhere;
   font-weight: var(--fw-bold);
 }
 
@@ -682,8 +746,9 @@ h2.section__title {
    맞춰 "같은 사람"이라는 인상을 준다. */
 .about-me__photo {
   flex: 0 0 auto;
-  width: 168px;
-  height: 168px;
+  width: min(168px, 38vmin);
+  height: auto;
+  aspect-ratio: 1;
   object-fit: cover;
   border-radius: 28px;
   border: 1px solid var(--glass-border);
@@ -729,8 +794,10 @@ h2.section__title {
   transition: var(--transition-fast);
 }
 
-.tabs__tab:hover {
-  color: var(--clr-text-strong);
+@media (hover: hover) {
+  .tabs__tab:hover {
+    color: var(--clr-text-strong);
+  }
 }
 
 .tabs__tab[aria-selected="true"] {
@@ -794,8 +861,23 @@ h2.section__title {
   margin-top: 1rem;
 }
 
+/* 세로로 min-height:0 이 필요한 것과 같은 이유로 가로에는 min-width:0 이
+   필요하다. 그리드/플렉스 항목의 기본 최소 크기는 auto(=min-content)라, 안에
+   든 것 중 제일 안 줄어드는 것(여기서는 max-width:58ch 인 히어로 이미지,
+   약 447px)이 패널 전체의 바닥이 되어 좁은 카드를 그대로 뚫고 나간다.
+   연쇄의 고리마다 걸어야 한다 — 하나만 빠져도 거기서 다시 막힌다. */
 .tabs__panels--fill .tabs__panel {
   min-height: 0;
+  min-width: 0;
+}
+
+.tabs__panels--fill .project {
+  min-width: 0;
+}
+
+/* 이미지는 그 자체로도 막아 둔다: 등가 폭(58ch)이 칸보다 넓을 수 있다. */
+.project__hero {
+  max-width: min(var(--text-measure), 100%);
 }
 
 /* 헤더 한 줄: 왼쪽 제목+부제, 오른쪽 전환기. 제목 블록을 따로 두면 세로로
@@ -882,9 +964,11 @@ h2.section__title {
   transition: var(--transition-fast);
 }
 
-.project__toc a:hover {
-  color: var(--clr-text-strong);
-  background: var(--glass-bg);
+@media (hover: hover) {
+  .project__toc a:hover {
+    color: var(--clr-text-strong);
+    background: var(--glass-bg);
+  }
 }
 
 .project__toc a.is-active {
@@ -903,7 +987,9 @@ h2.section__title {
   position: relative; /* 섹션 offsetTop 의 기준 (목차 스크롤·추적) */
   flex: 1 1 auto;
   min-height: 0;
+  min-width: 0;  /* 안의 비교표 min-content 에 묶이지 않게 */
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 0 1.5rem 2rem 0;
   scrollbar-width: thin;
   scrollbar-color: var(--clr-text-faint) transparent;
@@ -938,7 +1024,7 @@ h2.section__title {
 
 .project__name {
   margin: 0;
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 5.5vmin, 2rem);
   font-weight: var(--fw-black);
   color: var(--clr-text-strong);
 }
@@ -1044,13 +1130,26 @@ h2.section__title {
   text-decoration: none;
 }
 
-.project__link:hover {
-  color: var(--clr-accent-soft);
+@media (hover: hover) {
+  .project__link:hover {
+    color: var(--clr-accent-soft);
+  }
 }
 
 .link-ext {
   margin-left: 0.3em;
   font-size: 0.8em;
+}
+
+/* 비교표는 4열이고 행 머리글이 nowrap 이라 min-content 가 약 320px 이다.
+   그보다 좁은 카드에서는 표를 줄이는 대신 표만 옆으로 밀게 한다 — 줄여 봤자
+   글자가 한 글자씩 꺾여 표로 읽히지 않는다. min-width:0 이 있어야 이 래퍼가
+   부모 폭에 맞춰 줄어들고, 그때서야 안쪽에 스크롤이 생긴다. */
+.table-scroll {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
 .cmp-table {
@@ -1131,13 +1230,163 @@ body.no-motion * {
   transition: var(--transition-fast);
 }
 
-.btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px var(--clr-accent-glow);
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px var(--clr-accent-glow);
+  }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .view-content { --pad-r: 20px; --pad-l: 20px; }
-  .content-wrapper { padding: 1.5rem; }
+/* ── 모바일 ──────────────────────────────────────────────────────
+   조건은 css/tokens.css 의 미디어쿼리와 같아야 한다(거기가 --mobile 을 켜고,
+   js 는 그 플래그만 읽는다). 조건을 바꾸면 두 파일을 같이 고칠 것.
+
+   예전에 여기 있던 @media (max-width: 768px) 블록은 지웠다. --pad-* 를
+   덮어쓰려 했지만 layoutCard 가 같은 속성을 *인라인*으로 써서 항상 졌다.
+   이제 범퍼는 tokens.css 에서 줄이고, 인라인 값도 그 줄어든 범퍼에서 나온다. */
+@media (max-width: 700px), (max-height: 500px) {
+
+  /* ── 홈 링 ──
+     39vmin 상한 덕에 링은 이미 화면에 들어간다. 문제는 링이 아니라 노드다:
+     390px 화면에서 노드 48.7px / 글자 7.3px 라 읽을 수도 누를 수도 없었다.
+     노드 사이 호 간격이 2πR/6 이라 훨씬 굵어질 자리가 남아 있으므로,
+     반지름을 줄이고 그만큼 노드 비율을 키운다.
+     vmin 390 기준 → R 132.6 / 노드 74.3px / 글자 12.6px / 링 지름 339px
+     (390px 안에 좌우 25px 여유) / 호 간격 138.8px 라 겹치지 않는다.
+     세로·가로 모두 vmin 이 짧은 쪽이라 같은 값이 나온다. */
+  :root {
+    --node-radius: 34vmin;
+  }
+
+  .node-btn {
+    --node-size: calc(var(--node-radius) * 0.56);
+    font-size: calc(var(--node-size) * 0.17);
+  }
+
+  /* 비율로만 줄인 글자들은 이 크기에서 읽히지 않는다. 바닥을 깐다. */
+  .home-subname {
+    font-size: max(10px, calc(var(--node-radius) * 0.06));
+    letter-spacing: 0.04em;  /* 판 안(74px)에 "Taekyung Ho" 가 들어가게 */
+  }
+
+  .plate-hint {
+    font-size: max(10px, calc(var(--node-radius) * 0.05));
+  }
+
+  /* 부제는 한 줄로 두면 약 250px(반폭 125px)이라 3시/9시 노드의 안쪽
+     가장자리(95.5px)를 침범한다. 폭을 묶어 여러 줄로 접는다. */
+  .home-subtitle {
+    font-size: max(10px, calc(var(--node-radius) * 0.075));
+    max-width: calc(var(--node-radius) * 1.05);
+    letter-spacing: 0.08em;
+  }
+
+  /* 언어 토글은 홈 좌하단. safe-area 만큼 띄워 홈 인디케이터를 피한다. */
+  .lang-toggle-container {
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    left: calc(16px + env(safe-area-inset-left));
+  }
+
+  /* 50×26 은 44px 최소 터치 크기에 못 미친다. 보이는 크기는 그대로 두고
+     히트 영역만 넓힌다(::before 가 요소 밖으로 뻗는다). */
+  .toggle-switch::before {
+    content: "";
+    position: absolute;
+    inset: -9px;
+  }
+
+  /* ── 카드 ──
+     범퍼가 12px 로 줄어(tokens.css) 카드가 화면을 꽉 채우고, 축소된 Jean 판은
+     카드를 밀어내는 대신 그 위에 떠 있는다. 판에 가리는 아래쪽은 .card-scroll
+     이 --plate-clear 만큼 비켜 준다(값은 js 가 써넣는다). */
+  .content-wrapper {
+    border-radius: 24px;
+  }
+
+  .card-scroll {
+    padding: calc(1.25rem - var(--card-inset))
+             calc(1.25rem - var(--card-inset))
+             calc(1.5rem - var(--card-inset) + var(--plate-clear, 0px));
+  }
+
+  /* ── 카드 안쪽에서 폭이 줄지 않던 것들 ── */
+  .about-me__profile {
+    gap: 1.25rem;
+  }
+
+  /* 태그 줄은 11개가 3~4줄이 되므로 알약 하나하나가 낮아야 답답하지 않다.
+     white-space 를 푸는 건 "Visual Studio" 같은 항목 하나가 칸보다 넓을 때
+     대비다(지금 폭에서는 안 꺾이지만 더 좁은 기기가 있다). */
+  .skill-tags {
+    gap: 0.4rem;
+  }
+
+  .skill-tags li {
+    padding: 0.15rem 0.7rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    white-space: normal;
+  }
+
+  .skill-tags__label {
+    margin: 0.25rem 0 0.5rem;
+  }
+
+  .tabs {
+    margin-top: 1.25rem;
+  }
+
+  /* 알약 세 개를 세로로 쌓는다. flex-wrap 만 걸면 각 줄이 자기 내용 폭대로
+     가운데 정렬돼(탭은 flex: 0 1 auto) 세 개의 좌우 끝이 제각각 어긋난다.
+     폭을 맞춰 쌓아야 세그먼트 컨트롤로 읽힌다.
+     .project-switch 는 제외한다 — 알약 둘뿐이라 가로로 들어가고, 세로로
+     쌓으면 Game Projects 헤더가 본문 높이를 그만큼 잡아먹는다. */
+  .tabs__list:not(.project-switch) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 2px;
+    border-radius: 20px;  /* 여러 줄이 되면 999px 은 양끝만 둥근 덩어리가 된다 */
+  }
+
+  .project-switch {
+    flex-wrap: wrap;
+  }
+
+  .tabs__tab {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .tabs__panels {
+    margin-top: 1rem;
+  }
+
+  /* 제목 블록이 한 줄을 다 쓰고 전환기가 아래로 내려가게 한다. */
+  .project-header__text {
+    flex: 1 1 100%;
+  }
+
+  /* 알약 둘 + 연결선 72px 이면 최소폭이 약 382px 라 카드(366px)를 뚫는다.
+     선을 빼고 알약을 줄이면 약 230px. */
+  .project-switch__line {
+    display: none;
+  }
+
+  .project-switch__pill {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* 라벨 칸이 max-content 라 "Development"·"Technology" 가 줄지 않는다.
+     라벨과 값을 위아래로 쌓는다. */
+  .project__facts {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .project__scroll {
+    padding-right: 0;
+  }
 }

@@ -29,6 +29,15 @@ function cssNum(token, el = document.documentElement) {
     return parseFloat(getComputedStyle(el).getPropertyValue(token));
 }
 
+// 브레이크포인트의 단일 출처는 css/tokens.css 의 미디어쿼리다. 여기서
+// matchMedia 로 같은 조건을 또 적으면 언젠가 한쪽만 고쳐져 어긋나므로,
+// 그 쿼리가 켜 주는 --mobile 플래그를 읽기만 한다.
+const isMobile = () => cssNum("--mobile") === 1;
+
+// 호버가 실제로 있는 기기인지. 터치에서는 mouseleave 가 영영 오지 않을 수
+// 있어, 노드에 걸어 둔 호버 힌트가 --tx/--ty/--scale 을 남긴 채 끝난다.
+const canHover = () => window.matchMedia("(hover: hover)").matches;
+
 function nodeButtons() {
     return [...document.querySelectorAll(".node-btn")];
 }
@@ -370,9 +379,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const E = (state === "menu" ? R + rNode : plateHalf) * s;
         const rad = (angle * Math.PI) / 180;
 
+        // 휴대폰에서는 세로 방향을 아래로 고정한다. 카드가 화면을 꽉 채우므로
+        // "노드 반대편"이라는 공간적 단서는 어차피 보이지 않고, 대신 판이 늘
+        // 아래 한 곳에만 있어야 가려지는 구역도 한 곳이라 여백 하나로 비켜 줄
+        // 수 있다(--plate-clear). 엄지가 닿는 자리이기도 하다.
+        // 좌/우 부호는 노드 각도 그대로 둬서 방향 힌트는 남긴다.
+        const mobile = isMobile();
+        const sx = axisSign(-Math.cos(rad));
+        const sy = mobile ? 1 : axisSign(-Math.sin(rad));
+
         return {
-            tx: axisSign(-Math.cos(rad)) * Math.max(0, W / 2 - E - M),
-            ty: axisSign(-Math.sin(rad)) * Math.max(0, H / 2 - E - M),
+            tx: sx * Math.max(0, W / 2 - E - M),
+            ty: sy * Math.max(0, H / 2 - E - M),
             s,
         };
     }
@@ -436,6 +454,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const bB = cssNum("--bumper-b", view), bL = cssNum("--bumper-l", view);
         const gap = cssNum("--card-gap");
         const minH = cssNum("--card-min-height");
+        const minW = cssNum("--card-min-width");
+        const mobile = isMobile();
         const ratio = view.dataset.cardRatio;
         // 카드가 상자 높이를 꽉 채운다. 스크롤이 카드 안쪽 영역(프로젝트 본문)에서
         // 일어나는 카드는 카드 높이가 먼저 정해져야 안쪽이 얼마를 쓸지 알 수 있다.
@@ -443,11 +463,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const p = plateRectAt(park);
 
         // 판은 늘 가장자리에 있으므로 그쪽 범퍼만 키우면 된다.
+        // 휴대폰에서는 이 계산을 통째로 건너뛴다 — 판이 차지한 띠를 비워 주면
+        // 390px 화면에서 70px 넘게 잃는다. 대신 카드가 화면을 꽉 채우고 판이
+        // 그 위에 떠 있으며, 가려지는 아래쪽은 --plate-clear 로 비켜 준다.
         const horiz = [], vert = [];
-        if (p.left > W / 2) horiz.push({ t: bT, r: Math.max(bR, W - p.left + gap), b: bB, l: bL });
-        if (p.right < W / 2) horiz.push({ t: bT, r: bR, b: bB, l: Math.max(bL, p.right + gap) });
-        if (p.top > H / 2) vert.push({ t: bT, r: bR, b: Math.max(bB, H - p.top + gap), l: bL });
-        if (p.bottom < H / 2) vert.push({ t: Math.max(bT, p.bottom + gap), r: bR, b: bB, l: bL });
+        if (!mobile) {
+            if (p.left > W / 2) horiz.push({ t: bT, r: Math.max(bR, W - p.left + gap), b: bB, l: bL });
+            if (p.right < W / 2) horiz.push({ t: bT, r: bR, b: bB, l: Math.max(bL, p.right + gap) });
+            if (p.top > H / 2) vert.push({ t: bT, r: bR, b: Math.max(bB, H - p.top + gap), l: bL });
+            if (p.bottom < H / 2) vert.push({ t: Math.max(bT, p.bottom + gap), r: bR, b: bB, l: bL });
+        }
 
         // 모서리 주차는 가로·세로 두 후보가 나온다. 면적으로 고르면 거의
         // 정사각형인 창에서 축이 홱 바뀌어 카드가 튀므로, 화면 방향으로
@@ -458,17 +483,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const box = { w: W - pick.l - pick.r, h: H - pick.t - pick.b };
 
-        let width = box.w, height = null;
+        // 폭에는 반드시 바닥이 있어야 한다. 범퍼는 커지기만 하므로 화면이 좁으면
+        // box.w 가 음수가 되는데, --card-width 는 <length> 로 등록돼 있어 음수도
+        // 통과시키고 width 에서만 무효가 되어 auto 로 풀린다. 그러면 카드가
+        // min-content 로 쪼그라든 채 범퍼 안쪽(화면 밖)에 중앙정렬된다.
+        let width = Math.max(minW, box.w), height = null;
         if (ratio) {
             const [rw, rh] = ratio.split("/").map(Number);
             if (rw > 0 && rh > 0) {
                 const k = Math.min(box.w / rw, box.h / rh);   // contain 맞춤
-                width = rw * k;
+                width = Math.max(minW, rw * k);
                 height = rh * k;
             }
-        } else if (fill) {
+        } else if (fill || mobile) {
+            // 휴대폰에서는 카드 종류와 무관하게 전면 시트로 둔다. 화면이 작아
+            // 내용 높이만큼만 띄우면 카드가 떠 있는 쪽지처럼 보이고, 짧은 카드와
+            // 긴 카드에서 판까지의 거리가 제각각이 된다.
             height = Math.max(minH, box.h);
         }
+
+        // 떠 있는 Jean 판에 마지막 내용이 가리지 않도록 스크롤 영역이 아래로
+        // 비켜 줄 양. 판이 없는(데스크톱) 배치에서는 0 이다.
+        const plateClear = mobile
+            ? Math.max(0, (H - pick.b) - (p.top - gap))
+            : 0;
 
         // --- 쓰기 ---
         content.style.setProperty("--pad-t", `${pick.t}px`);
@@ -477,6 +515,7 @@ document.addEventListener("DOMContentLoaded", () => {
         content.style.setProperty("--pad-l", `${pick.l}px`);
         card.style.setProperty("--card-width", `${width}px`);
         card.style.setProperty("--card-max-height", `${Math.max(minH, box.h)}px`);
+        card.style.setProperty("--plate-clear", `${plateClear}px`);
         // 비율 카드만 높이가 고정된다. 나머지는 auto 로 되돌려 내용이 정한다.
         if (height !== null) card.style.setProperty("--card-height", `${height}px`);
         else card.style.removeProperty("--card-height");
@@ -658,8 +697,11 @@ document.addEventListener("DOMContentLoaded", () => {
     nodeBtns.forEach(btn => {
         // 호버 힌트는 홈에서만. 축소된 메뉴 상태에서 돌면 화면 절반 거리만큼
         // 날아가고, mouseleave 가 모든 노드의 --scale 을 되돌려 흐림도 풀린다.
+        // 터치 기기에서는 아예 걸지 않는다 — 탭하면 mouseenter 는 오지만
+        // mouseleave 는 안 올 수 있어, 눌렀던 노드만 커지고 나머지는 작아진
+        // 상태로 굳는다.
         btn.addEventListener("mouseenter", () => {
-            if (isAnimating || document.body.dataset.hub !== "home") return;
+            if (!canHover() || isAnimating || document.body.dataset.hub !== "home") return;
             const corner = getTargetCornerTranslation(btn.dataset.target);
             const hintTx = corner.x * 0.05;
             const hintTy = corner.y * 0.05;
@@ -683,7 +725,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         btn.addEventListener("mouseleave", () => {
-            if (isAnimating || document.body.dataset.hub !== "home") return;
+            if (!canHover() || isAnimating || document.body.dataset.hub !== "home") return;
             centerGroup.style.setProperty("--tx", "0px");
             centerGroup.style.setProperty("--ty", "0px");
             centerGroup.style.setProperty("--scale", "1");
@@ -724,7 +766,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 창 크기가 바뀌면 주차 위치와 카드 배치를 다시 잡는다.
     // resize 는 드래그 중 초당 수십 번 오므로 프레임 단위로 합친다.
     let resizePending = false;
-    window.addEventListener("resize", () => {
+    function relayout() {
         if (resizePending) return;
         resizePending = true;
         requestAnimationFrame(() => {
@@ -739,7 +781,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (view) layoutCard(view, hubPark(target, "parked"));
             }
         });
-    });
+    }
+    window.addEventListener("resize", relayout);
+    // 모바일 주소창이 접히고 펴지면 window.innerHeight 가 바뀌는데, 브라우저에
+    // 따라 resize 가 오지 않는다. hubPark/layoutCard 가 그 값을 직접 읽으므로
+    // 판 위치와 카드 높이가 실제 화면과 어긋난 채 남는다.
+    window.visualViewport?.addEventListener("resize", relayout);
 
     // ── 카드 안 탭 UI ─────────────────────────────────────────────
     // [data-tabs] 안의 role=tab 버튼이 aria-controls 가 가리키는 패널을 켠다.
