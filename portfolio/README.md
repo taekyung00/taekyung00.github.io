@@ -60,7 +60,7 @@ portfolio/                          # 프로젝트 루트
 - `js/index.js` 가 `.node-nav` 에 `--n`(노드 개수), 각 `.node-btn` 에 `--i`(DOM 순번)를 넣습니다.
 - CSS 가 `--angle: calc(360deg / var(--n) * var(--i) - 90deg)` 로 각도를 계산합니다.
 - **DOM 순서 = 12시 방향부터 시계방향 배치 순서**이고, 반지름은 `--node-radius` 하나로 통일됩니다.
-- 페이지가 열렸을 때 Jean 판이 주차되는 코너도 그 노드의 각도에서 자동 유도됩니다(반대편).
+- 페이지가 열렸을 때 Jean 판은 어느 노드를 눌렀든 **화면 아래 가운데**로 주차됩니다(노드 순서와 무관).
 
 ### 허브 — 3가지 상태
 
@@ -69,7 +69,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 | 상태 | 화면 |
 |---|---|
 | `home` | Jean 판 중앙, 노드 링 원본 크기 |
-| `parked` | 페이지가 열리고 Jean 판만 **열린 노드의 반대편 코너**로 축소. 나머지 노드는 Jean 안으로 들어감 |
+| `parked` | 페이지가 열리고 Jean 판만 **화면 아래 가운데**로 축소(모든 카드 공통). 나머지 노드는 Jean 안으로 들어감 |
 | `menu` | 노드 링이 Jean 주위로 다시 나옴. 현재 페이지의 노드는 자리를 지킨 채 흐려짐 |
 
 - 노드 클릭 → `parked` · Jean 클릭 → `menu` · Jean 한 번 더 → `home`
@@ -100,6 +100,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 | 유리 재질(투명도·블러·림) | `css/tokens.css` 의 `--glass-*`. 새 표면을 유리로 만들려면 `css/style.css` 맨 위 "유리 재질" 규칙의 선택자 목록에 추가 |
 | 전환 애니메이션 속도 | `css/tokens.css` 의 `--dur-*` (JS 가 이 값을 읽어 씀) |
 | 메뉴가 열렸을 때 본문 흐림 정도 | `css/tokens.css` 의 `--menu-content-blur` |
+| 카드가 열렸을 때 Jean 이 가는 자리 | `js/index.js` 의 `hubPark()` 반환값(홈 호버 힌트도 이 값을 따라감) |
 | 홈 화면 전체 크기 | `css/style.css` 의 `--node-radius` 한 줄 |
 | 카드가 커질 수 있는 범위 | `css/tokens.css` 의 `--bumper-t/r/b/l` (방향별) |
 | 특정 카드만 다른 범퍼 | 그 `<section>` 에 `--bumper-*` 덮어쓰기 |
@@ -119,6 +120,7 @@ Jean 판과 노드 링은 `.hub` 하나로 묶여 있고, **같은 DOM 이 홈 �
 
 | 날짜 | 변경 파일 | 변경 내용 |
 |------|----------|----------|
+| 2026-10-03 | `js/index.js`, `css/style.css`, `css/tokens.css`, `index.html` | Jean 주차 자리를 **모든 카드에서 화면 아래 가운데**로 통일 — 예전엔 "누른 노드의 반대편 코너"라 카드마다 Jean 이 다른 곳(좌상단·우하단·위 가운데 …)으로 날아가 통일감이 없고 매번 버튼을 다시 찾아야 했다. `hubPark()` 가 노드 각도 대신 `tx: 0`, 아래쪽 `ty` 를 돌려준다(모바일도 같은 자리). 홈 호버 힌트는 따로 코너를 계산하던 `getTargetCornerTranslation()` 을 지우고 `hubPark()` 결과의 5% 로 기울게 해, 주차 자리와 힌트가 어긋날 수 없게 했다. 쓰이지 않게 된 `nodeAngle()`·`axisSign()` 삭제. **대가**: 판이 늘 아래 띠를 차지해 카드 최대 높이가 준다(1890×815 기준 764 → 615px). 높이를 다 쓰던 Game Projects(안쪽 스크롤 573 → 424px)와 Resume 만 영향. 그래서 "키 큰 카드는 12/6시 자리를 피하라"는 이전 규칙은 더는 의미가 없다. 메뉴 링이 Game Projects 의 검은 히어로 이미지 위에 놓여 그 위 노드가 회색으로 비치지만 글자 대비는 최저 5.07:1 로 AA 통과(측정). 데스크톱·태블릿(1024)·모바일, 메뉴 경유 카드 이동, 뒤로 가기까지 헤드리스 크롬으로 확인. `?v=47` |
 | 2026-10-03 | `css/style.css`, `css/tokens.css`, `index.html` | Jean 메뉴(menu 상태)가 열리면 카드 본문을 흐림 — 링이 카드 위로 펼쳐져 노드 글자와 본문 글자가 겹쳐 둘 다 안 읽히던 문제. 카드(`.content-wrapper`)가 아니라 안쪽 `.card-scroll` 에만 `filter: blur(var(--menu-content-blur))`(6px) — 카드까지 흐리면 유리판 윤곽·그림자가 번져 초점이 나간 듯 보인다. 번진 가장자리는 카드의 `overflow: hidden` 이 자른다. 흐린 동안은 `pointer-events: none` 이라 읽을 수 없는 링크를 눌러 떠나지 않고, 클릭은 카드로 떨어져 메뉴가 닫힌다. 시간은 노드가 나오는 `--dur-node-fly` 와 같다. About·Graphics·Game Projects(1890×915), Skills(모바일)에서 헤드리스 크롬으로 확인. `?v=46` |
 | 2026-10-03 | `CLAUDE.md` | 코드와 어긋난 서술 정정 — 모바일 미디어쿼리는 "한 곳"이 아니라 CSS 세 파일(`tokens.css`·`style.css`·`portfolio-page.css`)에 같은 조건으로 반복됨(`@media` 조건엔 커스텀 속성을 못 쓴다; js 쪽 단일 출처는 그대로), 캐시 버스팅 번호를 고정값 대신 grep 으로 확인하도록 변경(이미 `?v=45`/`?v=10` 으로 어긋나 있었다), id↔라벨 대응(`projects` = Graphics) 명시, 아무도 읽지 않는 `--dur-view-swap`·`--dur-back-*` 토큰과 참조 없는 이미지(`skills-bg.jpg`, `dragonic_tactics/logo.png`) 기록 |
 | 2026-09-22 | `css/tokens.css`, `css/style.css`, `css/portfolio-page.css`, `js/index.js`, `index.html`, `portfolio/0*.html` | 모바일 지원(세로·가로). **근본 원인은 `layoutCard()` 의 폭 하한 부재** — 범퍼(좌우 합 685px)가 `Math.max` 로 커지기만 해서 뷰포트가 685px 보다 좁으면 `box.w` 가 음수가 되고, `--card-width` 가 `<length>` 로 등록돼 있어 음수도 통과한 뒤 `width` 에서만 무효가 되어 `auto` 로 풀렸다. 그래서 카드가 min-content 로 쪼그라든 채 화면 밖(390px 화면 기준 오른쪽 60px 지점)에 놓였다. `--card-min-width` 로 바닥을 깔고, 모바일에서는 범퍼를 12px + safe-area 로 줄여 카드가 화면을 꽉 채우게 했다. Jean 판은 카드를 밀어내는 대신 위에 떠 있고(모바일에서는 `hubPark` 가 세로 위치를 항상 아래로 고정), 가려지는 만큼은 js 가 써넣는 `--plate-clear` 로 `.card-scroll` 이 비켜 준다. 홈 링은 유지하되 `--node-radius` 34vmin + 노드 비율 0.32→0.56 으로 재조정(390px 기준 노드 48.7→74.3px, 글자 7.3→12.6px). 브레이크포인트는 `tokens.css` 에만 두고 js 는 `--mobile` 플래그를 읽는다. 터치 대응: 장식용 `:hover` 를 전부 `@media (hover: hover)` 로 감싸고(탭 후 눌러붙던 문제), `.plate-hint` 는 `(hover: none)` 에서 상시 표시(호버가 유일한 단서였다). 겸사겸사 701~1100px 구간 범퍼도 줄였다 — 1024px 에서 카드가 339px 밖에 안 나오던 기존 버그. Skills 카드는 실기기 확인 후 보정: 탭 목록에 `flex-wrap` 만 걸면 탭이 `flex: 0 1 auto` 라 각 줄이 자기 내용 폭대로 가운데 정렬돼 세 알약의 좌우 끝이 제각각 어긋났다 → `.tabs__list:not(.project-switch)` 를 세로 스택(`align-items: stretch`, 폭 100%)으로 바꿔 정렬(알약 셋 다 314px @ x38). 태그 알약도 낮췄다(높이 약 31→26.5px). `.project-switch` 는 제외 — 알약 둘뿐이라 가로로 들어가고, 세로로 쌓으면 Game Projects 헤더가 본문 높이를 잡아먹는다. **데스크톱 1280/1440/1920 은 홈·카드 6개·상세 페이지 전부 원본과 픽셀 단위로 동일함을 A/B 측정으로 확인** |

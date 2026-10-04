@@ -1,7 +1,8 @@
 // ── 노드 원형 배치 ────────────────────────────────────────────────
 // DOM 순서가 곧 시계방향 배치 순서이고, 첫 노드가 12시(-90deg)에 놓인다.
-// 노드를 추가/제거하면 각도·전환 방향·back 버튼 위치가 모두 여기서 다시
-// 계산되므로, 나머지 노드는 손댈 필요가 없다.
+// 노드를 추가/제거하면 각도가 여기서 다시 계산되므로, 나머지 노드는 손댈
+// 필요가 없다. (페이지가 열렸을 때 Jean 이 가는 자리는 노드와 무관하게
+// 늘 화면 아래 가운데다 — hubPark 참고.)
 
 // 애니메이션 시간의 단일 출처는 css/tokens.css 의 --dur-* 토큰이다.
 // 여기서는 그 값을 읽어 setTimeout 에 쓰고, 인라인 transition 에는 var() 를
@@ -9,9 +10,6 @@
 function cssMs(token) {
     return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(token)) * 1000;
 }
-
-// 대각선이 아닌(축에 가까운) 성분은 0으로 눌러 가장자리 중앙에 붙게 한다.
-const axisSign = (v) => (Math.abs(v) < 0.35 ? 0 : Math.sign(v));
 
 // 링 반지름(px). @property 로 등록해 둔 덕에 계산된 값이 나온다.
 function nodeRadiusPx() {
@@ -40,13 +38,6 @@ const canHover = () => window.matchMedia("(hover: hover)").matches;
 
 function nodeButtons() {
     return [...document.querySelectorAll(".node-btn")];
-}
-
-// data-target 에 해당하는 노드가 원 위에서 놓인 각도. 없으면 null.
-function nodeAngle(target) {
-    const btns = nodeButtons();
-    const i = btns.findIndex((b) => b.dataset.target === target);
-    return i < 0 ? null : -90 + (360 / btns.length) * i;
 }
 
 (() => {
@@ -317,24 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize with default language
     updateLanguage();
 
-    
-    // 전환 애니메이션이 향하는 지점: 노드가 놓인 방향의 정반대 코너.
-    function getTargetCornerTranslation(targetId) {
-        const angle = nodeAngle(targetId);
-        if (angle === null) return { x: 0, y: 0 };
-
-        const halfW = window.innerWidth / 2;
-        const halfH = window.innerHeight / 2;
-        // The back button is 120x120, its center is 60px from the 40px margin = 100px from edge.
-        const offset = 100;
-        const rad = (angle * Math.PI) / 180;
-
-        return {
-            x: axisSign(-Math.cos(rad)) * (halfW - offset),
-            y: axisSign(-Math.sin(rad)) * (halfH - offset),
-        };
-    }
-
     let isAnimating = false;
 
     const hub = document.querySelector(".hub");
@@ -350,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── 허브 상태 ────────────────────────────────────────────────
     // home   : Jean 판이 화면 중앙, 노드 링 원본 크기
-    // parked : 페이지가 열려 있고 Jean 버튼만 코너에 축소되어 남음
+    // parked : 페이지가 열려 있고 Jean 버튼만 화면 아래 가운데에 축소되어 남음
     // menu   : parked + 노드 링이 Jean 주위로 다시 나옴
 
     // 허브를 화면 가장자리 쪽으로 얼마나 들여 놓을지 계산한다.
@@ -359,8 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 들어와야 한다. 예전에는 둘 다 링 기준이라 parked 일 때 Jean 이
     // 필요보다 한참 안쪽에 놓여 카드 위에 올라앉았다.
     function hubPark(target, state) {
-        const angle = nodeAngle(target);
-        if (angle === null) return { tx: 0, ty: 0, s: 1 };
+        if (!VIEW_IDS.has(target)) return { tx: 0, ty: 0, s: 1 };
 
         const R = nodeRadiusPx();
         // 계산된 width 는 레이아웃 값이라 허브의 transform 에 영향받지 않는다.
@@ -377,22 +349,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const s = Math.min(cssNum("--hub-scale-parked"),
                            (Math.min(W, H) / 2 - M) / (R + rNode));
         const E = (state === "menu" ? R + rNode : plateHalf) * s;
-        const rad = (angle * Math.PI) / 180;
 
-        // 휴대폰에서는 세로 방향을 아래로 고정한다. 카드가 화면을 꽉 채우므로
-        // "노드 반대편"이라는 공간적 단서는 어차피 보이지 않고, 대신 판이 늘
-        // 아래 한 곳에만 있어야 가려지는 구역도 한 곳이라 여백 하나로 비켜 줄
-        // 수 있다(--plate-clear). 엄지가 닿는 자리이기도 하다.
-        // 좌/우 부호는 노드 각도 그대로 둬서 방향 힌트는 남긴다.
-        const mobile = isMobile();
-        const sx = axisSign(-Math.cos(rad));
-        const sy = mobile ? 1 : axisSign(-Math.sin(rad));
-
-        return {
-            tx: sx * Math.max(0, W / 2 - E - M),
-            ty: sy * Math.max(0, H / 2 - E - M),
-            s,
-        };
+        // 주차 자리는 어느 노드를 눌렀든 화면 아래 가운데 한 곳이다.
+        // 예전에는 "누른 노드의 반대편 코너"라 카드마다 Jean 이 다른 곳(좌상단,
+        // 우하단, 위 가운데 …)으로 날아가서, 메뉴를 열 때마다 버튼을 다시
+        // 찾아야 했고 화면마다 구도가 달라 통일감이 없었다. 아래 가운데는
+        // 써 보고 가장 누르기 편했던 자리이고, 휴대폰에서는 엄지가 닿는 자리다.
+        // 대가: 판이 늘 아래 띠를 차지하므로 카드 최대 높이가 그만큼 준다
+        // (1890×815 에서 764 -> 615px). 코너 주차 때는 좌우 범퍼 안에 판이
+        // 숨어 높이를 다 썼다. data-card-fill 카드(Game Projects)는 안쪽
+        // 스크롤 영역이 줄어들 뿐 내용이 잘리지는 않는다.
+        return { tx: 0, ty: Math.max(0, H / 2 - E - M), s };
     }
 
     // 홈에서는 Jean 판이 버튼이 아니므로 버튼 의미도 붙이지 않는다.
@@ -702,9 +669,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // 상태로 굳는다.
         btn.addEventListener("mouseenter", () => {
             if (!canHover() || isAnimating || document.body.dataset.hub !== "home") return;
-            const corner = getTargetCornerTranslation(btn.dataset.target);
-            const hintTx = corner.x * 0.05;
-            const hintTy = corner.y * 0.05;
+            // Jean 이 실제로 주차할 자리 쪽으로 5% 기운다. 주차 계산을 그대로
+            // 빌려 써서, 주차 자리를 바꾸면 힌트도 저절로 따라간다(예전에는 따로
+            // 계산한 코너를 가리켜 둘이 어긋날 수 있었다).
+            const park = hubPark(btn.dataset.target, "parked");
+            const hintTx = park.tx * 0.05;
+            const hintTy = park.ty * 0.05;
 
             centerGroup.style.setProperty("--tx", `${hintTx}px`);
             centerGroup.style.setProperty("--ty", `${hintTy}px`);
