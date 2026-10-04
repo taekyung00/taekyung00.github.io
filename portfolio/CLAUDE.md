@@ -36,7 +36,7 @@ The closest thing to a test suite is the **browser console**: `updateLanguage()`
 |---|---|
 | `home` | plate centred, full-size node ring |
 | `parked` | a page card is open; only the plate remains, shrunk to the corner **opposite** the opened node. Other nodes get `--dist: 0` so they collapse *into* the plate |
-| `menu` | the ring re-emerges around the parked plate. The open page's node keeps its slot but gets `.is-current` (dimmed, non-clickable) so the others never re-space |
+| `menu` | the ring re-emerges around the parked plate. The open page's node keeps its slot but gets `.is-current` (dimmed, non-clickable) so the others never re-space. The card's `.card-scroll` is blurred (`--menu-content-blur`) and `pointer-events: none` so the ring reads over the text; the card itself stays sharp |
 
 Transitions: node click → `parked`; plate click → `menu`; plate click again → `home`; clicking anything that is **not** the plate or a node → closes the menu; clicking another node in the menu → goes straight to that page without passing through home.
 

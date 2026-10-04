@@ -423,6 +423,26 @@ body[data-hub="menu"] .node-btn.is-current {
   pointer-events: none;
 }
 
+/* menu 에서는 링이 카드 위로 다시 펼쳐져 노드 글자와 본문 글자가 겹친다.
+   본문만 흐려 링이 전경으로 읽히게 한다. 카드(.content-wrapper)가 아니라
+   안쪽 .card-scroll 을 흐리는 이유: 카드까지 흐리면 유리판의 윤곽과 그림자가
+   번져 카드가 초점 밖으로 밀려난 듯 보인다. 판은 또렷하게 두고 그 안의
+   내용만 물러나야 "젖빛 유리 너머의 글자"로 읽힌다. 번진 가장자리는
+   카드의 overflow: hidden 이 둥근 모서리로 잘라 준다.
+   pointer-events 도 끈다 — 읽을 수 없는 링크를 눌러 페이지를 떠나면 안 된다.
+   클릭은 아래의 카드로 떨어지고, 문서 클릭 리스너가 메뉴를 닫는다.
+   filter 는 레이아웃을 바꾸지 않으므로 flipCardIn 의 전제를 깨지 않는다.
+   transition 은 상태 규칙이 아니라 기본 규칙에 둬야 닫힐 때도 풀리며 돌아온다.
+   시간은 노드가 링으로 나오는 시간과 같다. */
+.card-scroll {
+  transition: filter var(--dur-node-fly) var(--ease-emphasized);
+}
+
+body[data-hub="menu"] .card-scroll {
+  filter: blur(var(--menu-content-blur));
+  pointer-events: none;
+}
+
 /* Language Toggle Switch */
 .lang-toggle-container {
   position: absolute;
